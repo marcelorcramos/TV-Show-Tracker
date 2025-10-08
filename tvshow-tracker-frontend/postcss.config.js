@@ -1,8 +1,6 @@
-cat > postcss.config.js << 'EOF'
 export default {
   plugins: {
-    tailwindcss: {},
+    '@tailwindcss/postcss': {},
     autoprefixer: {},
   },
 }
-EOF

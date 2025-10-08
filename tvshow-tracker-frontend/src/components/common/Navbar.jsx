@@ -48,7 +48,7 @@ const Navbar = () => {
                   to="/favorites" 
                   className={`hover:text-blue-200 transition ${
                     isActive('/favorites') ? 'text-blue-200 font-semibold' : ''
-              }`}
+                  }`}
                 >
                   My Favorites
                 </Link>

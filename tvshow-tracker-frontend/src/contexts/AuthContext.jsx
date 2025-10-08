@@ -26,7 +26,6 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = async (email, password) => {
-    // Mock login for now
     const mockUser = { id: 1, name: 'Test User', email: email };
     localStorage.setItem('authToken', 'mock-token');
     localStorage.setItem('userData', JSON.stringify(mockUser));
