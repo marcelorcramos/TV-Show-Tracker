@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Infrastructure/TvShowTracker.Infrastructure.csproj": {}
+    "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Infrastructure/TvShowTracker.Infrastructure.csproj": {}
   },
   "projects": {
-    "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Application/TvShowTracker.Application.csproj": {
+    "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Application/TvShowTracker.Application.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Application/TvShowTracker.Application.csproj",
+        "projectUniqueName": "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Application/TvShowTracker.Application.csproj",
         "projectName": "TvShowTracker.Application",
-        "projectPath": "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Application/TvShowTracker.Application.csproj",
+        "projectPath": "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Application/TvShowTracker.Application.csproj",
         "packagesPath": "/Users/marceloramos/.nuget/packages/",
-        "outputPath": "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Application/obj/",
+        "outputPath": "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Application/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/marceloramos/.nuget/NuGet/NuGet.Config"
@@ -26,8 +26,8 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Domain/TvShowTracker.Domain.csproj": {
-                "projectPath": "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Domain/TvShowTracker.Domain.csproj"
+              "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Domain/TvShowTracker.Domain.csproj": {
+                "projectPath": "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Domain/TvShowTracker.Domain.csproj"
               }
             }
           }
@@ -81,14 +81,14 @@
         }
       }
     },
-    "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Domain/TvShowTracker.Domain.csproj": {
+    "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Domain/TvShowTracker.Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Domain/TvShowTracker.Domain.csproj",
+        "projectUniqueName": "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Domain/TvShowTracker.Domain.csproj",
         "projectName": "TvShowTracker.Domain",
-        "projectPath": "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Domain/TvShowTracker.Domain.csproj",
+        "projectPath": "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Domain/TvShowTracker.Domain.csproj",
         "packagesPath": "/Users/marceloramos/.nuget/packages/",
-        "outputPath": "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Domain/obj/",
+        "outputPath": "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Domain/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/marceloramos/.nuget/NuGet/NuGet.Config"
@@ -140,14 +140,14 @@
         }
       }
     },
-    "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Infrastructure/TvShowTracker.Infrastructure.csproj": {
+    "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Infrastructure/TvShowTracker.Infrastructure.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Infrastructure/TvShowTracker.Infrastructure.csproj",
+        "projectUniqueName": "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Infrastructure/TvShowTracker.Infrastructure.csproj",
         "projectName": "TvShowTracker.Infrastructure",
-        "projectPath": "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Infrastructure/TvShowTracker.Infrastructure.csproj",
+        "projectPath": "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Infrastructure/TvShowTracker.Infrastructure.csproj",
         "packagesPath": "/Users/marceloramos/.nuget/packages/",
-        "outputPath": "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Infrastructure/obj/",
+        "outputPath": "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Infrastructure/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/marceloramos/.nuget/NuGet/NuGet.Config"
@@ -162,11 +162,11 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Application/TvShowTracker.Application.csproj": {
-                "projectPath": "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Application/TvShowTracker.Application.csproj"
+              "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Application/TvShowTracker.Application.csproj": {
+                "projectPath": "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Application/TvShowTracker.Application.csproj"
               },
-              "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Domain/TvShowTracker.Domain.csproj": {
-                "projectPath": "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Domain/TvShowTracker.Domain.csproj"
+              "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Domain/TvShowTracker.Domain.csproj": {
+                "projectPath": "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Domain/TvShowTracker.Domain.csproj"
               }
             }
           }
@@ -191,14 +191,6 @@
               "target": "Package",
               "version": "[4.0.3, )"
             },
-            "CsvHelper": {
-              "target": "Package",
-              "version": "[30.0.1, )"
-            },
-            "Microsoft.AspNetCore.Authentication.JwtBearer": {
-              "target": "Package",
-              "version": "[8.0.4, )"
-            },
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
               "version": "[8.0.4, )"
@@ -206,22 +198,6 @@
             "Microsoft.EntityFrameworkCore.SqlServer": {
               "target": "Package",
               "version": "[8.0.4, )"
-            },
-            "Microsoft.EntityFrameworkCore.Tools": {
-              "target": "Package",
-              "version": "[8.0.4, )"
-            },
-            "Microsoft.Extensions.Caching.StackExchangeRedis": {
-              "target": "Package",
-              "version": "[8.0.4, )"
-            },
-            "QuestPDF": {
-              "target": "Package",
-              "version": "[2024.3.7, )"
-            },
-            "SendGrid": {
-              "target": "Package",
-              "version": "[9.29.1, )"
             },
             "System.IdentityModel.Tokens.Jwt": {
               "target": "Package",

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Domain/TvShowTracker.Domain.csproj": {}
+    "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Domain/TvShowTracker.Domain.csproj": {}
   },
   "projects": {
-    "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Domain/TvShowTracker.Domain.csproj": {
+    "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Domain/TvShowTracker.Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Domain/TvShowTracker.Domain.csproj",
+        "projectUniqueName": "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Domain/TvShowTracker.Domain.csproj",
         "projectName": "TvShowTracker.Domain",
-        "projectPath": "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Domain/TvShowTracker.Domain.csproj",
+        "projectPath": "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Domain/TvShowTracker.Domain.csproj",
         "packagesPath": "/Users/marceloramos/.nuget/packages/",
-        "outputPath": "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Domain/obj/",
+        "outputPath": "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Domain/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/marceloramos/.nuget/NuGet/NuGet.Config"
