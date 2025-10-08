@@ -1,49 +1,46 @@
 using Microsoft.AspNetCore.Mvc;
+using TvShowTracker.Application.DTOs;
 using TvShowTracker.Application.Interfaces;
 
 namespace TvShowTracker.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class ActorsController : ControllerBase
+    public class AuthController : ControllerBase
     {
-        private readonly IActorService _actorService;
+        private readonly IUserService _userService;
 
-        public ActorsController(IActorService actorService)
+        public AuthController(IUserService userService)
         {
-            _actorService = actorService;
+            _userService = userService;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<PagedResult<ActorDto>>> GetActors(
-            [FromQuery] int page = 1,
-            [FromQuery] int pageSize = 10,
-            [FromQuery] string? search = null,
-            [FromQuery] string? sortBy = "Name",
-            [FromQuery] bool sortDescending = false)
+        [HttpPost("register")]
+        public async Task<ActionResult<UserDto>> Register(CreateUserDto createUserDto)
         {
-            var query = new ActorQuery
+            try
             {
-                Page = page,
-                PageSize = pageSize,
-                Search = search,
-                SortBy = sortBy,
-                SortDescending = sortDescending
-            };
-
-            var result = await _actorService.GetActorsAsync(query);
-            return Ok(result);
-        }
-
-        [HttpGet("{id}")]
-        public async Task<ActionResult<ActorDetailDto>> GetActor(int id)
-        {
-            var actor = await _actorService.GetActorByIdAsync(id);
-            if (actor == null)
-            {
-                return NotFound();
+                var user = await _userService.RegisterAsync(createUserDto);
+                return Ok(user);
             }
-            return Ok(actor);
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        [HttpPost("login")]
+        public async Task<ActionResult<AuthResponseDto>> Login(LoginDto loginDto)
+        {
+            try
+            {
+                var authResponse = await _userService.LoginAsync(loginDto);
+                return Ok(authResponse);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(new { message = ex.Message });
+            }
         }
     }
 }

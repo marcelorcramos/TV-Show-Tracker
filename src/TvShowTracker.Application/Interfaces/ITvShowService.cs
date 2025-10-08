@@ -4,9 +4,11 @@ namespace TvShowTracker.Application.Interfaces
 {
     public interface ITvShowService
     {
-        Task<PagedResult<TvShowDto>> GetTvShowsAsync(int page, int pageSize, string? genre, string? type, string? sortBy);
+        Task<PagedResult<TvShowDto>> GetTvShowsAsync(TvShowQuery query);
         Task<TvShowDetailDto?> GetTvShowByIdAsync(int id);
         Task<List<TvShowDto>> GetRecommendedTvShowsAsync(int userId);
+        Task<List<string>> GetAvailableGenresAsync();
+        Task<List<string>> GetAvailableTypesAsync();
     }
 
     public class PagedResult<T>
@@ -29,6 +31,5 @@ namespace TvShowTracker.Application.Interfaces
         public string? Search { get; set; }
         public string? SortBy { get; set; } = "Title";
         public bool SortDescending { get; set; } = false;
-
     }
 }

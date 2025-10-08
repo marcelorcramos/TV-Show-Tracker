@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TvShowTracker.Application.Interfaces;
+using TvShowTracker.Application.DTOs;
 
 namespace TvShowTracker.API.Controllers
 {

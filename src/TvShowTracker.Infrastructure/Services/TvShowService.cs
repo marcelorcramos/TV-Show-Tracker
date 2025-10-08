@@ -36,7 +36,7 @@ namespace TvShowTracker.Infrastructure.Services
             {
                 tvShowsQuery = tvShowsQuery.Where(t => 
                     t.Title.Contains(query.Search) || 
-                    t.Description != null && t.Description.Contains(query.Search));
+                    (t.Description != null && t.Description.Contains(query.Search)));
             }
 
             // Apply sorting
