@@ -1,0 +1,12 @@
+/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Domain/bin/Debug/net8.0/TvShowTracker.Domain.deps.json
+/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Domain/bin/Debug/net8.0/TvShowTracker.Domain.dll
+/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Domain/bin/Debug/net8.0/TvShowTracker.Domain.pdb
+/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Domain/obj/Debug/net8.0/TvShowTracker.Domain.GeneratedMSBuildEditorConfig.editorconfig
+/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Domain/obj/Debug/net8.0/TvShowTracker.Domain.AssemblyInfoInputs.cache
+/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Domain/obj/Debug/net8.0/TvShowTracker.Domain.AssemblyInfo.cs
+/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Domain/obj/Debug/net8.0/TvShowTracker.Domain.csproj.CoreCompileInputs.cache
+/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Domain/obj/Debug/net8.0/TvShowTracker.Domain.sourcelink.json
+/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Domain/obj/Debug/net8.0/TvShowTracker.Domain.dll
+/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Domain/obj/Debug/net8.0/refint/TvShowTracker.Domain.dll
+/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Domain/obj/Debug/net8.0/TvShowTracker.Domain.pdb
+/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Domain/obj/Debug/net8.0/ref/TvShowTracker.Domain.dll

@@ -4,7 +4,6 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 using TvShowTracker.Application.Interfaces;
-using TvShowTracker.Application.Services;
 using TvShowTracker.Infrastructure.Data;
 using TvShowTracker.Infrastructure.Services;
 

@@ -1,0 +1,16 @@
+/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Application/bin/Debug/net8.0/TvShowTracker.Application.deps.json
+/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Application/bin/Debug/net8.0/TvShowTracker.Application.dll
+/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Application/bin/Debug/net8.0/TvShowTracker.Application.pdb
+/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Application/bin/Debug/net8.0/TvShowTracker.Domain.dll
+/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Application/bin/Debug/net8.0/TvShowTracker.Domain.pdb
+/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Application/obj/Debug/net8.0/TvShowTracker.Application.csproj.AssemblyReference.cache
+/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Application/obj/Debug/net8.0/TvShowTracker.Application.GeneratedMSBuildEditorConfig.editorconfig
+/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Application/obj/Debug/net8.0/TvShowTracker.Application.AssemblyInfoInputs.cache
+/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Application/obj/Debug/net8.0/TvShowTracker.Application.AssemblyInfo.cs
+/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Application/obj/Debug/net8.0/TvShowTracker.Application.csproj.CoreCompileInputs.cache
+/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Application/obj/Debug/net8.0/TvShowTracker.Application.sourcelink.json
+/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Application/obj/Debug/net8.0/TvShowTr.3CCB4314.Up2Date
+/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Application/obj/Debug/net8.0/TvShowTracker.Application.dll
+/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Application/obj/Debug/net8.0/refint/TvShowTracker.Application.dll
+/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Application/obj/Debug/net8.0/TvShowTracker.Application.pdb
+/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Application/obj/Debug/net8.0/ref/TvShowTracker.Application.dll

@@ -1,30 +1,30 @@
 {
   "format": 1,
   "restore": {
-    "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/tests/TvShowTracker.IntegrationTests/TvShowTracker.IntegrationTests.csproj": {}
+    "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/tests/TvShowTracker.IntegrationTests/TvShowTracker.IntegrationTests.csproj": {}
   },
   "projects": {
-    "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/tests/TvShowTracker.IntegrationTests/TvShowTracker.IntegrationTests.csproj": {
+    "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/tests/TvShowTracker.IntegrationTests/TvShowTracker.IntegrationTests.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/tests/TvShowTracker.IntegrationTests/TvShowTracker.IntegrationTests.csproj",
+        "projectUniqueName": "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/tests/TvShowTracker.IntegrationTests/TvShowTracker.IntegrationTests.csproj",
         "projectName": "TvShowTracker.IntegrationTests",
-        "projectPath": "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/tests/TvShowTracker.IntegrationTests/TvShowTracker.IntegrationTests.csproj",
+        "projectPath": "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/tests/TvShowTracker.IntegrationTests/TvShowTracker.IntegrationTests.csproj",
         "packagesPath": "/Users/marceloramos/.nuget/packages/",
-        "outputPath": "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/tests/TvShowTracker.IntegrationTests/obj/",
+        "outputPath": "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/tests/TvShowTracker.IntegrationTests/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/marceloramos/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
-          "net9.0"
+          "net8.0"
         ],
         "sources": {
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
-          "net9.0": {
-            "targetAlias": "net9.0",
+          "net8.0": {
+            "targetAlias": "net8.0",
             "projectReferences": {}
           }
         },
@@ -41,8 +41,8 @@
         "SdkAnalysisLevel": "9.0.300"
       },
       "frameworks": {
-        "net9.0": {
-          "targetAlias": "net9.0",
+        "net8.0": {
+          "targetAlias": "net8.0",
           "dependencies": {
             "Microsoft.NET.Test.Sdk": {
               "target": "Package",
