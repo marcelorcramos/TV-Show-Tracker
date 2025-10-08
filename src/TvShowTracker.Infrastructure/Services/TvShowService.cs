@@ -10,12 +10,15 @@ namespace TvShowTracker.Infrastructure.Services
     {
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
+        private readonly ICacheService _cacheService;
 
-        public TvShowService(ApplicationDbContext context, IMapper mapper)
+        public TvShowService(ApplicationDbContext context, IMapper mapper, ICacheService cacheService)
         {
             _context = context;
             _mapper = mapper;
+            _cacheService = cacheService;
         }
+        
 
         public async Task<PagedResult<TvShowDto>> GetTvShowsAsync(TvShowQuery query)
         {
@@ -34,15 +37,15 @@ namespace TvShowTracker.Infrastructure.Services
 
             if (!string.IsNullOrEmpty(query.Search))
             {
-                tvShowsQuery = tvShowsQuery.Where(t => 
-                    t.Title.Contains(query.Search) || 
+                tvShowsQuery = tvShowsQuery.Where(t =>
+                    t.Title.Contains(query.Search) ||
                     (t.Description != null && t.Description.Contains(query.Search)));
             }
 
             // Apply sorting
             tvShowsQuery = query.SortBy?.ToLower() switch
             {
-                "title" => query.SortDescending 
+                "title" => query.SortDescending
                     ? tvShowsQuery.OrderByDescending(t => t.Title)
                     : tvShowsQuery.OrderBy(t => t.Title),
                 "releasedate" => query.SortDescending
@@ -98,24 +101,48 @@ namespace TvShowTracker.Infrastructure.Services
             return tvShowDetail;
         }
 
-        public async Task<List<string>> GetAvailableGenresAsync()
+       public async Task<List<string>> GetAvailableGenresAsync()
+         {
+        var cacheKey = "available_genres";
+        var cachedGenres = await _cacheService.GetAsync<List<string>>(cacheKey);
+        
+        if (cachedGenres != null)
         {
-            return await _context.TvShows
-                .Where(t => t.Genre != null)
-                .Select(t => t.Genre!)
-                .Distinct()
-                .OrderBy(g => g)
-                .ToListAsync();
+            return cachedGenres;
         }
 
-        public async Task<List<string>> GetAvailableTypesAsync()
+        var genres = await _context.TvShows
+            .Where(t => t.Genre != null)
+            .Select(t => t.Genre!)
+            .Distinct()
+            .OrderBy(g => g)
+            .ToListAsync();
+
+        await _cacheService.SetAsync(cacheKey, genres, TimeSpan.FromHours(6)); // Cache for 6 hours
+        
+        return genres;
+         }
+
+         public async Task<List<string>> GetAvailableTypesAsync()
         {
-            return await _context.TvShows
-                .Where(t => t.Type != null)
-                .Select(t => t.Type!)
-                .Distinct()
-                .OrderBy(t => t)
-                .ToListAsync();
+        var cacheKey = "available_types";
+        var cachedTypes = await _cacheService.GetAsync<List<string>>(cacheKey);
+        
+        if (cachedTypes != null)
+        {
+            return cachedTypes;
+        }
+
+        var types = await _context.TvShows
+            .Where(t => t.Type != null)
+            .Select(t => t.Type!)
+            .Distinct()
+            .OrderBy(t => t)
+            .ToListAsync();
+
+        await _cacheService.SetAsync(cacheKey, types, TimeSpan.FromHours(6));
+        
+        return types;
         }
 
         public async Task<List<TvShowDto>> GetRecommendedTvShowsAsync(int userId)
