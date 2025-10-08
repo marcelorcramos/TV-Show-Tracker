@@ -74,6 +74,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 // Application Services
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ITvShowService, TvShowService>();
+builder.Services.AddScoped<IActorService, ActorService>();
 
 // AutoMapper
 builder.Services.AddAutoMapper(typeof(Program));
