@@ -1,11 +1,11 @@
 {
   "version": 3,
   "targets": {
-    "net9.0": {}
+    "net8.0": {}
   },
   "libraries": {},
   "projectFileDependencyGroups": {
-    "net9.0": []
+    "net8.0": []
   },
   "packageFolders": {
     "/Users/marceloramos/.nuget/packages/": {}
@@ -13,24 +13,24 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Domain/TvShowTracker.Domain.csproj",
+      "projectUniqueName": "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Domain/TvShowTracker.Domain.csproj",
       "projectName": "TvShowTracker.Domain",
-      "projectPath": "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Domain/TvShowTracker.Domain.csproj",
+      "projectPath": "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Domain/TvShowTracker.Domain.csproj",
       "packagesPath": "/Users/marceloramos/.nuget/packages/",
-      "outputPath": "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Domain/obj/",
+      "outputPath": "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Domain/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/Users/marceloramos/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
-        "net9.0"
+        "net8.0"
       ],
       "sources": {
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
-        "net9.0": {
-          "targetAlias": "net9.0",
+        "net8.0": {
+          "targetAlias": "net8.0",
           "projectReferences": {}
         }
       },
@@ -47,8 +47,8 @@
       "SdkAnalysisLevel": "9.0.300"
     },
     "frameworks": {
-      "net9.0": {
-        "targetAlias": "net9.0",
+      "net8.0": {
+        "targetAlias": "net8.0",
         "imports": [
           "net461",
           "net462",

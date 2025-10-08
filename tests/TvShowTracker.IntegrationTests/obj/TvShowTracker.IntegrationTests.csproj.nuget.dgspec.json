@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/tests/TvShowTracker.IntegrationTests/TvShowTracker.IntegrationTests.csproj": {}
+    "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/tests/TvShowTracker.IntegrationTests/TvShowTracker.IntegrationTests.csproj": {}
   },
   "projects": {
-    "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/tests/TvShowTracker.IntegrationTests/TvShowTracker.IntegrationTests.csproj": {
+    "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/tests/TvShowTracker.IntegrationTests/TvShowTracker.IntegrationTests.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/tests/TvShowTracker.IntegrationTests/TvShowTracker.IntegrationTests.csproj",
+        "projectUniqueName": "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/tests/TvShowTracker.IntegrationTests/TvShowTracker.IntegrationTests.csproj",
         "projectName": "TvShowTracker.IntegrationTests",
-        "projectPath": "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/tests/TvShowTracker.IntegrationTests/TvShowTracker.IntegrationTests.csproj",
+        "projectPath": "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/tests/TvShowTracker.IntegrationTests/TvShowTracker.IntegrationTests.csproj",
         "packagesPath": "/Users/marceloramos/.nuget/packages/",
-        "outputPath": "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/tests/TvShowTracker.IntegrationTests/obj/",
+        "outputPath": "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/tests/TvShowTracker.IntegrationTests/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/marceloramos/.nuget/NuGet/NuGet.Config"

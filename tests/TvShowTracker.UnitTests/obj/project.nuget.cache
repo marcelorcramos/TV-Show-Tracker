@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "DTOjkz0gfbs=",
+  "dgSpecHash": "kwTSdeJjo5w=",
   "success": true,
-  "projectFilePath": "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/tests/TvShowTracker.UnitTests/TvShowTracker.UnitTests.csproj",
+  "projectFilePath": "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/tests/TvShowTracker.UnitTests/TvShowTracker.UnitTests.csproj",
   "expectedPackageFiles": [
     "/Users/marceloramos/.nuget/packages/coverlet.collector/6.0.2/coverlet.collector.6.0.2.nupkg.sha512",
     "/Users/marceloramos/.nuget/packages/microsoft.codecoverage/17.12.0/microsoft.codecoverage.17.12.0.nupkg.sha512",

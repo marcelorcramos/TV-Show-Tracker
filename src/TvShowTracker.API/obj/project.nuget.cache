@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "uZQhCRm/IxY=",
+  "dgSpecHash": "7IdWXn0W5yE=",
   "success": false,
-  "projectFilePath": "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.API/TvShowTracker.API.csproj",
+  "projectFilePath": "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.API/TvShowTracker.API.csproj",
   "expectedPackageFiles": [
     "/Users/marceloramos/.nuget/packages/automapper.extensions.microsoft.dependencyinjection/12.0.1/automapper.extensions.microsoft.dependencyinjection.12.0.1.nupkg.sha512",
     "/Users/marceloramos/.nuget/packages/azure.core/1.35.0/azure.core.1.35.0.nupkg.sha512",
@@ -92,20 +92,9 @@
       "code": "NU1107",
       "level": "Error",
       "message": "Version conflict detected for AutoMapper. Install/reference AutoMapper 13.0.1 directly to project TvShowTracker.API to resolve this issue. \n TvShowTracker.API -> TvShowTracker.Application -> AutoMapper (>= 13.0.1) \n TvShowTracker.API -> AutoMapper.Extensions.Microsoft.DependencyInjection 12.0.1 -> AutoMapper (= 12.0.1).",
-      "projectPath": "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.API/TvShowTracker.API.csproj",
-      "filePath": "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.API/TvShowTracker.API.csproj",
+      "projectPath": "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.API/TvShowTracker.API.csproj",
+      "filePath": "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.API/TvShowTracker.API.csproj",
       "libraryId": "AutoMapper",
-      "targetGraphs": [
-        "net8.0"
-      ]
-    },
-    {
-      "code": "NU1201",
-      "level": "Error",
-      "message": "Project TvShowTracker.Domain is not compatible with net8.0 (.NETCoreApp,Version=v8.0). Project TvShowTracker.Domain supports: net9.0 (.NETCoreApp,Version=v9.0)",
-      "projectPath": "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.API/TvShowTracker.API.csproj",
-      "filePath": "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.API/TvShowTracker.API.csproj",
-      "libraryId": "TvShowTracker.Domain",
       "targetGraphs": [
         "net8.0"
       ]

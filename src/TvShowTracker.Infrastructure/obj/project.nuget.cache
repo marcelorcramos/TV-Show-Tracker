@@ -1,7 +1,7 @@
 {
   "version": 2,
-  "dgSpecHash": "v/fKQsYKPsU=",
-  "success": false,
+  "dgSpecHash": "TlIyyDJqrp8=",
+  "success": true,
   "projectFilePath": "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Infrastructure/TvShowTracker.Infrastructure.csproj",
   "expectedPackageFiles": [
     "/Users/marceloramos/.nuget/packages/automapper/13.0.1/automapper.13.0.1.nupkg.sha512",
@@ -60,17 +60,5 @@
     "/Users/marceloramos/.nuget/packages/system.threading.tasks.extensions/4.5.4/system.threading.tasks.extensions.4.5.4.nupkg.sha512",
     "/Users/marceloramos/.nuget/packages/system.windows.extensions/6.0.0/system.windows.extensions.6.0.0.nupkg.sha512"
   ],
-  "logs": [
-    {
-      "code": "NU1201",
-      "level": "Error",
-      "message": "Project TvShowTracker.Domain is not compatible with net8.0 (.NETCoreApp,Version=v8.0). Project TvShowTracker.Domain supports: net9.0 (.NETCoreApp,Version=v9.0)",
-      "projectPath": "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Infrastructure/TvShowTracker.Infrastructure.csproj",
-      "filePath": "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Infrastructure/TvShowTracker.Infrastructure.csproj",
-      "libraryId": "TvShowTracker.Domain",
-      "targetGraphs": [
-        "net8.0"
-      ]
-    }
-  ]
+  "logs": []
 }
