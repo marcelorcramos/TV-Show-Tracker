@@ -150,3 +150,9 @@
 /Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.API/obj/Debug/net8.0/TvShowTracker.API.pdb
 /Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.API/obj/Debug/net8.0/TvShowTracker.API.genruntimeconfig.cache
 /Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.API/obj/Debug/net8.0/ref/TvShowTracker.API.dll
+/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.API/bin/Debug/net8.0/Microsoft.Extensions.Caching.StackExchangeRedis.dll
+/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.API/bin/Debug/net8.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll
+/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.API/bin/Debug/net8.0/Microsoft.Extensions.Logging.Abstractions.dll
+/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.API/bin/Debug/net8.0/Microsoft.Extensions.Options.dll
+/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.API/bin/Debug/net8.0/Pipelines.Sockets.Unofficial.dll
+/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.API/bin/Debug/net8.0/StackExchange.Redis.dll

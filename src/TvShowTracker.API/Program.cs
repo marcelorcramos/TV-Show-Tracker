@@ -6,13 +6,15 @@ using System.Text;
 using TvShowTracker.Application.Interfaces;
 using TvShowTracker.Infrastructure.Data;
 using TvShowTracker.Infrastructure.Services;
+using Microsoft.Extensions.Caching.StackExchangeRedis;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddScoped<IRecommendationService, RecommendationService>();
+
+
 
 // Swagger configuration
 builder.Services.AddSwaggerGen(c =>
@@ -49,6 +51,13 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+// Redis Cache
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = builder.Configuration.GetConnectionString("Redis") ?? "localhost:6379";
+    options.InstanceName = "TvShowTracker_";
+});
+
 // JWT Authentication
 var jwtSecret = builder.Configuration["Jwt:Secret"];
 if (string.IsNullOrEmpty(jwtSecret))
@@ -77,9 +86,15 @@ builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ITvShowService, TvShowService>();
 builder.Services.AddScoped<IActorService, ActorService>();
+builder.Services.AddScoped<IRecommendationService, RecommendationService>();
+builder.Services.AddScoped<ICacheService, RedisCacheService>();
+
+// Background Services
+builder.Services.AddHostedService<EmailBackgroundService>();
 
 // AutoMapper
 builder.Services.AddAutoMapper(typeof(Program));
+
 
 // CORS
 builder.Services.AddCors(options =>
