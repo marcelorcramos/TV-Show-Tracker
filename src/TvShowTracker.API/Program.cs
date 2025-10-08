@@ -88,6 +88,8 @@ builder.Services.AddScoped<ITvShowService, TvShowService>();
 builder.Services.AddScoped<IActorService, ActorService>();
 builder.Services.AddScoped<IRecommendationService, RecommendationService>();
 builder.Services.AddScoped<ICacheService, RedisCacheService>();
+builder.Services.AddScoped<IGdprService, GdprService>();
+builder.Services.AddScoped<IExportService, ExportService>();
 
 // Background Services
 builder.Services.AddHostedService<EmailBackgroundService>();

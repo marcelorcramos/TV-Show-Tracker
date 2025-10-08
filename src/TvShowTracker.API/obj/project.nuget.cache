@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "dx1jMzX4Z3Y=",
+  "dgSpecHash": "KI/sycXIsLU=",
   "success": true,
   "projectFilePath": "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.API/TvShowTracker.API.csproj",
   "expectedPackageFiles": [
@@ -9,6 +9,7 @@
     "/Users/marceloramos/.nuget/packages/azure.core/1.35.0/azure.core.1.35.0.nupkg.sha512",
     "/Users/marceloramos/.nuget/packages/azure.identity/1.10.3/azure.identity.1.10.3.nupkg.sha512",
     "/Users/marceloramos/.nuget/packages/bcrypt.net-next/4.0.3/bcrypt.net-next.4.0.3.nupkg.sha512",
+    "/Users/marceloramos/.nuget/packages/csvhelper/30.0.1/csvhelper.30.0.1.nupkg.sha512",
     "/Users/marceloramos/.nuget/packages/fluentvalidation/11.9.0/fluentvalidation.11.9.0.nupkg.sha512",
     "/Users/marceloramos/.nuget/packages/humanizer.core/2.14.1/humanizer.core.2.14.1.nupkg.sha512",
     "/Users/marceloramos/.nuget/packages/mediatr/12.2.0/mediatr.12.2.0.nupkg.sha512",
@@ -74,6 +75,7 @@
     "/Users/marceloramos/.nuget/packages/microsoft.win32.systemevents/6.0.0/microsoft.win32.systemevents.6.0.0.nupkg.sha512",
     "/Users/marceloramos/.nuget/packages/mono.texttemplating/2.2.1/mono.texttemplating.2.2.1.nupkg.sha512",
     "/Users/marceloramos/.nuget/packages/pipelines.sockets.unofficial/2.2.8/pipelines.sockets.unofficial.2.2.8.nupkg.sha512",
+    "/Users/marceloramos/.nuget/packages/questpdf/2024.3.7/questpdf.2024.3.7.nupkg.sha512",
     "/Users/marceloramos/.nuget/packages/stackexchange.redis/2.7.27/stackexchange.redis.2.7.27.nupkg.sha512",
     "/Users/marceloramos/.nuget/packages/swashbuckle.aspnetcore/6.5.0/swashbuckle.aspnetcore.6.5.0.nupkg.sha512",
     "/Users/marceloramos/.nuget/packages/swashbuckle.aspnetcore.swagger/6.5.0/swashbuckle.aspnetcore.swagger.6.5.0.nupkg.sha512",
