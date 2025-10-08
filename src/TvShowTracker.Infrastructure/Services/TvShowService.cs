@@ -120,15 +120,9 @@ namespace TvShowTracker.Infrastructure.Services
 
         public async Task<List<TvShowDto>> GetRecommendedTvShowsAsync(int userId)
         {
-            // TODO: Implement recommendation logic based on user favorites
-            // For now, return random popular shows
-            var randomShows = await _context.TvShows
-                .Where(t => t.Rating > 7.0m)
-                .OrderBy(t => Guid.NewGuid())
-                .Take(5)
-                .ToListAsync();
-
-            return _mapper.Map<List<TvShowDto>>(randomShows);
+            // Use the recommendation service instead of simple random
+            var recommendationService = new RecommendationService(_context, _mapper);
+            return await recommendationService.GetRecommendationsAsync(userId, 5);
         }
     }
 }
