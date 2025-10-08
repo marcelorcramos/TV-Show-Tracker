@@ -1,0 +1,6 @@
+@TvShowTracker.API_HostAddress = http://localhost:5023
+
+GET {{TvShowTracker.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
