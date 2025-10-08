@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Core/TvShowTracker.Core.csproj",
+      "projectUniqueName": "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Core/TvShowTracker.Core.csproj",
       "projectName": "TvShowTracker.Core",
-      "projectPath": "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Core/TvShowTracker.Core.csproj",
+      "projectPath": "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Core/TvShowTracker.Core.csproj",
       "packagesPath": "/Users/marceloramos/.nuget/packages/",
-      "outputPath": "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Core/obj/",
+      "outputPath": "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Core/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/Users/marceloramos/.nuget/NuGet/NuGet.Config"
