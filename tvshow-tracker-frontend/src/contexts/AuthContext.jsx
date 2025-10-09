@@ -1,4 +1,3 @@
-cat > src/contexts/AuthContext.jsx << 'EOF'
 import React, { createContext, useState, useContext, useEffect } from 'react';
 
 const AuthContext = createContext();
@@ -26,11 +25,23 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = async (email, password) => {
-    const mockUser = { id: 1, name: 'Test User', email: email };
-    localStorage.setItem('authToken', 'mock-token');
-    localStorage.setItem('userData', JSON.stringify(mockUser));
-    setUser(mockUser);
-    return { success: true };
+    try {
+      // Mock login - substituir por chamada real à API
+      const mockUser = { 
+        id: 1, 
+        name: 'Test User', 
+        email: email 
+      };
+      const mockToken = 'mock-token-' + Date.now();
+      
+      localStorage.setItem('authToken', mockToken);
+      localStorage.setItem('userData', JSON.stringify(mockUser));
+      setUser(mockUser);
+      
+      return { success: true, user: mockUser, token: mockToken };
+    } catch (error) {
+      return { success: false, error: error.message };
+    }
   };
 
   const register = async (name, email, password) => {
@@ -58,4 +69,3 @@ export const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
-EOF

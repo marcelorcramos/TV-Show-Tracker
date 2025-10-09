@@ -87,7 +87,7 @@ builder.Services.AddScoped<IExportService, ExportService>();
 builder.Services.AddHostedService<EmailBackgroundService>();
 
 // AutoMapper
-builder.Services.AddAutoMapper(typeof(Program));
+builder.Services.AddAutoMapper(typeof(TvShowTracker.Application.Mappings.MappingProfile));
 
 // CORS - ADD REACT PORT 5173
 builder.Services.AddCors(options =>
