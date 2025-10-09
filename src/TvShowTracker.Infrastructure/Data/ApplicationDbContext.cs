@@ -24,7 +24,7 @@ namespace TvShowTracker.Infrastructure.Data
             modelBuilder.Entity<User>(entity =>
             {
                 entity.HasIndex(u => u.Email).IsUnique();
-                entity.Property(u => u.CreatedAt).HasDefaultValueSql("GETUTCDATE()");
+                entity.Property(u => u.CreatedAt).HasDefaultValueSql("datetime('now')");
             });
 
             // TvShow configuration
@@ -33,14 +33,14 @@ namespace TvShowTracker.Infrastructure.Data
                 entity.HasIndex(t => t.Title);
                 entity.HasIndex(t => t.Genre);
                 entity.HasIndex(t => t.Type);
-                entity.Property(t => t.CreatedAt).HasDefaultValueSql("GETUTCDATE()");
+                entity.Property(t => t.CreatedAt).HasDefaultValueSql("datetime('now')");
             });
 
             // Actor configuration
             modelBuilder.Entity<Actor>(entity =>
             {
                 entity.HasIndex(a => a.Name);
-                entity.Property(a => a.CreatedAt).HasDefaultValueSql("GETUTCDATE()");
+                entity.Property(a => a.CreatedAt).HasDefaultValueSql("datetime('now')");
             });
 
             // Episode configuration
@@ -48,7 +48,7 @@ namespace TvShowTracker.Infrastructure.Data
             {
                 entity.HasIndex(e => e.TvShowId);
                 entity.HasIndex(e => new { e.TvShowId, e.SeasonNumber, e.EpisodeNumber });
-                entity.Property(e => e.CreatedAt).HasDefaultValueSql("GETUTCDATE()");
+                entity.Property(e => e.CreatedAt).HasDefaultValueSql("datetime('now')");
                 
                 entity.HasOne(e => e.TvShow)
                       .WithMany(t => t.Episodes)

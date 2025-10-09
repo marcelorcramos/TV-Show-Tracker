@@ -45,7 +45,7 @@ builder.Services.AddSwaggerGen(c =>
 
 // Database Configuration
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 
 
@@ -96,6 +96,7 @@ builder.Services.AddCors(options =>
     {
         policy.WithOrigins("http://localhost:3000",
                         "http://localhost:5173",
+                         "http://localhost:5174",
                         "http://localhost:5023",
                         "https://localhost:7023")
               .AllowAnyHeader()
