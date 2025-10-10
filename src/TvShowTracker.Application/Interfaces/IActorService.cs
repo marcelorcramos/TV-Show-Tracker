@@ -6,6 +6,7 @@ namespace TvShowTracker.Application.Interfaces
     {
         Task<PagedResult<ActorDto>> GetActorsAsync(ActorQuery query);
         Task<ActorDetailDto?> GetActorByIdAsync(int id);
+        Task<IEnumerable<TvShowDto>> GetActorTvShowsAsync(int actorId);
     }
 
     public class ActorQuery

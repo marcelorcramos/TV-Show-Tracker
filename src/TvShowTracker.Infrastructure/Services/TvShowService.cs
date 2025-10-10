@@ -88,50 +88,6 @@ namespace TvShowTracker.Infrastructure.Services
                 _context.TvShows.AddRange(tvShows);
                 await _context.SaveChangesAsync();
             }
-
-            // Verificar se já existem Atores
-           // Verificar se já existem Atores
-if (!await _context.Actors.AnyAsync())
-{
-    var actors = new List<Actor>
-    {
-        new Actor
-        {
-            Name = "Bryan Cranston",
-            Bio = "American actor known for Breaking Bad",
-            Nationality = "American",
-            BirthDate = new DateTime(1956, 3, 7),
-            CreatedAt = DateTime.UtcNow
-        },
-        new Actor
-        {
-            Name = "Millie Bobby Brown", 
-            Bio = "British actress known for Stranger Things",
-            Nationality = "British",
-            BirthDate = new DateTime(2004, 2, 19),
-            CreatedAt = DateTime.UtcNow
-        },
-        new Actor
-        {
-            Name = "Pedro Pascal",
-            Bio = "Chilean-American actor known for The Mandalorian",
-            Nationality = "Chilean-American",
-            BirthDate = new DateTime(1975, 4, 2),
-            CreatedAt = DateTime.UtcNow
-        },
-        new Actor
-        {
-            Name = "Emilia Clarke",
-            Bio = "English actress known for Game of Thrones",
-            Nationality = "British",
-            BirthDate = new DateTime(1986, 10, 23),
-            CreatedAt = DateTime.UtcNow
-        }
-    };
-
-    _context.Actors.AddRange(actors);
-    await _context.SaveChangesAsync();
-}
         }
         
 

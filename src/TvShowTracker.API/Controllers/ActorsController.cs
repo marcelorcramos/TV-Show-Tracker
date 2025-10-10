@@ -1,45 +1,71 @@
 using Microsoft.AspNetCore.Mvc;
-using TvShowTracker.Application.DTOs;
 using TvShowTracker.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TvShowTracker.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class AuthController : ControllerBase
+    public class ActorsController : ControllerBase
     {
-        private readonly IUserService _userService;
+        private readonly IActorService _actorService;
 
-        public AuthController(IUserService userService)
+        public ActorsController(IActorService actorService)
         {
-            _userService = userService;
+            _actorService = actorService;
         }
 
-        [HttpPost("register")]
-        public async Task<ActionResult<UserDto>> Register(CreateUserDto createUserDto)
+        [HttpGet]
+        public async Task<IActionResult> GetActors([FromQuery] string? search = null, [FromQuery] string? sortBy = "Name")
         {
             try
             {
-                var user = await _userService.RegisterAsync(createUserDto);
-                return Ok(user);
+                // Corrige o primeiro erro - usar ActorQuery em vez de parâmetros separados
+                var query = new ActorQuery 
+                { 
+                    Search = search, 
+                    SortBy = sortBy 
+                };
+                
+                var actors = await _actorService.GetActorsAsync(query);
+                return Ok(actors);
             }
-            catch (ArgumentException ex)
+            catch (Exception ex)
             {
-                return BadRequest(new { message = ex.Message });
+                return StatusCode(500, new { message = "Error retrieving actors", error = ex.Message });
             }
         }
 
-        [HttpPost("login")]
-        public async Task<ActionResult<AuthResponseDto>> Login(LoginDto loginDto)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetActor(int id)
         {
             try
             {
-                var authResponse = await _userService.LoginAsync(loginDto);
-                return Ok(authResponse);
+                var actor = await _actorService.GetActorByIdAsync(id);
+                if (actor == null)
+                {
+                    return NotFound(new { message = "Actor not found" });
+                }
+                return Ok(actor);
             }
-            catch (UnauthorizedAccessException ex)
+            catch (Exception ex)
             {
-                return Unauthorized(new { message = ex.Message });
+                return StatusCode(500, new { message = "Error retrieving actor", error = ex.Message });
+            }
+        }
+
+        [HttpGet("{id}/tvshows")]
+        public async Task<IActionResult> GetActorTvShows(int id)
+        {
+            try
+            {
+                // Corrige o segundo erro - usar o novo método
+                var tvShows = await _actorService.GetActorTvShowsAsync(id);
+                return Ok(tvShows);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Error retrieving actor TV shows", error = ex.Message });
             }
         }
     }
