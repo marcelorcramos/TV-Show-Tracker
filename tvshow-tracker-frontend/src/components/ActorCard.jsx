@@ -1,7 +1,12 @@
-// src/components/ActorCard.jsx
-import React from 'react';
 
-export const ActorCard = ({ actor }) => {
+import React, { useState } from 'react';
+import { useAuth } from '../contexts/AuthContext';
+
+const ActorCard = ({ actor, onFavoriteUpdate }) => {
+  const { isAuthenticated } = useAuth();
+  const [isFavorite, setIsFavorite] = useState(actor.isFavorite || false);
+  const [loading, setLoading] = useState(false);
+
   const calculateAge = (birthDate) => {
     const today = new Date();
     const birth = new Date(birthDate);
@@ -15,71 +20,195 @@ export const ActorCard = ({ actor }) => {
     return age;
   };
 
-  const formatBirthDate = (birthDate) => {
-    return new Date(birthDate).toLocaleDateString('pt-BR');
+  const handleFavoriteClick = async () => {
+    if (!isAuthenticated) {
+      alert('Please login to add favorites');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      // TODO: Implementar API de favoritos para atores
+      // if (isFavorite) {
+      //   await favoritesAPI.remove(actor.id);
+      //   setIsFavorite(false);
+      // } else {
+      //   await favoritesAPI.add(actor.id);
+      //   setIsFavorite(true);
+      // }
+      
+      // Simulação temporária
+      setIsFavorite(!isFavorite);
+      
+      if (onFavoriteUpdate) {
+        onFavoriteUpdate();
+      }
+    } catch (error) {
+      console.error('Failed to update favorite:', error);
+      alert('Failed to update favorite');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition-shadow duration-300">
-      {/* Header com imagem/avatar */}
-      <div className="bg-gradient-to-br from-blue-50 to-purple-50 p-6 flex justify-center items-center">
+    <div style={{ 
+      backgroundColor: 'white', 
+      borderRadius: '12px', 
+      padding: '20px',
+      boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+      border: '1px solid #e5e7eb',
+      transition: 'transform 0.2s, box-shadow 0.2s',
+      cursor: 'pointer',
+      position: 'relative'
+    }}
+    onMouseEnter={(e) => {
+      e.currentTarget.style.transform = 'translateY(-4px)';
+      e.currentTarget.style.boxShadow = '0 8px 25px rgba(0,0,0,0.15)';
+    }}
+    onMouseLeave={(e) => {
+      e.currentTarget.style.transform = 'translateY(0)';
+      e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
+    }}
+    >
+      {/* Favorite Button */}
+      {isAuthenticated && (
+        <button
+          onClick={handleFavoriteClick}
+          disabled={loading}
+          style={{
+            position: 'absolute',
+            top: '15px',
+            right: '15px',
+            background: 'none',
+            border: 'none',
+            fontSize: '24px',
+            cursor: 'pointer',
+            color: isFavorite ? '#ef4444' : '#d1d5db',
+            transition: 'color 0.2s'
+          }}
+          title={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
+        >
+          {isFavorite ? '❤️' : '🤍'}
+        </button>
+      )}
+
+      {/* Actor Image */}
+      <div style={{ 
+        width: '100%', 
+        height: '200px', 
+        backgroundColor: '#f3f4f6', 
+        borderRadius: '8px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginBottom: '15px',
+        color: '#6b7280',
+        overflow: 'hidden'
+      }}>
         {actor.imageUrl ? (
           <img 
             src={actor.imageUrl} 
             alt={actor.name}
-            className="w-24 h-24 rounded-full object-cover border-4 border-white shadow-md"
+            style={{ 
+              width: '100%', 
+              height: '100%', 
+              objectFit: 'cover' 
+            }}
           />
         ) : (
-          <div className="w-24 h-24 bg-gradient-to-br from-blue-100 to-purple-100 rounded-full flex items-center justify-center border-4 border-white shadow-md">
-            <span className="text-blue-600 text-2xl font-bold">
-              {actor.name.charAt(0)}
-            </span>
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}>
+            <span style={{ fontSize: '48px', marginBottom: '8px' }}>🎭</span>
+            <span>No Image</span>
           </div>
         )}
       </div>
 
-      {/* Informações do ator */}
-      <div className="p-4">
-        <h3 className="text-lg font-semibold text-gray-900 mb-2 truncate">
-          {actor.name}
-        </h3>
-        
-        <div className="space-y-2 mb-3">
-          <div className="flex items-center text-sm text-gray-600">
-            <span className="font-medium mr-2">🏴 Nacionalidade:</span>
-            <span>{actor.nationality || 'Não informada'}</span>
-          </div>
-          
-          <div className="flex items-center text-sm text-gray-600">
-            <span className="font-medium mr-2">🎂 Idade:</span>
-            <span>{calculateAge(actor.birthDate)} anos</span>
-          </div>
-          
-          <div className="flex items-center text-sm text-gray-600">
-            <span className="font-medium mr-2">📅 Nascimento:</span>
-            <span>{formatBirthDate(actor.birthDate)}</span>
-          </div>
-        </div>
-
-        {/* Bio */}
-        {actor.bio && (
-          <div className="mt-3 pt-3 border-t border-gray-100">
-            <p className="text-sm text-gray-600 line-clamp-3">
-              {actor.bio}
-            </p>
-          </div>
+      {/* Actor Info */}
+      <h3 style={{ 
+        fontSize: '18px', 
+        fontWeight: '600', 
+        marginBottom: '8px',
+        color: '#1f2937'
+      }}>
+        {actor.name}
+      </h3>
+      
+      <div style={{ marginBottom: '10px' }}>
+        {actor.nationality && (
+          <span style={{ 
+            backgroundColor: '#dbeafe',
+            color: '#1e40af',
+            padding: '4px 8px',
+            borderRadius: '4px',
+            fontSize: '12px',
+            fontWeight: '500',
+            marginRight: '8px'
+          }}>
+            {actor.nationality}
+          </span>
         )}
-
-        {/* Botão de ação */}
-        <div className="mt-4 flex space-x-2">
-          <button className="flex-1 bg-blue-600 text-white py-2 px-3 rounded text-sm font-medium hover:bg-blue-700 transition-colors">
-            Ver Perfil
-          </button>
-          <button className="bg-gray-100 text-gray-700 py-2 px-3 rounded text-sm font-medium hover:bg-gray-200 transition-colors">
-            ☆
-          </button>
-        </div>
+        {actor.birthDate && (
+          <span style={{ 
+            backgroundColor: '#f3f4f6',
+            color: '#6b7280',
+            padding: '4px 8px',
+            borderRadius: '4px',
+            fontSize: '12px',
+            fontWeight: '500'
+          }}>
+            {calculateAge(actor.birthDate)} anos
+          </span>
+        )}
       </div>
+
+      {actor.birthDate && (
+        <p style={{ color: '#6b7280', marginBottom: '5px', fontSize: '14px' }}>
+          🎂 {new Date(actor.birthDate).toLocaleDateString('pt-BR')}
+        </p>
+      )}
+
+      {actor.bio && (
+        <p style={{ 
+          color: '#6b7280', 
+          marginBottom: '15px', 
+          fontSize: '14px',
+          display: '-webkit-box',
+          WebkitLineClamp: 2,
+          WebkitBoxOrient: 'vertical',
+          overflow: 'hidden'
+        }}>
+          {actor.bio}
+        </p>
+      )}
+
+      <button style={{ 
+        width: '100%',
+        backgroundColor: '#2563eb',
+        color: 'white',
+        border: 'none',
+        padding: '10px',
+        borderRadius: '6px',
+        cursor: 'pointer',
+        fontWeight: '500',
+        transition: 'background-color 0.2s'
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.backgroundColor = '#1d4ed8';
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.backgroundColor = '#2563eb';
+      }}
+      >
+        Ver Perfil
+      </button>
     </div>
   );
 };
+
+export default ActorCard;
