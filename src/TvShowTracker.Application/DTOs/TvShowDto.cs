@@ -10,6 +10,7 @@ namespace TvShowTracker.Application.DTOs
         public DateTime? ReleaseDate { get; set; }
         public DateTime? EndDate { get; set; }
         public int? Seasons { get; set; }
+        public int? Duration { get; set; }
         public decimal? Rating { get; set; }
         public string? ImageUrl { get; set; }
         public bool IsFavorite { get; set; }

@@ -1,3 +1,4 @@
+// src/components/TvShowCard.jsx
 import React, { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { favoritesAPI } from '../services/api';
@@ -33,6 +34,26 @@ const TvShowCard = ({ tvShow, onFavoriteUpdate }) => {
       setLoading(false);
     }
   };
+
+  // Função para formatar a duração (minutos para horas e minutos)
+  const formatDuration = (minutes) => {
+    if (!minutes) return null;
+    const hours = Math.floor(minutes / 60);
+    const mins = minutes % 60;
+    return `${hours}h ${mins}m`;
+  };
+
+  // Função para mostrar seasons ou duração
+  const getRuntimeInfo = () => {
+    if (tvShow.type === 'Movie' && tvShow.duration) {
+      return `🎬 ${formatDuration(tvShow.duration)}`;
+    } else if (tvShow.type === 'Series' && tvShow.seasons) {
+      return `📺 ${tvShow.seasons} season${tvShow.seasons !== 1 ? 's' : ''}`;
+    }
+    return null;
+  };
+
+  const runtimeInfo = getRuntimeInfo();
 
   return (
     <div style={{ 
@@ -100,7 +121,7 @@ const TvShowCard = ({ tvShow, onFavoriteUpdate }) => {
             }}
           />
         ) : (
-          '📺 No Image'
+          tvShow.type === 'Movie' ? '🎬' : '📺'
         )}
       </div>
 
@@ -148,9 +169,10 @@ const TvShowCard = ({ tvShow, onFavoriteUpdate }) => {
         </p>
       )}
 
-      {tvShow.seasons && (
+      {/* Runtime Info - Seasons para séries, Duração para filmes */}
+      {runtimeInfo && (
         <p style={{ color: '#6b7280', marginBottom: '15px', fontSize: '14px' }}>
-          📺 {tvShow.seasons} season{tvShow.seasons !== 1 ? 's' : ''}
+          {runtimeInfo}
         </p>
       )}
 

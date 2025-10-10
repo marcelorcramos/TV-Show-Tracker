@@ -18,14 +18,13 @@ namespace TvShowTracker.Infrastructure.Services
             _context = context;
             _mapper = mapper;
             _cacheService = cacheService;
-            _ = SeedSampleDataAsync(); // Use _ = para evitar warning de async sem await
+            _ = SeedSampleDataAsync();
         }
 
         private async Task SeedSampleDataAsync()
         {
             try
             {
-                // Verifica se já existem dados para evitar duplicação em produção
                 if (await _context.TvShows.AnyAsync())
                 {
                     Console.WriteLine("✅ Banco de dados já populado. Pulando seed.");
@@ -91,7 +90,7 @@ namespace TvShowTracker.Infrastructure.Services
                         CreatedAt = DateTime.UtcNow
                     },
                     
-                    // FILMES
+                    // FILMES (sem Duration por enquanto)
                     new TvShow
                     {
                         Title = "The Shawshank Redemption",
@@ -101,6 +100,7 @@ namespace TvShowTracker.Infrastructure.Services
                         ReleaseDate = new DateTime(1994, 9, 23),
                         Rating = 9.3m,
                         Seasons = null,
+                        Duration = 142,
                         CreatedAt = DateTime.UtcNow
                     },
                     new TvShow
@@ -112,6 +112,7 @@ namespace TvShowTracker.Infrastructure.Services
                         ReleaseDate = new DateTime(1972, 3, 24),
                         Rating = 9.2m,
                         Seasons = null,
+                        Duration = 175,
                         CreatedAt = DateTime.UtcNow
                     },
                     new TvShow
@@ -123,6 +124,7 @@ namespace TvShowTracker.Infrastructure.Services
                         ReleaseDate = new DateTime(2008, 7, 18),
                         Rating = 9.0m,
                         Seasons = null,
+                        Duration = 152,
                         CreatedAt = DateTime.UtcNow
                     },
                     new TvShow
@@ -134,6 +136,7 @@ namespace TvShowTracker.Infrastructure.Services
                         ReleaseDate = new DateTime(1994, 10, 14),
                         Rating = 8.9m,
                         Seasons = null,
+                        Duration = 154,
                         CreatedAt = DateTime.UtcNow
                     },
                     new TvShow
@@ -145,6 +148,7 @@ namespace TvShowTracker.Infrastructure.Services
                         ReleaseDate = new DateTime(1994, 7, 6),
                         Rating = 8.8m,
                         Seasons = null,
+                        Duration = 142,
                         CreatedAt = DateTime.UtcNow
                     },
                     new TvShow
@@ -156,6 +160,7 @@ namespace TvShowTracker.Infrastructure.Services
                         ReleaseDate = new DateTime(2010, 7, 16),
                         Rating = 8.8m,
                         Seasons = null,
+                        Duration = 148,
                         CreatedAt = DateTime.UtcNow
                     },
                     new TvShow
@@ -167,6 +172,7 @@ namespace TvShowTracker.Infrastructure.Services
                         ReleaseDate = new DateTime(1999, 3, 31),
                         Rating = 8.7m,
                         Seasons = null,
+                        Duration = 136,
                         CreatedAt = DateTime.UtcNow
                     }
                 };
@@ -206,7 +212,7 @@ namespace TvShowTracker.Infrastructure.Services
                         (t.Description != null && t.Description.Contains(query.Search)));
                 }
 
-                // Apply sorting
+                // Apply sorting (sem Duration por enquanto)
                 tvShowsQuery = query.SortBy?.ToLower() switch
                 {
                     "title" => query.SortDescending
@@ -302,7 +308,6 @@ namespace TvShowTracker.Infrastructure.Services
             catch (Exception ex)
             {
                 Console.WriteLine($"❌ Erro em GetAvailableGenresAsync: {ex.Message}");
-                // Retorna lista vazia em caso de erro
                 return new List<string>();
             }
         }
