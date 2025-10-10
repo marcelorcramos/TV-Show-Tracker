@@ -129,36 +129,6 @@ const TvShows = () => {
           >
             🎬 Movies ({pagination.totalCount > 0 ? Math.ceil(pagination.totalCount * 0.53) : '0'})
           </button>
-          <button
-            onClick={() => setFilters({ genre: '', type: '', search: '', sortBy: 'Rating' })}
-            style={{
-              backgroundColor: '#059669',
-              color: 'white',
-              border: 'none',
-              padding: '8px 16px',
-              borderRadius: '20px',
-              cursor: 'pointer',
-              fontSize: '0.9rem',
-              fontWeight: '500'
-            }}
-          >
-            ⭐ Top Rated
-          </button>
-          <button
-            onClick={() => setFilters({ genre: '', type: '', search: '', sortBy: 'ReleaseDate' })}
-            style={{
-              backgroundColor: '#7c3aed',
-              color: 'white',
-              border: 'none',
-              padding: '8px 16px',
-              borderRadius: '20px',
-              cursor: 'pointer',
-              fontSize: '0.9rem',
-              fontWeight: '500'
-            }}
-          >
-            🆕 New Releases
-          </button>
         </div>
       </div>
       
