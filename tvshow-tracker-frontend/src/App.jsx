@@ -1,7 +1,8 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import Layout from './components/Layout';
 import TvShows from './pages/TvShows';
+import { Actors } from './pages/actors/Actors';
 import { AuthProvider } from './contexts/AuthContext';
 
 // Páginas
@@ -44,60 +45,6 @@ const Home = () => (
   </div>
 );
 
-
-const Actors = () => (
-  <div>
-    <h1 style={{ color: '#1e40af', marginBottom: '20px' }}>🎭 Atores</h1>
-    <div style={{ 
-      display: 'grid', 
-      gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', 
-      gap: '20px',
-      marginTop: '30px'
-    }}>
-      {/* Mock Actors */}
-      {[1, 2, 3, 4, 5, 6].map((item) => (
-        <div key={item} style={{ 
-          backgroundColor: 'white', 
-          borderRadius: '12px', 
-          padding: '20px',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-          border: '1px solid #e5e7eb',
-          textAlign: 'center'
-        }}>
-          <div style={{ 
-            width: '120px', 
-            height: '120px', 
-            backgroundColor: '#f3f4f6', 
-            borderRadius: '50%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            margin: '0 auto 15px',
-            color: '#6b7280'
-          }}>
-            Actor Photo
-          </div>
-          <h3 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '8px' }}>
-            Actor {item}
-          </h3>
-          <p style={{ color: '#6b7280', marginBottom: '15px' }}>🏴󠁧󠁢󠁥󠁮󠁧󠁿 American</p>
-          <button style={{ 
-            backgroundColor: '#2563eb',
-            color: 'white',
-            border: 'none',
-            padding: '8px 16px',
-            borderRadius: '6px',
-            cursor: 'pointer',
-            fontWeight: '500'
-          }}>
-            Ver Perfil
-          </button>
-        </div>
-      ))}
-    </div>
-  </div>
-);
-
 const Login = () => (
   <div style={{ maxWidth: '400px', margin: '40px auto' }}>
     <h1 style={{ color: '#1e40af', marginBottom: '30px', textAlign: 'center' }}>🔐 Login</h1>
@@ -110,8 +57,8 @@ const Login = () => (
       <p style={{ textAlign: 'center', color: '#6b7280', marginBottom: '20px' }}>
         Página de login em desenvolvimento...
       </p>
-      <a 
-        href="/" 
+      <Link 
+        to="/" 
         style={{ 
           display: 'block',
           textAlign: 'center',
@@ -121,14 +68,9 @@ const Login = () => (
         }}
       >
         ← Voltar para Home
-      </a>
+      </Link>
     </div>
   </div>
-);
-
-// Componente Link necessário
-const Link = ({ to, children, ...props }) => (
-  <a href={to} {...props}>{children}</a>
 );
 
 function App() {
@@ -148,4 +90,4 @@ function App() {
   );
 }
 
-export default App;
+export default App; 
