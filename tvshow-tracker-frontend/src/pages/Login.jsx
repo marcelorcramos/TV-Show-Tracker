@@ -161,6 +161,12 @@ const Login = () => {
       marginTop: '1.5rem',
       transition: 'color 0.2s ease'
     },
+    registerLink: {
+      textAlign: 'center',
+      marginTop: '1rem',
+      fontSize: '0.8rem',
+      color: '#64748b'
+    },
     demoBox: {
       background: '#f8fafc',
       borderRadius: '8px',
@@ -272,6 +278,19 @@ const Login = () => {
             >
               {loading ? 'Signing In...' : 'Sign In'}
             </button>
+
+            {/* Link para Registro - NOVO */}
+            <div style={styles.registerLink}>
+              Ainda não tem conta criada?{' '}
+              <Link 
+                to="/register" 
+                style={{color: '#059669', fontWeight: '500', textDecoration: 'none'}}
+                onMouseOver={(e) => e.target.style.color = '#047857'}
+                onMouseOut={(e) => e.target.style.color = '#059669'}
+              >
+                Criar conta
+              </Link>
+            </div>
 
             {/* Back Link */}
             <Link 

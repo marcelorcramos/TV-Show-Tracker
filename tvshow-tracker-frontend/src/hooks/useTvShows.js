@@ -7,7 +7,7 @@ export const useTvShows = (filters = {}) => {
   const [error, setError] = useState(null);
   const [pagination, setPagination] = useState({
     page: 1,
-    pageSize: 12,
+    pageSize: 9, // MUDADO DE 12 PARA 9
     totalCount: 0,
     totalPages: 0
   });
@@ -19,7 +19,7 @@ export const useTvShows = (filters = {}) => {
       
       const params = {
         page,
-        pageSize: pagination.pageSize,
+        pageSize: pagination.pageSize, // AGORA USA 9
         ...filters
       };
 
@@ -60,6 +60,7 @@ export const useTvShows = (filters = {}) => {
   };
 };
 
+// Os outros hooks (useTvShowGenres e useTvShowTypes) permanecem iguais
 export const useTvShowGenres = () => {
   const [genres, setGenres] = useState([]);
   const [loading, setLoading] = useState(true);
