@@ -12,25 +12,59 @@ namespace TvShowTracker.Infrastructure.Services
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
         private readonly ICacheService _cacheService;
+        private static bool _hasSeeded = false;
+        private static readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
 
         public TvShowService(ApplicationDbContext context, IMapper mapper, ICacheService cacheService)
         {
             _context = context;
             _mapper = mapper;
             _cacheService = cacheService;
-            _ = SeedSampleDataAsync();
+            
+            // Iniciar o seed de forma assíncrona e segura
+            _ = InitializeDatabaseAsync();
+        }
+
+        private async Task InitializeDatabaseAsync()
+        {
+            await _semaphore.WaitAsync();
+            try
+            {
+                if (_hasSeeded) return;
+
+                // PASSO 1: Garantir que o banco e tabelas existem
+                Console.WriteLine("🔧 Verificando/Criando banco de dados...");
+                await _context.Database.EnsureCreatedAsync();
+                
+                // PASSO 2: Verificar se já temos dados
+                var hasData = await _context.TvShows.AnyAsync();
+                if (hasData)
+                {
+                    Console.WriteLine("✅ Banco de dados já populado.");
+                    _hasSeeded = true;
+                    return;
+                }
+
+                // PASSO 3: Popular com dados iniciais
+                Console.WriteLine("📥 Populando banco de dados com dados iniciais...");
+                await SeedSampleDataAsync();
+                
+                _hasSeeded = true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ Erro na inicialização do banco: {ex.Message}");
+            }
+            finally
+            {
+                _semaphore.Release();
+            }
         }
 
         private async Task SeedSampleDataAsync()
         {
             try
             {
-                if (await _context.TvShows.AnyAsync())
-                {
-                    Console.WriteLine("✅ Banco de dados já populado. Pulando seed.");
-                    return;
-                }
-
                 var tvShows = new List<TvShow>
                 {
                     // SERIES
@@ -90,7 +124,7 @@ namespace TvShowTracker.Infrastructure.Services
                         CreatedAt = DateTime.UtcNow
                     },
                     
-                    // FILMES (sem Duration por enquanto)
+                    // FILMES
                     new TvShow
                     {
                         Title = "The Shawshank Redemption",
@@ -194,7 +228,7 @@ namespace TvShowTracker.Infrastructure.Services
             {
                 var tvShowsQuery = _context.TvShows.AsQueryable();
 
-                // Apply filters
+                // Apply filters - FILTRAGENS RESTAURADAS
                 if (!string.IsNullOrEmpty(query.Genre))
                 {
                     tvShowsQuery = tvShowsQuery.Where(t => t.Genre == query.Genre);
@@ -212,7 +246,7 @@ namespace TvShowTracker.Infrastructure.Services
                         (t.Description != null && t.Description.Contains(query.Search)));
                 }
 
-                // Apply sorting (sem Duration por enquanto)
+                // Apply sorting
                 tvShowsQuery = query.SortBy?.ToLower() switch
                 {
                     "title" => query.SortDescending
@@ -252,34 +286,6 @@ namespace TvShowTracker.Infrastructure.Services
             catch (Exception ex)
             {
                 Console.WriteLine($"❌ Erro em GetTvShowsAsync: {ex.Message}");
-                throw;
-            }
-        }
-
-        public async Task<TvShowDetailDto?> GetTvShowByIdAsync(int id)
-        {
-            try
-            {
-                var tvShow = await _context.TvShows
-                    .Include(t => t.Episodes.OrderBy(e => e.SeasonNumber).ThenBy(e => e.EpisodeNumber))
-                    .Include(t => t.TvShowActors)
-                        .ThenInclude(ta => ta.Actor)
-                    .FirstOrDefaultAsync(t => t.Id == id);
-
-                if (tvShow == null) return null;
-
-                var tvShowDetail = _mapper.Map<TvShowDetailDto>(tvShow);
-                
-                tvShowDetail.FeaturedActors = tvShow.TvShowActors
-                    .Where(ta => ta.IsFeatured)
-                    .Select(ta => _mapper.Map<ActorDto>(ta.Actor))
-                    .ToList();
-
-                return tvShowDetail;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"❌ Erro em GetTvShowByIdAsync: {ex.Message}");
                 throw;
             }
         }
@@ -337,6 +343,35 @@ namespace TvShowTracker.Infrastructure.Services
             {
                 Console.WriteLine($"❌ Erro em GetAvailableTypesAsync: {ex.Message}");
                 return new List<string>();
+            }
+        }
+
+        // RESTANTE DOS MÉTODOS PERMANECEM IGUAIS
+        public async Task<TvShowDetailDto?> GetTvShowByIdAsync(int id)
+        {
+            try
+            {
+                var tvShow = await _context.TvShows
+                    .Include(t => t.Episodes.OrderBy(e => e.SeasonNumber).ThenBy(e => e.EpisodeNumber))
+                    .Include(t => t.TvShowActors)
+                        .ThenInclude(ta => ta.Actor)
+                    .FirstOrDefaultAsync(t => t.Id == id);
+
+                if (tvShow == null) return null;
+
+                var tvShowDetail = _mapper.Map<TvShowDetailDto>(tvShow);
+                
+                tvShowDetail.FeaturedActors = tvShow.TvShowActors
+                    .Where(ta => ta.IsFeatured)
+                    .Select(ta => _mapper.Map<ActorDto>(ta.Actor))
+                    .ToList();
+
+                return tvShowDetail;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ Erro em GetTvShowByIdAsync: {ex.Message}");
+                throw;
             }
         }
 
