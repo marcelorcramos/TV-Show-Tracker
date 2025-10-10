@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import Layout from './components/Layout';
 import TvShows from './pages/TvShows';
 import { Actors } from './pages/actors/Actors';
+import Login from './pages/Login'; // ← Importa o novo Login
 import { AuthProvider } from './contexts/AuthContext';
 
 // Páginas
@@ -45,34 +46,6 @@ const Home = () => (
   </div>
 );
 
-const Login = () => (
-  <div style={{ maxWidth: '400px', margin: '40px auto' }}>
-    <h1 style={{ color: '#1e40af', marginBottom: '30px', textAlign: 'center' }}>🔐 Login</h1>
-    <div style={{ 
-      backgroundColor: 'white', 
-      padding: '30px', 
-      borderRadius: '12px',
-      boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
-    }}>
-      <p style={{ textAlign: 'center', color: '#6b7280', marginBottom: '20px' }}>
-        Página de login em desenvolvimento...
-      </p>
-      <Link 
-        to="/" 
-        style={{ 
-          display: 'block',
-          textAlign: 'center',
-          color: '#2563eb',
-          textDecoration: 'none',
-          fontWeight: '500'
-        }}
-      >
-        ← Voltar para Home
-      </Link>
-    </div>
-  </div>
-);
-
 function App() {
   return (
     <AuthProvider>
@@ -82,7 +55,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/tvshows" element={<TvShows />} />
             <Route path="/actors" element={<Actors />} />
-            <Route path="/login" element={<Login />} />
+            <Route path="/login" element={<Login />} /> {/* ← Usa o novo Login */}
           </Routes>
         </Layout>
       </Router>
@@ -90,4 +63,4 @@ function App() {
   );
 }
 
-export default App; 
+export default App;
