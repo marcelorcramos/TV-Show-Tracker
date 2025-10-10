@@ -3,7 +3,8 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import Layout from './components/Layout';
 import TvShows from './pages/TvShows';
 import { Actors } from './pages/actors/Actors';
-import Login from './pages/Login'; // ← Importa o novo Login
+import Login from './pages/Login';
+import Registration from './pages/Registration';
 import { AuthProvider } from './contexts/AuthContext';
 
 // Páginas
@@ -55,7 +56,8 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/tvshows" element={<TvShows />} />
             <Route path="/actors" element={<Actors />} />
-            <Route path="/login" element={<Login />} /> {/* ← Usa o novo Login */}
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Registration />} /> {/* ← Adicione esta linha */}
           </Routes>
         </Layout>
       </Router>

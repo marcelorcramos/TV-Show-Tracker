@@ -1,84 +1,90 @@
-cat > src/components/common/Navbar.jsx << 'EOF'
 import React from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
+import { Link } from 'react-router-dom';
 
 const Navbar = () => {
-  const { user, logout, isAuthenticated } = useAuth();
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  const handleLogout = () => {
-    logout();
-    navigate('/');
+  // Versão simplificada sem AuthContext
+  const styles = {
+    nav: {
+      backgroundColor: '#2563eb',
+      color: 'white',
+      boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+      height: '64px',
+      display: 'flex',
+      alignItems: 'center',
+      padding: '0 1rem'
+    },
+    container: {
+      maxWidth: '1200px',
+      margin: '0 auto',
+      width: '100%',
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center'
+    },
+    logo: {
+      fontSize: '1.25rem',
+      fontWeight: 'bold',
+      display: 'flex',
+      alignItems: 'center',
+      textDecoration: 'none',
+      color: 'white'
+    },
+    navLinks: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: '1rem'
+    },
+    navLink: {
+      color: 'white',
+      textDecoration: 'none',
+      fontSize: '0.875rem',
+      padding: '0.5rem'
+    },
+    button: {
+      backgroundColor: '#1d4ed8',
+      color: 'white',
+      padding: '0.5rem 1rem',
+      borderRadius: '0.375rem',
+      textDecoration: 'none',
+      fontSize: '0.875rem',
+      marginLeft: '0.5rem'
+    },
+    registerButton: {
+      backgroundColor: '#059669',
+      color: 'white',
+      padding: '0.5rem 1rem',
+      borderRadius: '0.375rem',
+      textDecoration: 'none',
+      fontSize: '0.875rem',
+      marginLeft: '0.5rem'
+    }
   };
 
-  const isActive = (path) => location.pathname === path;
-
   return (
-    <nav className="bg-blue-600 text-white shadow-lg">
-      <div className="container mx-auto px-4">
-        <div className="flex justify-between items-center h-16">
-          <Link to="/" className="text-xl font-bold flex items-center">
-            <span className="mr-2">🎬</span>
-            TV Show Tracker
-          </Link>
+    <nav style={styles.nav}>
+      <div style={styles.container}>
+        {/* Logo */}
+        <Link to="/" style={styles.logo}>
+          <span style={{marginRight: '0.5rem'}}>🎬</span>
+          TV Show Tracker
+        </Link>
 
-          <div className="flex items-center space-x-6">
-            <Link 
-              to="/tvshows" 
-              className={`hover:text-blue-200 transition ${
-                isActive('/tvshows') ? 'text-blue-200 font-semibold' : ''
-              }`}
-            >
-              TV Shows
-            </Link>
-            <Link 
-              to="/actors" 
-              className={`hover:text-blue-200 transition ${
-                isActive('/actors') ? 'text-blue-200 font-semibold' : ''
-              }`}
-            >
-              Actors
-            </Link>
-            
-            {isAuthenticated ? (
-              <>
-                <Link 
-                  to="/favorites" 
-                  className={`hover:text-blue-200 transition ${
-                    isActive('/favorites') ? 'text-blue-200 font-semibold' : ''
-                  }`}
-                >
-                  My Favorites
-                </Link>
-                <div className="flex items-center space-x-4">
-                  <span className="text-blue-200 hidden sm:inline">Hello, {user?.name}</span>
-                  <button
-                    onClick={handleLogout}
-                    className="bg-blue-700 hover:bg-blue-800 px-4 py-2 rounded transition text-sm"
-                  >
-                    Logout
-                  </button>
-                </div>
-              </>
-            ) : (
-              <div className="flex items-center space-x-4">
-                <Link
-                  to="/login"
-                  className="bg-blue-700 hover:bg-blue-800 px-4 py-2 rounded transition text-sm"
-                >
-                  Login
-                </Link>
-                <Link
-                  to="/register"
-                  className="bg-green-600 hover:bg-green-700 px-4 py-2 rounded transition text-sm"
-                >
-                  Register
-                </Link>
-              </div>
-            )}
-          </div>
+        {/* Navigation Links - Versão SIMPLES */}
+        <div style={styles.navLinks}>
+          <Link to="/tvshows" style={styles.navLink}>
+            TV Shows
+          </Link>
+          <Link to="/actors" style={styles.navLink}>
+            Actors
+          </Link>
+          
+          {/* Botões FIXOS sem auth */}
+          <Link to="/login" style={styles.button}>
+            Login
+          </Link>
+          <Link to="/register" style={styles.registerButton}>
+            Register
+          </Link>
         </div>
       </div>
     </nav>
@@ -86,4 +92,3 @@ const Navbar = () => {
 };
 
 export default Navbar;
-EOF

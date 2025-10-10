@@ -55,19 +55,42 @@ const Layout = ({ children }) => {
             >
               Actors
             </Link>
-            <Link 
-              to="/login" 
-              style={{ 
-                backgroundColor: '#1d4ed8',
-                color: 'white',
-                padding: '8px 16px',
-                borderRadius: '6px',
-                textDecoration: 'none',
-                fontSize: '14px'
-              }}
-            >
-              Login
-            </Link>
+            
+            {/* Botões Login e Register */}
+            <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+              <Link 
+                to="/login" 
+                style={{ 
+                  backgroundColor: '#1d4ed8',
+                  color: 'white',
+                  padding: '8px 16px',
+                  borderRadius: '6px',
+                  textDecoration: 'none',
+                  fontSize: '14px',
+                  transition: 'background-color 0.2s ease'
+                }}
+                onMouseOver={(e) => e.target.style.backgroundColor = '#1e40af'}
+                onMouseOut={(e) => e.target.style.backgroundColor = '#1d4ed8'}
+              >
+                Login
+              </Link>
+              <Link 
+                to="/register" 
+                style={{ 
+                  backgroundColor: '#059669',
+                  color: 'white',
+                  padding: '8px 16px',
+                  borderRadius: '6px',
+                  textDecoration: 'none',
+                  fontSize: '14px',
+                  transition: 'background-color 0.2s ease'
+                }}
+                onMouseOver={(e) => e.target.style.backgroundColor = '#047857'}
+                onMouseOut={(e) => e.target.style.backgroundColor = '#059669'}
+              >
+                Register
+              </Link>
+            </div>
           </div>
         </div>
       </nav>

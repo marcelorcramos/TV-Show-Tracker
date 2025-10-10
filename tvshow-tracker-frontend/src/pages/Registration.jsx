@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 
-const Login = () => {
+const Register = () => {
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -13,13 +15,27 @@ const Login = () => {
     setLoading(true);
     setError('');
 
+    // Validações
+    if (password !== confirmPassword) {
+      setError('Passwords do not match');
+      setLoading(false);
+      return;
+    }
+
+    if (password.length < 6) {
+      setError('Password must be at least 6 characters long');
+      setLoading(false);
+      return;
+    }
+
     try {
-      const response = await fetch('http://localhost:5023/api/Auth/login', {
+      const response = await fetch('http://localhost:5023/api/Auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
+          name: name,
           email: email,
           password: password
         }),
@@ -27,16 +43,17 @@ const Login = () => {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || 'Login failed');
+        throw new Error(errorData.message || 'Registration failed');
       }
 
       const data = await response.json();
       
-      localStorage.setItem('authToken', data.token);
-      localStorage.setItem('user', JSON.stringify(data.user));
+      console.log('Registration successful:', data);
       
-      console.log('Login successful:', data.user);
-      navigate('/');
+      // Redireciona para login após registo bem-sucedido
+      navigate('/login', { 
+        state: { message: 'Registration successful! Please login.' }
+      });
       
     } catch (err) {
       setError(err.message);
@@ -45,7 +62,7 @@ const Login = () => {
     }
   };
 
-  // Estilos com inputs alinhados à esquerda
+  // Estilos consistentes com o Login
   const styles = {
     container: {
       minHeight: '100vh',
@@ -62,7 +79,7 @@ const Login = () => {
       padding: '2.5rem 2rem',
       boxShadow: '0 4px 6px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.1)',
       width: '100%',
-      maxWidth: '380px',
+      maxWidth: '420px',
       border: '1px solid #e2e8f0'
     },
     header: {
@@ -72,7 +89,7 @@ const Login = () => {
     iconContainer: {
       width: '60px',
       height: '60px',
-      background: '#1e293b',
+      background: '#059669',
       borderRadius: '12px',
       display: 'flex',
       alignItems: 'center',
@@ -100,10 +117,10 @@ const Login = () => {
       marginBottom: '0.5rem',
       textTransform: 'uppercase',
       letterSpacing: '0.5px',
-      paddingLeft: '0.5rem' // Alinha labels com os inputs
+      paddingLeft: '0.5rem'
     },
     input: {
-      width: '100%', // Largura total do container
+      width: '100%',
       padding: '0.75rem 1rem',
       border: '1px solid #d1d5db',
       borderRadius: '8px',
@@ -111,16 +128,16 @@ const Login = () => {
       transition: 'all 0.2s ease',
       outline: 'none',
       backgroundColor: 'white',
-      boxSizing: 'border-box' // Inclui padding na largura total
+      boxSizing: 'border-box'
     },
     inputFocus: {
-      borderColor: '#1e293b',
-      boxShadow: '0 0 0 3px rgba(30, 41, 59, 0.1)'
+      borderColor: '#059669',
+      boxShadow: '0 0 0 3px rgba(5, 150, 105, 0.1)'
     },
     button: {
-      width: '100%', // Mesma largura que os inputs
+      width: '100%',
       padding: '0.875rem',
-      background: '#1e293b',
+      background: '#059669',
       color: 'white',
       border: 'none',
       borderRadius: '8px',
@@ -129,10 +146,10 @@ const Login = () => {
       cursor: 'pointer',
       transition: 'all 0.2s ease',
       marginTop: '0.5rem',
-      boxSizing: 'border-box' // Inclui padding na largura total
+      boxSizing: 'border-box'
     },
     buttonHover: {
-      background: '#374151',
+      background: '#047857',
       transform: 'translateY(-1px)'
     },
     buttonDisabled: {
@@ -161,18 +178,14 @@ const Login = () => {
       marginTop: '1.5rem',
       transition: 'color 0.2s ease'
     },
-    demoBox: {
-      background: '#f8fafc',
-      borderRadius: '8px',
-      padding: '1rem',
-      marginTop: '1.5rem',
+    loginLink: {
       textAlign: 'center',
-      border: '1px solid #e2e8f0',
-      width: '100%',
-      boxSizing: 'border-box'
+      marginTop: '1rem',
+      fontSize: '0.8rem',
+      color: '#64748b'
     },
     formContainer: {
-      padding: '0 0.5rem' // Move tudo um pouco para a esquerda
+      padding: '0 0.5rem'
     }
   };
 
@@ -183,14 +196,14 @@ const Login = () => {
         <div style={styles.header}>
           <div style={styles.iconContainer}>
             <svg style={{width: '1.5rem', height: '1.5rem', color: 'white'}} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
             </svg>
           </div>
-          <h1 style={styles.title}>Welcome Back</h1>
-          <p style={styles.subtitle}>Sign in to your account</p>
+          <h1 style={styles.title}>Create Account</h1>
+          <p style={styles.subtitle}>Join TV Show Tracker today</p>
         </div>
 
-        {/* Form Container com padding à esquerda */}
+        {/* Form Container */}
         <div style={styles.formContainer}>
           <form onSubmit={handleSubmit}>
             {error && (
@@ -198,6 +211,32 @@ const Login = () => {
                 {error}
               </div>
             )}
+            
+            {/* Name Input */}
+            <div style={styles.inputContainer}>
+              <label htmlFor="name" style={styles.label}>
+                Full Name
+              </label>
+              <input
+                id="name"
+                name="name"
+                type="text"
+                autoComplete="name"
+                required
+                style={styles.input}
+                placeholder="Enter your full name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                onFocus={(e) => {
+                  e.target.style.borderColor = styles.inputFocus.borderColor;
+                  e.target.style.boxShadow = styles.inputFocus.boxShadow;
+                }}
+                onBlur={(e) => {
+                  e.target.style.borderColor = styles.input.border;
+                  e.target.style.boxShadow = 'none';
+                }}
+              />
+            </div>
             
             {/* Email Input */}
             <div style={styles.inputContainer}>
@@ -234,12 +273,38 @@ const Login = () => {
                 id="password"
                 name="password"
                 type="password"
-                autoComplete="current-password"
+                autoComplete="new-password"
                 required
                 style={styles.input}
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                onFocus={(e) => {
+                  e.target.style.borderColor = styles.inputFocus.borderColor;
+                  e.target.style.boxShadow = styles.inputFocus.boxShadow;
+                }}
+                onBlur={(e) => {
+                  e.target.style.borderColor = styles.input.border;
+                  e.target.style.boxShadow = 'none';
+                }}
+              />
+            </div>
+            
+            {/* Confirm Password Input */}
+            <div style={styles.inputContainer}>
+              <label htmlFor="confirmPassword" style={styles.label}>
+                Confirm Password
+              </label>
+              <input
+                id="confirmPassword"
+                name="confirmPassword"
+                type="password"
+                autoComplete="new-password"
+                required
+                style={styles.input}
+                placeholder="••••••••"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
                 onFocus={(e) => {
                   e.target.style.borderColor = styles.inputFocus.borderColor;
                   e.target.style.boxShadow = styles.inputFocus.boxShadow;
@@ -270,8 +335,21 @@ const Login = () => {
                 e.target.style.transform = 'none';
               }}
             >
-              {loading ? 'Signing In...' : 'Sign In'}
+              {loading ? 'Creating Account...' : 'Create Account'}
             </button>
+
+            {/* Login Link */}
+            <div style={styles.loginLink}>
+              Already have an account?{' '}
+              <Link 
+                to="/login" 
+                style={{color: '#059669', fontWeight: '500', textDecoration: 'none'}}
+                onMouseOver={(e) => e.target.style.color = '#047857'}
+                onMouseOut={(e) => e.target.style.color = '#059669'}
+              >
+                Sign in
+              </Link>
+            </div>
 
             {/* Back Link */}
             <Link 
@@ -286,23 +364,10 @@ const Login = () => {
               Back to Home
             </Link>
           </form>
-
-          {/* Demo Credentials */}
-          <div style={styles.demoBox}>
-            <p style={{margin: '0 0 0.5rem 0', fontSize: '0.75rem', color: '#64748b', fontWeight: '500'}}>
-              💡 Demo Credentials
-            </p>
-            <p style={{margin: '0 0 0.25rem 0', fontSize: '0.7rem', color: '#94a3b8', fontFamily: 'monospace'}}>
-              novo@example.com
-            </p>
-            <p style={{margin: 0, fontSize: '0.7rem', color: '#94a3b8', fontFamily: 'monospace'}}>
-              Password123!
-            </p>
-          </div>
         </div>
       </div>
     </div>
   );
 };
 
-export default Login;
+export default Register;
