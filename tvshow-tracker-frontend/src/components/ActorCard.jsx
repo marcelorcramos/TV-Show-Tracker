@@ -15,53 +15,69 @@ export const ActorCard = ({ actor }) => {
     return age;
   };
 
+  const formatBirthDate = (birthDate) => {
+    return new Date(birthDate).toLocaleDateString('pt-BR');
+  };
+
   return (
-    <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-300 border border-gray-100">
-      <div className="flex items-start space-x-4">
-        {/* Avatar do Ator */}
-        <div className="flex-shrink-0">
-          <div className="w-16 h-16 bg-gradient-to-br from-blue-100 to-purple-100 rounded-full flex items-center justify-center border-2 border-white shadow-sm">
-            {actor.imageUrl ? (
-              <img 
-                src={actor.imageUrl} 
-                alt={actor.name}
-                className="w-16 h-16 rounded-full object-cover"
-              />
-            ) : (
-              <span className="text-blue-600 text-xl font-bold">
-                {actor.name.charAt(0)}
-              </span>
-            )}
+    <div className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition-shadow duration-300">
+      {/* Header com imagem/avatar */}
+      <div className="bg-gradient-to-br from-blue-50 to-purple-50 p-6 flex justify-center items-center">
+        {actor.imageUrl ? (
+          <img 
+            src={actor.imageUrl} 
+            alt={actor.name}
+            className="w-24 h-24 rounded-full object-cover border-4 border-white shadow-md"
+          />
+        ) : (
+          <div className="w-24 h-24 bg-gradient-to-br from-blue-100 to-purple-100 rounded-full flex items-center justify-center border-4 border-white shadow-md">
+            <span className="text-blue-600 text-2xl font-bold">
+              {actor.name.charAt(0)}
+            </span>
+          </div>
+        )}
+      </div>
+
+      {/* Informações do ator */}
+      <div className="p-4">
+        <h3 className="text-lg font-semibold text-gray-900 mb-2 truncate">
+          {actor.name}
+        </h3>
+        
+        <div className="space-y-2 mb-3">
+          <div className="flex items-center text-sm text-gray-600">
+            <span className="font-medium mr-2">🏴 Nacionalidade:</span>
+            <span>{actor.nationality || 'Não informada'}</span>
+          </div>
+          
+          <div className="flex items-center text-sm text-gray-600">
+            <span className="font-medium mr-2">🎂 Idade:</span>
+            <span>{calculateAge(actor.birthDate)} anos</span>
+          </div>
+          
+          <div className="flex items-center text-sm text-gray-600">
+            <span className="font-medium mr-2">📅 Nascimento:</span>
+            <span>{formatBirthDate(actor.birthDate)}</span>
           </div>
         </div>
-        
-        {/* Informações do Ator */}
-        <div className="flex-1 min-w-0">
-          <h3 className="text-lg font-semibold text-gray-900 mb-1">
-            {actor.name}
-          </h3>
-          
-          <div className="flex items-center space-x-4 text-sm text-gray-600 mb-2">
-            <span className="flex items-center">
-              <span className="w-2 h-2 bg-green-400 rounded-full mr-2"></span>
-              {actor.nationality}
-            </span>
-            <span className="flex items-center">
-              <span className="w-2 h-2 bg-blue-400 rounded-full mr-2"></span>
-              {calculateAge(actor.birthDate)} anos
-            </span>
-          </div>
-          
-          <p className="text-sm text-gray-500 line-clamp-2">
-            {actor.bio}
-          </p>
-          
-          {/* Data de Nascimento */}
+
+        {/* Bio */}
+        {actor.bio && (
           <div className="mt-3 pt-3 border-t border-gray-100">
-            <p className="text-xs text-gray-400">
-              Nascimento: {new Date(actor.birthDate).toLocaleDateString('pt-BR')}
+            <p className="text-sm text-gray-600 line-clamp-3">
+              {actor.bio}
             </p>
           </div>
+        )}
+
+        {/* Botão de ação */}
+        <div className="mt-4 flex space-x-2">
+          <button className="flex-1 bg-blue-600 text-white py-2 px-3 rounded text-sm font-medium hover:bg-blue-700 transition-colors">
+            Ver Perfil
+          </button>
+          <button className="bg-gray-100 text-gray-700 py-2 px-3 rounded text-sm font-medium hover:bg-gray-200 transition-colors">
+            ☆
+          </button>
         </div>
       </div>
     </div>

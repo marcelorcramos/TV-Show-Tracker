@@ -1,18 +1,19 @@
-// src/pages/Actors.jsx
+// src/pages/actors/Actors.jsx
 import React, { useState, useMemo } from 'react';
 import { useActors } from '../../hooks/useActors';
-import { ActorCard } from '../../components/ActorCard'; 
-import  LoadingSpinner  from '../../components/LoadingSpinner';
+import { ActorCard } from '../../components/ActorCard';
+import LoadingSpinner from '../../components/LoadingSpinner';
 
 export const Actors = () => {
   const [search, setSearch] = useState('');
   const [sortBy, setSortBy] = useState('Name');
-  
-  // Usar useMemo para evitar recriação desnecessária do objeto filters
+  const [nationalityFilter, setNationalityFilter] = useState('');
+
   const filters = useMemo(() => ({
     search,
-    sortBy
-  }), [search, sortBy]);
+    sortBy,
+    nationality: nationalityFilter
+  }), [search, sortBy, nationalityFilter]);
 
   const { actors, loading, error, pagination, changePage } = useActors(filters);
 
@@ -24,9 +25,18 @@ export const Actors = () => {
     setSortBy(e.target.value);
   };
 
+  const handleNationalityChange = (e) => {
+    setNationalityFilter(e.target.value);
+  };
+
+  const clearFilters = () => {
+    setSearch('');
+    setSortBy('Name');
+    setNationalityFilter('');
+  };
+
   const handlePageChange = (newPage) => {
     changePage(newPage);
-    // Scroll para o topo quando mudar de página
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -64,44 +74,69 @@ export const Actors = () => {
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="mb-8 text-center">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">Atores</h1>
-          <p className="text-gray-600 text-lg">Descubra e explore nosso elenco de atores talentosos</p>
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Atores</h1>
+          <p className="text-gray-600">Explore nosso elenco de atores talentosos</p>
         </div>
 
-        {/* Filtros e Busca */}
-        <div className="bg-white p-6 rounded-lg shadow-md mb-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Campo de Busca */}
+        {/* Filtros - Estilo similar ao TV Shows */}
+        <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+            {/* Search */}
             <div>
-              <label htmlFor="search" className="block text-sm font-medium text-gray-700 mb-2">
-                🔍 Buscar Atores
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                🔍 Search
               </label>
               <input
                 type="text"
-                id="search"
                 value={search}
                 onChange={handleSearchChange}
-                placeholder="Buscar por nome ou nacionalidade..."
-                className="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                placeholder="Search actors..."
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
-            
-            {/* Ordenação */}
+
+            {/* Nationality Filter */}
             <div>
-              <label htmlFor="sort" className="block text-sm font-medium text-gray-700 mb-2">
-                📊 Ordenar por
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                🏴 Nationality
               </label>
               <select
-                id="sort"
+                value={nationalityFilter}
+                onChange={handleNationalityChange}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              >
+                <option value="">All Nationalities</option>
+                <option value="American">American</option>
+                <option value="British">British</option>
+                <option value="Chilean-American">Chilean-American</option>
+              </select>
+            </div>
+
+            {/* Sort By */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                📊 Sort By
+              </label>
+              <select
                 value={sortBy}
                 onChange={handleSortChange}
-                className="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               >
-                <option value="Name">Nome (A-Z)</option>
-                <option value="birthdate">Data de Nascimento</option>
-                <option value="nationality">Nacionalidade</option>
+                <option value="Name">Name</option>
+                <option value="birthdate">Birth Date</option>
+                <option value="nationality">Nationality</option>
               </select>
+            </div>
+
+            {/* Clear Filters */}
+            <div className="flex items-end">
+              <button
+                onClick={clearFilters}
+                className="w-full bg-gray-200 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-300 transition-colors font-medium"
+              >
+                Clear Filters
+              </button>
             </div>
           </div>
         </div>
@@ -110,11 +145,11 @@ export const Actors = () => {
         {!loading && actors.length > 0 && (
           <div className="mb-6 flex justify-between items-center">
             <p className="text-gray-600">
-              Mostrando <span className="font-semibold">{actors.length}</span> de{' '}
-              <span className="font-semibold">{pagination.totalCount}</span> atores
+              Showing <span className="font-semibold">{actors.length}</span> of{' '}
+              <span className="font-semibold">{pagination.totalCount}</span> actors
             </p>
             <p className="text-gray-600">
-              Página <span className="font-semibold">{pagination.page}</span> de{' '}
+              Page <span className="font-semibold">{pagination.page}</span> of{' '}
               <span className="font-semibold">{pagination.totalPages}</span>
             </p>
           </div>
@@ -123,14 +158,14 @@ export const Actors = () => {
         {/* Loading State */}
         {loading && (
           <div className="flex justify-center py-12">
-            <LoadingSpinner size="lg" />
+            <LoadingSpinner />
           </div>
         )}
 
         {/* Grid de Atores */}
         {!loading && actors.length > 0 && (
           <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
               {actors.map((actor) => (
                 <ActorCard key={actor.id} actor={actor} />
               ))}
@@ -139,20 +174,17 @@ export const Actors = () => {
             {/* Paginação */}
             {pagination.totalPages > 1 && (
               <div className="flex justify-center items-center space-x-2">
-                {/* Botão Anterior */}
                 <button
                   onClick={() => handlePageChange(pagination.page - 1)}
                   disabled={pagination.page === 1}
                   className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
-                  Anterior
+                  Previous
                 </button>
 
-                {/* Números das Páginas */}
                 <div className="flex space-x-1">
                   {[...Array(pagination.totalPages)].map((_, index) => {
                     const pageNumber = index + 1;
-                    // Mostrar apenas algumas páginas ao redor da atual
                     if (
                       pageNumber === 1 ||
                       pageNumber === pagination.totalPages ||
@@ -171,27 +203,17 @@ export const Actors = () => {
                           {pageNumber}
                         </button>
                       );
-                    } else if (
-                      pageNumber === pagination.page - 2 ||
-                      pageNumber === pagination.page + 2
-                    ) {
-                      return (
-                        <span key={pageNumber} className="px-3 py-2 text-gray-500">
-                          ...
-                        </span>
-                      );
                     }
                     return null;
                   })}
                 </div>
 
-                {/* Botão Próximo */}
                 <button
                   onClick={() => handlePageChange(pagination.page + 1)}
                   disabled={pagination.page === pagination.totalPages}
                   className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
-                  Próximo
+                  Next
                 </button>
               </div>
             )}
@@ -202,19 +224,22 @@ export const Actors = () => {
         {!loading && actors.length === 0 && (
           <div className="text-center py-12">
             <div className="bg-white rounded-lg shadow-sm p-8 max-w-md mx-auto">
-              <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              <h3 className="mt-4 text-lg font-medium text-gray-900">Nenhum ator encontrado</h3>
-              <p className="mt-2 text-gray-500">
-                {search ? `Nenhum resultado para "${search}"` : 'Não há atores cadastrados no momento'}
+              <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-2xl">🎭</span>
+              </div>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">No actors found</h3>
+              <p className="text-gray-500 mb-4">
+                {search || nationalityFilter 
+                  ? 'Try adjusting your search or filters' 
+                  : 'No actors available at the moment'
+                }
               </p>
-              {search && (
+              {(search || nationalityFilter) && (
                 <button
-                  onClick={() => setSearch('')}
-                  className="mt-4 bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition-colors"
+                  onClick={clearFilters}
+                  className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition-colors"
                 >
-                  Limpar Busca
+                  Clear Filters
                 </button>
               )}
             </div>
