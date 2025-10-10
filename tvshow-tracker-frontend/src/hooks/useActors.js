@@ -23,6 +23,15 @@ export const useActors = (filters = {}) => {
         ...filters
       };
 
+      // Remove parâmetros vazios para não enviar à API
+      Object.keys(params).forEach(key => {
+        if (params[key] === '' || params[key] == null) {
+          delete params[key];
+        }
+      });
+
+      console.log('🔍 Parâmetros enviados para a API:', params); // Debug
+      
       const response = await actorsAPI.getAll(params);
       const data = response.data;
       
@@ -42,7 +51,7 @@ export const useActors = (filters = {}) => {
 
   useEffect(() => {
     fetchActors(1);
-  }, [filters.search, filters.sortBy]);
+  }, [filters.search, filters.sortBy, filters.nationality]); // ← ADICIONE filters.nationality aqui
 
   const changePage = (page) => {
     if (page >= 1 && page <= pagination.totalPages) {

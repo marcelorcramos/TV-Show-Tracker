@@ -1,70 +1,57 @@
 // src/pages/actors/Actors.jsx
-import React, { useState, useMemo } from 'react';
-import { useActors } from '../../hooks/useActors';
+import React, { useState } from 'react';
+import { useActors } from '../../hooks/useActors'
 import ActorCard from '../../components/ActorCard';
 import LoadingSpinner from '../../components/LoadingSpinner';
 
-export const Actors = () => {
-  const [search, setSearch] = useState('');
-  const [sortBy, setSortBy] = useState('Name');
-  const [nationalityFilter, setNationalityFilter] = useState('');
-
-  const filters = useMemo(() => ({
-    search,
-    sortBy,
-    nationality: nationalityFilter
-  }), [search, sortBy, nationalityFilter]);
+const Actors = () => {
+  const [filters, setFilters] = useState({
+    search: '',
+    nationality: '',
+    sortBy: 'Name'
+  });
 
   const { actors, loading, error, pagination, changePage } = useActors(filters);
 
-  const handleSearchChange = (e) => {
-    setSearch(e.target.value);
+  const handleFilterChange = (key, value) => {
+    setFilters(prev => ({
+      ...prev,
+      [key]: value
+    }));
   };
 
-  const handleSortChange = (e) => {
-    setSortBy(e.target.value);
+  const handleSearch = (searchTerm) => {
+    handleFilterChange('search', searchTerm);
   };
 
-  const handleNationalityChange = (e) => {
-    setNationalityFilter(e.target.value);
-  };
-
-  const clearFilters = () => {
-    setSearch('');
-    setSortBy('Name');
-    setNationalityFilter('');
-  };
-
-  const handlePageChange = (newPage) => {
-    changePage(newPage);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
+  // Extrai nacionalidades únicas dos atores para o dropdown
+  const availableNationalities = [...new Set(actors.map(actor => actor.nationality).filter(Boolean))].sort();
 
   if (error) {
     return (
-      <div style={{ textAlign: 'center', padding: '40px 20px' }}>
+      <div style={{ textAlign: 'center', padding: '40px' }}>
+        <h1 style={{ color: '#1e40af', marginBottom: '20px' }}>🎭 Actors</h1>
         <div style={{ 
           backgroundColor: '#fef2f2', 
-          border: '1px solid #fecaca',
+          color: '#dc2626', 
+          padding: '20px', 
           borderRadius: '8px',
-          padding: '20px',
-          maxWidth: '400px',
-          margin: '0 auto'
+          border: '1px solid #fecaca'
         }}>
-          <h3 style={{ color: '#dc2626', marginBottom: '10px' }}>Erro ao carregar atores</h3>
-          <p style={{ color: '#b91c1c', marginBottom: '15px' }}>{error}</p>
-          <button
+          <p>❌ Error: {error}</p>
+          <button 
             onClick={() => window.location.reload()}
             style={{
               backgroundColor: '#dc2626',
               color: 'white',
               border: 'none',
               padding: '8px 16px',
-              borderRadius: '6px',
-              cursor: 'pointer'
+              borderRadius: '4px',
+              cursor: 'pointer',
+              marginTop: '10px'
             }}
           >
-            Tentar Novamente
+            Try Again
           </button>
         </div>
       </div>
@@ -73,111 +60,71 @@ export const Actors = () => {
 
   return (
     <div>
-      {/* Header */}
-      <div style={{ marginBottom: '30px' }}>
-        <h1 style={{ 
-          fontSize: '2rem', 
-          fontWeight: 'bold', 
-          color: '#1f2937',
-          marginBottom: '8px'
-        }}>
-          Atores
-        </h1>
-        <p style={{ color: '#6b7280', fontSize: '1.125rem' }}>
-          Explore nosso elenco de atores talentosos
-        </p>
-      </div>
-
-      {/* Filtros */}
+      <h1 style={{ color: '#1e40af', marginBottom: '20px' }}>🎭 Actors</h1>
+      
+      {/* Filters */}
       <div style={{ 
         backgroundColor: 'white', 
-        borderRadius: '12px', 
-        padding: '24px',
-        boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-        border: '1px solid #e5e7eb',
-        marginBottom: '30px'
+        padding: '20px', 
+        borderRadius: '8px',
+        marginBottom: '30px',
+        boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
       }}>
-        <div style={{ 
-          display: 'grid', 
-          gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', 
-          gap: '16px',
-          marginBottom: '16px'
-        }}>
+        <div style={{ display: 'flex', gap: '15px', flexWrap: 'wrap', alignItems: 'end' }}>
           {/* Search */}
           <div>
-            <label style={{ 
-              display: 'block', 
-              fontSize: '14px', 
-              fontWeight: '500', 
-              color: '#374151',
-              marginBottom: '8px'
-            }}>
+            <label style={{ display: 'block', marginBottom: '5px', fontWeight: '500' }}>
               🔍 Search
             </label>
             <input
               type="text"
-              value={search}
-              onChange={handleSearchChange}
               placeholder="Search actors..."
+              value={filters.search}
+              onChange={(e) => handleSearch(e.target.value)}
               style={{
-                width: '100%',
                 padding: '8px 12px',
                 border: '1px solid #d1d5db',
                 borderRadius: '6px',
-                fontSize: '14px'
+                width: '200px'
               }}
             />
           </div>
 
           {/* Nationality Filter */}
           <div>
-            <label style={{ 
-              display: 'block', 
-              fontSize: '14px', 
-              fontWeight: '500', 
-              color: '#374151',
-              marginBottom: '8px'
-            }}>
+            <label style={{ display: 'block', marginBottom: '5px', fontWeight: '500' }}>
               🏴 Nationality
             </label>
             <select
-              value={nationalityFilter}
-              onChange={handleNationalityChange}
+              value={filters.nationality}
+              onChange={(e) => handleFilterChange('nationality', e.target.value)}
               style={{
-                width: '100%',
                 padding: '8px 12px',
                 border: '1px solid #d1d5db',
                 borderRadius: '6px',
-                fontSize: '14px'
+                minWidth: '150px'
               }}
             >
               <option value="">All Nationalities</option>
-              <option value="American">American</option>
-              <option value="British">British</option>
-              <option value="Chilean-American">Chilean-American</option>
+              {availableNationalities.map(nationality => (
+                <option key={nationality} value={nationality}>{nationality}</option>
+              ))}
             </select>
           </div>
 
-          {/* Sort By */}
+          {/* Sort */}
           <div>
-            <label style={{ 
-              display: 'block', 
-              fontSize: '14px', 
-              fontWeight: '500', 
-              color: '#374151',
-              marginBottom: '8px'
-            }}>
-              📊 Sort By
+            <label style={{ display: 'block', marginBottom: '5px', fontWeight: '500' }}>
+              🔄 Sort By
             </label>
             <select
-              value={sortBy}
-              onChange={handleSortChange}
+              value={filters.sortBy}
+              onChange={(e) => handleFilterChange('sortBy', e.target.value)}
               style={{
-                width: '100%',
                 padding: '8px 12px',
                 border: '1px solid #d1d5db',
                 borderRadius: '6px',
-                fontSize: '14px'
+                minWidth: '150px'
               }}
             >
               <option value="Name">Name</option>
@@ -187,199 +134,132 @@ export const Actors = () => {
           </div>
 
           {/* Clear Filters */}
-          <div style={{ display: 'flex', alignItems: 'end' }}>
-            <button
-              onClick={clearFilters}
-              style={{
-                width: '100%',
-                backgroundColor: '#f3f4f6',
-                color: '#374151',
-                border: '1px solid #d1d5db',
-                padding: '8px 16px',
-                borderRadius: '6px',
-                cursor: 'pointer',
-                fontSize: '14px',
-                fontWeight: '500'
-              }}
-            >
-              Clear Filters
-            </button>
-          </div>
+          <button
+            onClick={() => setFilters({ search: '', nationality: '', sortBy: 'Name' })}
+            style={{
+              backgroundColor: '#6b7280',
+              color: 'white',
+              border: 'none',
+              padding: '8px 16px',
+              borderRadius: '6px',
+              cursor: 'pointer',
+              height: 'fit-content'
+            }}
+          >
+            Clear Filters
+          </button>
         </div>
       </div>
 
-      {/* Informações de Resultados */}
-      {!loading && actors.length > 0 && (
-        <div style={{ 
-          display: 'flex', 
-          justifyContent: 'space-between', 
-          alignItems: 'center',
-          marginBottom: '20px',
-          color: '#6b7280',
-          fontSize: '14px'
-        }}>
-          <p>
-            Showing <strong>{actors.length}</strong> of <strong>{pagination.totalCount}</strong> actors
-          </p>
-          <p>
-            Page <strong>{pagination.page}</strong> of <strong>{pagination.totalPages}</strong>
-          </p>
-        </div>
-      )}
-
       {/* Loading State */}
-      {loading && (
-        <div style={{ display: 'flex', justifyContent: 'center', padding: '40px' }}>
-          <LoadingSpinner />
-        </div>
-      )}
+      {loading && <LoadingSpinner />}
 
-      {/* Grid de Atores - 3 colunas */}
-      {!loading && actors.length > 0 && (
+      {/* Actors Grid */}
+      {!loading && (
         <>
+          {/* Results Info */}
+          {actors.length > 0 && (
+            <div style={{ 
+              marginBottom: '20px',
+              color: '#6b7280',
+              fontSize: '14px'
+            }}>
+              <p>
+                Showing <strong>{actors.length}</strong> of <strong>{pagination.totalCount}</strong> actors
+              </p>
+            </div>
+          )}
+
           <div style={{ 
             display: 'grid', 
             gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', 
-            gap: '24px',
-            marginBottom: '40px'
+            gap: '20px',
+            marginBottom: '30px'
           }}>
-            {actors.map((actor) => (
+            {actors.map(actor => (
               <ActorCard key={actor.id} actor={actor} />
             ))}
           </div>
 
-          {/* Paginação */}
+          {/* No Results */}
+          {actors.length === 0 && !loading && (
+            <div style={{ 
+              textAlign: 'center', 
+              padding: '40px',
+              backgroundColor: 'white',
+              borderRadius: '8px',
+              boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+            }}>
+              <p style={{ color: '#6b7280', fontSize: '18px' }}>
+                No actors found matching your filters.
+              </p>
+              {(filters.search || filters.nationality) && (
+                <button
+                  onClick={() => setFilters({ search: '', nationality: '', sortBy: 'Name' })}
+                  style={{
+                    backgroundColor: '#2563eb',
+                    color: 'white',
+                    border: 'none',
+                    padding: '8px 16px',
+                    borderRadius: '6px',
+                    cursor: 'pointer',
+                    marginTop: '10px'
+                  }}
+                >
+                  Clear Filters
+                </button>
+              )}
+            </div>
+          )}
+
+          {/* Pagination */}
           {pagination.totalPages > 1 && (
             <div style={{ 
               display: 'flex', 
               justifyContent: 'center', 
               alignItems: 'center',
-              gap: '8px'
+              gap: '10px',
+              marginTop: '30px'
             }}>
               <button
-                onClick={() => handlePageChange(pagination.page - 1)}
+                onClick={() => changePage(pagination.page - 1)}
                 disabled={pagination.page === 1}
                 style={{
+                  backgroundColor: pagination.page === 1 ? '#d1d5db' : '#2563eb',
+                  color: 'white',
+                  border: 'none',
                   padding: '8px 16px',
-                  border: '1px solid #d1d5db',
                   borderRadius: '6px',
-                  backgroundColor: 'white',
-                  color: '#374151',
-                  cursor: pagination.page === 1 ? 'not-allowed' : 'pointer',
-                  opacity: pagination.page === 1 ? 0.5 : 1
+                  cursor: pagination.page === 1 ? 'not-allowed' : 'pointer'
                 }}
               >
-                Previous
+                ← Previous
               </button>
 
-              <div style={{ display: 'flex', gap: '4px' }}>
-                {[...Array(pagination.totalPages)].map((_, index) => {
-                  const pageNumber = index + 1;
-                  if (
-                    pageNumber === 1 ||
-                    pageNumber === pagination.totalPages ||
-                    (pageNumber >= pagination.page - 1 && pageNumber <= pagination.page + 1)
-                  ) {
-                    return (
-                      <button
-                        key={pageNumber}
-                        onClick={() => handlePageChange(pageNumber)}
-                        style={{
-                          padding: '8px 12px',
-                          border: '1px solid #d1d5db',
-                          borderRadius: '6px',
-                          backgroundColor: pagination.page === pageNumber ? '#2563eb' : 'white',
-                          color: pagination.page === pageNumber ? 'white' : '#374151',
-                          cursor: 'pointer'
-                        }}
-                      >
-                        {pageNumber}
-                      </button>
-                    );
-                  }
-                  return null;
-                })}
-              </div>
+              <span style={{ color: '#6b7280', fontWeight: '500' }}>
+                Page {pagination.page} of {pagination.totalPages}
+              </span>
 
               <button
-                onClick={() => handlePageChange(pagination.page + 1)}
+                onClick={() => changePage(pagination.page + 1)}
                 disabled={pagination.page === pagination.totalPages}
                 style={{
+                  backgroundColor: pagination.page === pagination.totalPages ? '#d1d5db' : '#2563eb',
+                  color: 'white',
+                  border: 'none',
                   padding: '8px 16px',
-                  border: '1px solid #d1d5db',
                   borderRadius: '6px',
-                  backgroundColor: 'white',
-                  color: '#374151',
-                  cursor: pagination.page === pagination.totalPages ? 'not-allowed' : 'pointer',
-                  opacity: pagination.page === pagination.totalPages ? 0.5 : 1
+                  cursor: pagination.page === pagination.totalPages ? 'not-allowed' : 'pointer'
                 }}
               >
-                Next
+                Next →
               </button>
             </div>
           )}
         </>
       )}
-
-      {/* Empty State */}
-      {!loading && actors.length === 0 && (
-        <div style={{ textAlign: 'center', padding: '60px 20px' }}>
-          <div style={{ 
-            backgroundColor: 'white',
-            borderRadius: '12px',
-            padding: '40px',
-            maxWidth: '400px',
-            margin: '0 auto',
-            boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
-          }}>
-            <div style={{ 
-              width: '64px', 
-              height: '64px', 
-              backgroundColor: '#f3f4f6',
-              borderRadius: '50%',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              margin: '0 auto 16px'
-            }}>
-              <span style={{ fontSize: '24px' }}>🎭</span>
-            </div>
-            <h3 style={{ 
-              fontSize: '18px', 
-              fontWeight: '600', 
-              color: '#1f2937',
-              marginBottom: '8px'
-            }}>
-              No actors found
-            </h3>
-            <p style={{ 
-              color: '#6b7280',
-              marginBottom: '20px'
-            }}>
-              {search || nationalityFilter 
-                ? 'Try adjusting your search or filters' 
-                : 'No actors available at the moment'
-              }
-            </p>
-            {(search || nationalityFilter) && (
-              <button
-                onClick={clearFilters}
-                style={{
-                  backgroundColor: '#2563eb',
-                  color: 'white',
-                  border: 'none',
-                  padding: '10px 20px',
-                  borderRadius: '6px',
-                  cursor: 'pointer',
-                  fontWeight: '500'
-                }}
-              >
-                Clear Filters
-              </button>
-            )}
-          </div>
-        </div>
-      )}
     </div>
   );
 };
+
+export { Actors };
