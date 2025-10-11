@@ -1,6 +1,5 @@
 import { useState } from 'react';
 
-// Exportação como default
 const useModal = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [modalData, setModalData] = useState(null);
@@ -27,4 +26,5 @@ const useModal = () => {
   };
 };
 
-export default useModal; // ← Exportação como default
+// ⚠️ IMPORTANTE: Exportação como default
+export default useModal;

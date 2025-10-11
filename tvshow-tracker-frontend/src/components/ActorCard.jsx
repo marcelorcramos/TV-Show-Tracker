@@ -1,15 +1,45 @@
 import React, { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import useModal from '../hooks/useModal'; // ← Importação sem chaves
+import  useModal  from '../hooks/useModal';
 import ActorModal from './ActorModal';
 
 const ActorCard = ({ actor, onFavoriteUpdate }) => {
   const { isAuthenticated } = useAuth();
   const [isFavorite, setIsFavorite] = useState(actor.isFavorite || false);
   const [loading, setLoading] = useState(false);
+  const [imageError, setImageError] = useState(false);
+  const [currentImageUrl, setCurrentImageUrl] = useState(actor.imageUrl);
   
   // Hook do modal
   const { isOpen, modalData, openModal, closeModal } = useModal();
+
+  // Mapeamento completo de fallback images para atores
+  const getActorFallbackImage = (actorName) => {
+    const fallbackImages = {
+      'Bryan Cranston': 'https://image.tmdb.org/t/p/w500/3gIO6mCd4s4mT2aUdS9dVMXZ9g6.jpg',
+      'Millie Bobby Brown': 'https://image.tmdb.org/t/p/w500/4D7fFjD4Ok3bD5iMGRWOM5r7cL6.jpg',
+      'Pedro Pascal': 'https://image.tmdb.org/t/p/w500/dBOrm29cr7NUrjiDQMTtrTyDpfy.jpg',
+      'Emilia Clarke': 'https://image.tmdb.org/t/p/w500/xMIjqwhPDfS1L2l8EWhWhDKpTQQ.jpg',
+      'Henry Cavill': 'https://image.tmdb.org/t/p/w500/5h3Dk3g9w8Yd1qwlvWGPWYUBrJ2.jpg',
+      'Zendaya': 'https://image.tmdb.org/t/p/w500/soXY5hq1i4K9LZEqY3WidBQD2KJ.jpg',
+      'Tom Hanks': 'https://image.tmdb.org/t/p/w500/xndWFsBlClOJFRdhSt4NBwiPq2o.jpg',
+      'Jennifer Aniston': 'https://image.tmdb.org/t/p/w500/9Y5q9dW95e9dY4tlgj5YdT2Y4n4.jpg',
+      'Leonardo DiCaprio': 'https://image.tmdb.org/t/p/w500/5Brc5dLifH3UInk3wUaCuGXpCqy.jpg',
+      'Margot Robbie': 'https://image.tmdb.org/t/p/w500/euDPyqLnuwaWMHajcU3oZ9uZezR.jpg',
+      'Keanu Reeves': 'https://image.tmdb.org/t/p/w500/4D0PpNI0km5y0h1hqHkFcCqML6o.jpg',
+      'Scarlett Johansson': 'https://image.tmdb.org/t/p/w500/6NsMbJXRlDZuDzatN2akFdGuTvx.jpg'
+    };
+    
+    return fallbackImages[actorName] || null;
+  };
+
+  // Verifica se a URL da imagem é válida
+  const isValidImageUrl = (url) => {
+    if (!url) return false;
+    if (!url.includes('http')) return false;
+    if (url.includes('placeholder.com')) return false;
+    return true;
+  };
 
   const calculateAge = (birthDate) => {
     if (!birthDate) return 'N/A';
@@ -26,7 +56,7 @@ const ActorCard = ({ actor, onFavoriteUpdate }) => {
   };
 
   const handleFavoriteClick = async (e) => {
-    e.stopPropagation(); // Prevenir que abra o modal
+    e.stopPropagation();
     if (!isAuthenticated) {
       alert('Please login to add favorites');
       return;
@@ -34,7 +64,6 @@ const ActorCard = ({ actor, onFavoriteUpdate }) => {
 
     setLoading(true);
     try {
-      // Simulação temporária
       setIsFavorite(!isFavorite);
       
       if (onFavoriteUpdate) {
@@ -56,6 +85,28 @@ const ActorCard = ({ actor, onFavoriteUpdate }) => {
   const handleCardClick = () => {
     handleShowDetails();
   };
+
+  const handleImageError = () => {
+    console.log('❌ Erro a carregar imagem para:', actor.name);
+    
+    // Tenta usar o fallback
+    const fallbackUrl = getActorFallbackImage(actor.name);
+    if (fallbackUrl && fallbackUrl !== currentImageUrl) {
+      console.log('🔄 Tentando fallback image:', fallbackUrl);
+      setCurrentImageUrl(fallbackUrl);
+      setImageError(false); // Reseta o erro para tentar carregar o fallback
+    } else {
+      setImageError(true); // Se não há fallback, mostra placeholder
+    }
+  };
+
+  const handleImageLoad = () => {
+    console.log('✅ Imagem carregada com sucesso:', actor.name);
+    setImageError(false);
+  };
+
+  // Determina qual imagem mostrar
+  const showFallback = imageError || !isValidImageUrl(currentImageUrl);
 
   return (
     <>
@@ -111,7 +162,7 @@ const ActorCard = ({ actor, onFavoriteUpdate }) => {
           </button>
         )}
 
-        {/* Actor Image */}
+        {/* Actor Image com Fallback Robusto */}
         <div style={{ 
           width: '100%', 
           height: '200px', 
@@ -125,31 +176,32 @@ const ActorCard = ({ actor, onFavoriteUpdate }) => {
           overflow: 'hidden',
           position: 'relative'
         }}>
-          {actor.imageUrl ? (
+          {!showFallback && currentImageUrl ? (
             <img 
-              src={actor.imageUrl} 
+              src={currentImageUrl} 
               alt={actor.name}
               style={{ 
                 width: '100%', 
                 height: '100%', 
                 objectFit: 'cover' 
               }}
-              onError={(e) => {
-                e.target.style.display = 'none';
-              }}
+              onError={handleImageError}
+              onLoad={handleImageLoad}
+              loading="lazy" // Otimização de performance
             />
-          ) : null}
-          {(!actor.imageUrl || !actor.imageUrl.includes('http')) && (
+          ) : (
             <div style={{
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
               justifyContent: 'center',
               width: '100%',
-              height: '100%'
+              height: '100%',
+              backgroundColor: '#e5e7eb'
             }}>
               <span style={{ fontSize: '48px', marginBottom: '8px' }}>🎭</span>
-              <span>No Image</span>
+              <span style={{ fontSize: '14px', color: '#6b7280' }}>{actor.name}</span>
+              <span style={{ fontSize: '12px', color: '#9ca3af', marginTop: '4px' }}>No Image</span>
             </div>
           )}
         </div>

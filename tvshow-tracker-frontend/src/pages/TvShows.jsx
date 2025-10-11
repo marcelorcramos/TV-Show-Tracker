@@ -15,6 +15,11 @@ const TvShows = () => {
   const { genres } = useTvShowGenres();
   const { types } = useTvShowTypes();
 
+  // Debug
+  React.useEffect(() => {
+    console.log('🎬 Filtros ativos:', filters);
+  }, [filters]);
+
   const handleFilterChange = (key, value) => {
     setFilters(prev => ({
       ...prev,
@@ -26,6 +31,16 @@ const TvShows = () => {
     handleFilterChange('search', searchTerm);
   };
 
+  // Função corrigida para os botões de filtro rápido
+  const handleQuickFilter = (type) => {
+    setFilters({
+      genre: '',
+      type: type,
+      search: '',
+      sortBy: 'Title' // Mantém 'Title' em vez de 'Rating' para evitar erros
+    });
+  };
+
   // Calcular páginas para mostrar na paginação
   const getPageNumbers = () => {
     const pages = [];
@@ -34,7 +49,6 @@ const TvShows = () => {
     let startPage = Math.max(1, pagination.page - Math.floor(maxPagesToShow / 2));
     let endPage = Math.min(pagination.totalPages, startPage + maxPagesToShow - 1);
     
-    // Ajustar se estiver perto do final
     if (endPage - startPage + 1 < maxPagesToShow) {
       startPage = Math.max(1, endPage - maxPagesToShow + 1);
     }
@@ -49,7 +63,14 @@ const TvShows = () => {
   if (error) {
     return (
       <div style={{ textAlign: 'center', padding: '40px' }}>
-        <h1 style={{ color: '#1e40af', marginBottom: '20px' }}>📺 TV Shows & Movies</h1>
+        <h1 style={{ 
+          color: '#1e40af', 
+          marginBottom: '20px',
+          fontSize: '2.5rem',
+          fontWeight: '700'
+        }}>
+          🎬 TV Shows & Movies
+        </h1>
         <div style={{ 
           backgroundColor: '#fef2f2', 
           color: '#dc2626', 
@@ -97,10 +118,26 @@ const TvShows = () => {
           Discover {pagination.totalCount} amazing shows and movies
         </p>
         
-        {/* Quick Filter Buttons */}
+        {/* Quick Filter Buttons CORRIGIDOS */}
         <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginBottom: '20px' }}>
           <button
-            onClick={() => setFilters({ genre: '', type: 'Series', search: '', sortBy: 'Rating' })}
+            onClick={() => setFilters({ genre: '', type: '', search: '', sortBy: 'Title' })}
+            style={{
+              backgroundColor: !filters.type ? '#2563eb' : '#e5e7eb',
+              color: !filters.type ? 'white' : '#374151',
+              border: 'none',
+              padding: '8px 16px',
+              borderRadius: '20px',
+              cursor: 'pointer',
+              fontSize: '0.9rem',
+              fontWeight: '500',
+              transition: 'all 0.2s ease'
+            }}
+          >
+            All Content ({pagination.totalCount})
+          </button>
+          <button
+            onClick={() => handleQuickFilter('Series')}
             style={{
               backgroundColor: filters.type === 'Series' ? '#2563eb' : '#e5e7eb',
               color: filters.type === 'Series' ? 'white' : '#374151',
@@ -109,13 +146,14 @@ const TvShows = () => {
               borderRadius: '20px',
               cursor: 'pointer',
               fontSize: '0.9rem',
-              fontWeight: '500'
+              fontWeight: '500',
+              transition: 'all 0.2s ease'
             }}
           >
-            📺 TV Series ({pagination.totalCount > 0 ? Math.ceil(pagination.totalCount * 0.47) : '0'})
+            📺 TV Series ({tvShows.filter(show => show.type === 'Series').length})
           </button>
           <button
-            onClick={() => setFilters({ genre: '', type: 'Movie', search: '', sortBy: 'Rating' })}
+            onClick={() => handleQuickFilter('Movie')}
             style={{
               backgroundColor: filters.type === 'Movie' ? '#2563eb' : '#e5e7eb',
               color: filters.type === 'Movie' ? 'white' : '#374151',
@@ -124,10 +162,11 @@ const TvShows = () => {
               borderRadius: '20px',
               cursor: 'pointer',
               fontSize: '0.9rem',
-              fontWeight: '500'
+              fontWeight: '500',
+              transition: 'all 0.2s ease'
             }}
           >
-            🎬 Movies ({pagination.totalCount > 0 ? Math.ceil(pagination.totalCount * 0.53) : '0'})
+            🎬 Movies ({tvShows.filter(show => show.type === 'Movie').length})
           </button>
         </div>
       </div>

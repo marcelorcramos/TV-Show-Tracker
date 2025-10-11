@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("TvShowTracker.Domain")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5a0ee0bf5b522b0f8ea0231140a0a7666e5c046a")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e9b8fc423c3721b2a477dd916c553a41f20eb4ec")]
 [assembly: System.Reflection.AssemblyProductAttribute("TvShowTracker.Domain")]
 [assembly: System.Reflection.AssemblyTitleAttribute("TvShowTracker.Domain")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
