@@ -1,3 +1,4 @@
+// TvShowTracker.Application/DTOs/TvShowDto.cs
 namespace TvShowTracker.Application.DTOs
 {
     public class TvShowDto
@@ -14,15 +15,13 @@ namespace TvShowTracker.Application.DTOs
         public decimal? Rating { get; set; }
         public string? ImageUrl { get; set; }
         public bool IsFavorite { get; set; }
-        
-        // ✅ ADICIONA ESTA LINHA - Atores de destaque para a card
         public List<ActorDto> FeaturedActors { get; set; } = new();
     }
 
     public class TvShowDetailDto : TvShowDto
     {
         public List<EpisodeDto> Episodes { get; set; } = new();
-        public List<ActorDto> FeaturedActors { get; set; } = new();
+        // ✅ APENAS Episodes aqui - FeaturedActors é herdado de TvShowDto
     }
 
     public class EpisodeDto
@@ -35,16 +34,5 @@ namespace TvShowTracker.Application.DTOs
         public DateTime? ReleaseDate { get; set; }
         public TimeSpan? Duration { get; set; }
         public decimal? Rating { get; set; }
-    }
-
-    public class ActorDto
-    {
-        public int Id { get; set; }
-        public string Name { get; set; } = string.Empty;
-        public DateTime? BirthDate { get; set; }
-        public string? CharacterName { get; set; }
-        public string? Nationality { get; set; }
-        public string? Bio { get; set; }
-        public string? ImageUrl { get; set; }
     }
 }

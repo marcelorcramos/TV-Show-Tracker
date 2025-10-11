@@ -1,0 +1,20 @@
+// TvShowTracker.Application/DTOs/ActorDto.cs
+namespace TvShowTracker.Application.DTOs
+{
+    public class ActorDto
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public DateTime? BirthDate { get; set; }
+        public string? CharacterName { get; set; }
+        public string? Nationality { get; set; }
+        public string? Bio { get; set; }
+        public string? ImageUrl { get; set; }
+    }
+
+    // ADICIONE ESTA CLASSE
+    public class ActorDetailDto : ActorDto
+    {
+        public List<TvShowDto> TvShows { get; set; } = new List<TvShowDto>();
+    }
+}

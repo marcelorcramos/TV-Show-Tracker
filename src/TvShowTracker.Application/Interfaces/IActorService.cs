@@ -1,3 +1,4 @@
+// TvShowTracker.Application/Interfaces/IActorService.cs
 using TvShowTracker.Application.DTOs;
 
 namespace TvShowTracker.Application.Interfaces
@@ -14,13 +15,14 @@ namespace TvShowTracker.Application.Interfaces
         public int Page { get; set; } = 1;
         public int PageSize { get; set; } = 10;
         public string? Search { get; set; }
-        public string? Nationality { get; set; } // ✅ ADICIONA ESTA LINHA
+        public string? Nationality { get; set; }
         public string? SortBy { get; set; } = "Name";
         public bool SortDescending { get; set; } = false;
     }
 
-    public class ActorDetailDto : ActorDto
-    {
-        public List<TvShowDto> TvShows { get; set; } = new();
-    }
+    // REMOVER ESTA CLASSE DAQUI - Ela agora está em ActorDto.cs
+    // public class ActorDetailDto : ActorDto
+    // {
+    //     public List<TvShowDto> TvShows { get; set; } = new();
+    // }
 }

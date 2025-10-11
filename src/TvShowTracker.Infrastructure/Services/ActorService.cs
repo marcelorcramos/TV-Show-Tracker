@@ -301,7 +301,16 @@ namespace TvShowTracker.Infrastructure.Services
 
                 Console.WriteLine($"🎭 ActorService: Encontrados {totalCount} atores no total, retornando {actors.Count} para a página {query.Page}");
 
-                var actorDtos = _mapper.Map<List<ActorDto>>(actors);
+                var actorDtos = actors.Select(actor => new ActorDto
+                {
+                    Id = actor.Id,
+                    Name = actor.Name,
+                    BirthDate = actor.BirthDate,           // ✅ FORÇAR MAPEAMENTO
+                    Nationality = actor.Nationality,       // ✅ FORÇAR MAPEAMENTO  
+                    Bio = actor.Bio,                       // ✅ FORÇAR MAPEAMENTO
+                    ImageUrl = actor.ImageUrl,             // ✅ FORÇAR MAPEAMENTO
+                    CharacterName = null // Será preenchido das relações se necessário
+                }).ToList();
 
                 return new PagedResult<ActorDto>
                 {
@@ -318,31 +327,45 @@ namespace TvShowTracker.Infrastructure.Services
             }
         }
 
-        public async Task<ActorDetailDto?> GetActorByIdAsync(int id)
+        // TvShowTracker.Infrastructure/Services/ActorService.cs
+public async Task<ActorDetailDto?> GetActorByIdAsync(int id)
+{
+    try
+    {
+        var actor = await _context.Actors
+            .Include(a => a.TvShowActors)
+                .ThenInclude(ta => ta.TvShow)
+            .FirstOrDefaultAsync(a => a.Id == id);
+
+        if (actor == null) return null;
+
+        var actorDetail = new ActorDetailDto
         {
-            try
-            {
-                var actor = await _context.Actors
-                    .Include(a => a.TvShowActors)
-                        .ThenInclude(ta => ta.TvShow)
-                    .FirstOrDefaultAsync(a => a.Id == id);
+            Id = actor.Id,
+            Name = actor.Name,
+            BirthDate = actor.BirthDate,           // ✅ FORÇAR MAPEAMENTO
+            Nationality = actor.Nationality,       // ✅ FORÇAR MAPEAMENTO
+            Bio = actor.Bio,                       // ✅ FORÇAR MAPEAMENTO
+            ImageUrl = actor.ImageUrl,             // ✅ FORÇAR MAPEAMENTO
+            CharacterName = null,
+            TvShows = actor.TvShowActors
+                .Select(ta => _mapper.Map<TvShowDto>(ta.TvShow))
+                .ToList()
+        };
+        
+        // Preencher os TV shows
+        actorDetail.TvShows = actor.TvShowActors
+            .Select(ta => _mapper.Map<TvShowDto>(ta.TvShow))
+            .ToList();
 
-                if (actor == null) return null;
-
-                var actorDetail = _mapper.Map<ActorDetailDto>(actor);
-                
-                actorDetail.TvShows = actor.TvShowActors
-                    .Select(ta => _mapper.Map<TvShowDto>(ta.TvShow))
-                    .ToList();
-
-                return actorDetail;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"❌ Error in GetActorByIdAsync: {ex.Message}");
-                throw;
-            }
-        }
+        return actorDetail;
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"❌ Error in GetActorByIdAsync: {ex.Message}");
+        throw;
+    }
+}
 
         public async Task<IEnumerable<TvShowDto>> GetActorTvShowsAsync(int actorId)
         {

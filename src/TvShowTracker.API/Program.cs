@@ -69,19 +69,20 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-// Application Services
+// Application Services - ✅ ATUALIZADO
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<JwtService>();
 builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<ITvShowService, TvShowService>();
+// ❌ REMOVER: builder.Services.AddScoped<ITvShowService, TvShowService>();
 builder.Services.AddScoped<IActorService, ActorService>();
 builder.Services.AddScoped<IRecommendationService, RecommendationService>();
 builder.Services.AddScoped<ICacheService, FakeCacheService>();
 builder.Services.AddScoped<IGdprService, GdprService>();
 builder.Services.AddScoped<IExportService, ExportService>();
 
-// Data Seed Service - ADICIONAR ESTA LINHA
-builder.Services.AddScoped<DataSeedService>();
+// ✅ DATA SEED SERVICE AGORA SUBSTITUI O TVSHOWSERVICE
+builder.Services.AddScoped<ITvShowService, DataSeedService>(); // ✅ IMPLEMENTA A INTERFACE
+builder.Services.AddScoped<DataSeedService>(); // ✅ PARA INICIALIZAÇÃO DO BANCO
 
 // Background Services
 builder.Services.AddHostedService<EmailBackgroundService>();
@@ -119,7 +120,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-// CORS DEVE VIR ANTES de Authentication e Authorization
+// ✅ CORS DEVE VIR PRIMEIRO - ANTES de qualquer outro middleware
 app.UseCors("AllowReactApp");
 
 app.UseAuthentication();
@@ -127,12 +128,16 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-// ✅ INICIALIZAÇÃO DO BANCO DE DADOS - ADICIONAR ESTA PARTE
+// ✅ INICIALIZAÇÃO DO BANCO DE DADOS
 try
 {
     Console.WriteLine("🚀 Iniciando aplicação...");
     using var scope = app.Services.CreateScope();
     var seedService = scope.ServiceProvider.GetRequiredService<DataSeedService>();
+    
+    Console.WriteLine("🗑️  Limpando banco de dados...");
+    await seedService.ClearDatabaseAsync();
+    
     Console.WriteLine("📥 Executando seed do banco de dados...");
     await seedService.InitializeDatabaseAsync();
     Console.WriteLine("✅ Seed concluído com sucesso!");
@@ -140,7 +145,6 @@ try
 catch (Exception ex)
 {
     Console.WriteLine($"❌ Erro durante o seed: {ex.Message}");
-    Console.WriteLine($"❌ StackTrace: {ex.StackTrace}");
 }
 
 app.Run();
