@@ -1,5 +1,5 @@
+// src/hooks/useActors.js
 import { useState, useEffect } from 'react';
-import { actorsAPI } from '../services/api';
 
 export const useActors = (filters = {}) => {
   const [actors, setActors] = useState([]);
@@ -12,78 +12,62 @@ export const useActors = (filters = {}) => {
     totalPages: 0
   });
 
-  const fetchActors = async (page = 1) => {
-    try {
-      setLoading(true);
-      setError(null);
-      
-      // Prepara os parâmetros para a API
-      const params = {
-        page: page,
-        pageSize: pagination.pageSize,
-      };
-
-      // Adiciona apenas os filtros que têm valor
-      if (filters.search && filters.search.trim() !== '') {
-        params.search = filters.search.trim();
-      }
-
-      if (filters.nationality && filters.nationality.trim() !== '') {
-        params.nationality = filters.nationality.trim();
-      }
-
-      if (filters.sortBy && filters.sortBy.trim() !== '') {
-        params.sortBy = filters.sortBy.trim();
-      }
-
-      console.log('🔍 [useActors] Parâmetros enviados para a API:', params);
-      console.log('🔍 [useActors] Filtros atuais:', filters);
-      
-      const response = await actorsAPI.getAll(params);
-      const data = response.data;
-      
-      console.log('✅ [useActors] Resposta da API:', {
-        itemsCount: data.items?.length || 0,
-        totalCount: data.totalCount || 0,
-        page: data.page || 1,
-        totalPages: data.totalPages || 0,
-        items: data.items?.map(item => ({ 
-          id: item.id, 
-          name: item.name, 
-          nationality: item.nationality 
-        }))
-      });
-      
-      setActors(data.items || []);
-      setPagination(prev => ({
-        ...prev,
-        page: data.page || 1,
-        totalCount: data.totalCount || 0,
-        totalPages: data.totalPages || 0
-      }));
-
-      console.log('🎭 [useActors] Actors no state:', data.items?.length || 0);
-      
-    } catch (err) {
-      const errorMessage = err.response?.data?.message || err.message || 'Failed to fetch actors';
-      setError(errorMessage);
-      console.error('❌ [useActors] Erro no fetchActors:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Recarrega quando os filtros mudam
   useEffect(() => {
-    console.log('🔄 [useActors] Filtros mudaram, recarregando atores...', filters);
-    fetchActors(1);
-  }, [filters.search, filters.nationality, filters.sortBy]);
+    const fetchActors = async () => {
+      try {
+        setLoading(true);
+        console.log('🔄 useActors: Iniciando fetch com filtros:', filters);
+        
+        const { actorsAPI } = await import('../services/api');
+        
+        const queryParams = {
+          page: pagination.page,
+          pageSize: pagination.pageSize,
+          search: filters.search || '',
+          nationality: filters.nationality || '',
+          sortBy: filters.sortBy || 'Name'
+        };
 
-  const changePage = (page) => {
-    console.log('📄 [useActors] Mudando para página:', page);
-    if (page >= 1 && page <= pagination.totalPages) {
-      fetchActors(page);
-    }
+        console.log('📡 useActors: Parâmetros da query:', queryParams);
+
+        const response = await actorsAPI.getAll(queryParams);
+        
+        console.log('✅ useActors: Resposta da API:', {
+          data: response.data,
+          itemsCount: response.data?.items?.length || 0,
+          totalCount: response.data?.totalCount || 0
+        });
+
+        if (response.data && response.data.items) {
+          setActors(response.data.items);
+          setPagination(prev => ({
+            ...prev,
+            totalCount: response.data.totalCount,
+            totalPages: Math.ceil(response.data.totalCount / prev.pageSize)
+          }));
+        } else {
+          console.warn('⚠️ useActors: Resposta sem dados esperados', response);
+          setActors([]);
+        }
+        
+        setError(null);
+      } catch (err) {
+        console.error('❌ useActors: Erro ao carregar atores:', err);
+        setError(err.message);
+        setActors([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchActors();
+  }, [filters, pagination.page]);
+
+  const changePage = (newPage) => {
+    setPagination(prev => ({
+      ...prev,
+      page: newPage
+    }));
   };
 
   return {
@@ -91,7 +75,6 @@ export const useActors = (filters = {}) => {
     loading,
     error,
     pagination,
-    changePage,
-    refetch: () => fetchActors(pagination.page)
+    changePage
   };
 };

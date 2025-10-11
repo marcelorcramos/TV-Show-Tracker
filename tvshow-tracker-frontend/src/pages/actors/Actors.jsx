@@ -1,6 +1,6 @@
 // src/pages/actors/Actors.jsx
 import React, { useState, useEffect } from 'react';
-import { useActors } from '../../hooks/useActors'
+import { useActors } from '../../hooks/useActors';
 import ActorCard from '../../components/ActorCard';
 import LoadingSpinner from '../../components/LoadingSpinner';
 
@@ -13,23 +13,54 @@ const Actors = () => {
 
   const { actors, loading, error, pagination, changePage } = useActors(filters);
   
-  // Estado separado para todas as nacionalidades disponíveis
   const [allNationalities, setAllNationalities] = useState([]);
+  const [loadingNationalities, setLoadingNationalities] = useState(true);
 
-  // Carrega todas as nacionalidades uma vez
+  // DEBUG: Verificar se os atores estão chegando
+  React.useEffect(() => {
+    console.log('🎭 ACTORS CARREGADOS:', actors.length);
+    
+    if (actors.length > 0) {
+      console.log('🔍 DETALHES DOS ACTORES:');
+      
+      actors.forEach((actor, index) => {
+        console.log(`👤 ${index + 1}. ${actor.name}`, {
+          id: actor.id,
+          nationality: actor.nationality,
+          birthDate: actor.birthDate,
+          hasImage: !!actor.imageUrl,
+          imageUrl: actor.imageUrl
+        });
+      });
+    }
+  }, [actors]);
+
+  // DEBUG: Verificar filtros
+  React.useEffect(() => {
+    console.log('🎭 Filtros ativos:', filters);
+  }, [filters]);
+
+  // Carrega todas as nacionalidades
   useEffect(() => {
     const fetchAllNationalities = async () => {
       try {
-        // Faz uma chamada à API sem filtros para pegar todas as nacionalidades
+        console.log('🔄 Carregando nacionalidades...');
+        setLoadingNationalities(true);
+        
         const { actorsAPI } = await import('../../services/api');
         const response = await actorsAPI.getAll({ pageSize: 100 });
         const allActors = response.data.items || [];
         
-        // Extrai nacionalidades únicas
+        console.log('📊 Total de atores carregados para nacionalidades:', allActors.length);
+        
         const nationalities = [...new Set(allActors.map(actor => actor.nationality).filter(Boolean))].sort();
+        console.log('🌍 Nacionalidades encontradas:', nationalities);
+        
         setAllNationalities(nationalities);
       } catch (err) {
-        console.error('❌ Erro ao carregar nacionalidades:', err);
+        console.error('❌ Erro ao cargar nacionalidades:', err);
+      } finally {
+        setLoadingNationalities(false);
       }
     };
 
@@ -45,6 +76,15 @@ const Actors = () => {
 
   const handleSearch = (searchTerm) => {
     handleFilterChange('search', searchTerm);
+  };
+
+  // Função para os botões de filtro rápido
+  const handleQuickFilter = (nationality) => {
+    setFilters(prev => ({
+      ...prev,
+      nationality: prev.nationality === nationality ? '' : nationality,
+      search: ''
+    }));
   };
 
   // Calcular páginas para mostrar na paginação
@@ -124,9 +164,8 @@ const Actors = () => {
           Discover {pagination.totalCount} talented actors
         </p>
         
-        {/* Quick Filter Buttons - AGORA COM TODAS AS NACIONALIDADES SEMPRE VISÍVEIS */}
+        {/* Quick Filter Buttons */}
         <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginBottom: '20px' }}>
-          {/* Botão "All Actors" */}
           <button
             onClick={() => setFilters({ search: '', nationality: '', sortBy: 'Name' })}
             style={{
@@ -143,19 +182,19 @@ const Actors = () => {
           >
             All Actors ({pagination.totalCount})
           </button>
-
-          {/* Botões de nacionalidade - SEMPRE VISÍVEIS */}
-          {allNationalities.slice(0, 6).map(nationality => {
-            // Conta quantos atores têm esta nacionalidade (dos atores filtrados)
+          
+          {/* Botões de nacionalidade mais populares */}
+          {!loadingNationalities && allNationalities.slice(0, 6).map(nationality => {
             const count = actors.filter(actor => actor.nationality === nationality).length;
+            const isActive = filters.nationality === nationality;
             
             return (
               <button
                 key={nationality}
-                onClick={() => setFilters({ search: '', nationality: nationality, sortBy: 'Name' })}
+                onClick={() => handleQuickFilter(nationality)}
                 style={{
-                  backgroundColor: filters.nationality === nationality ? '#2563eb' : '#e5e7eb',
-                  color: filters.nationality === nationality ? 'white' : '#374151',
+                  backgroundColor: isActive ? '#2563eb' : '#e5e7eb',
+                  color: isActive ? 'white' : '#374151',
                   border: 'none',
                   padding: '8px 16px',
                   borderRadius: '20px',
@@ -169,6 +208,16 @@ const Actors = () => {
               </button>
             );
           })}
+          
+          {loadingNationalities && (
+            <div style={{ 
+              padding: '8px 16px',
+              color: '#6b7280',
+              fontSize: '0.9rem'
+            }}>
+              Loading nationalities...
+            </div>
+          )}
         </div>
       </div>
       
@@ -357,7 +406,7 @@ const Actors = () => {
 
           <div style={{ 
             display: 'grid', 
-            gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', 
+            gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', 
             gap: '25px',
             marginBottom: '40px'
           }}>

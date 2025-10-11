@@ -121,119 +121,109 @@ namespace TvShowTracker.Infrastructure.Services
             }
         }
 
-        private async Task SeedTvShowActorRelationsAsync()
+        // No método SeedTvShowActorRelationsAsync, atualize o mapeamento:
+private async Task SeedTvShowActorRelationsAsync()
+{
+    try
+    {
+        var tvShows = await _context.TvShows.ToListAsync();
+        var actors = await _context.Actors.ToListAsync();
+
+        Console.WriteLine($"📊 Criando relações: {tvShows.Count} TV Shows e {actors.Count} Atores");
+
+        var tvShowActors = new List<TvShowActor>();
+
+        // MAPEAMENTO COMPLETO - CADA ATOR COM PELO MENOS 1 FILME/SÉRIE
+        var actorAssignments = new Dictionary<string, List<int>>
         {
-            try
+            { "Breaking Bad", new List<int> { 0, 1 } }, // Bryan Cranston, Aaron Paul
+            { "Stranger Things", new List<int> { 2, 11 } }, // Pedro Pascal, Bella Ramsey
+            { "Game of Thrones", new List<int> { 3, 6 } }, // Emilia Clarke, Kit Harington
+            { "The Witcher", new List<int> { 4, 5 } }, // Henry Cavill, Anya Chalotra
+            { "The Last of Us", new List<int> { 2, 11 } }, // Pedro Pascal, Bella Ramsey
+            { "Friends", new List<int> { 7, 12 } }, // Jennifer Aniston, Courteney Cox
+            { "The Dark Knight", new List<int> { 8, 9, 10 } }, // Leonardo DiCaprio, Heath Ledger, Tom Hardy
+            { "Inception", new List<int> { 8, 10 } }, // Leonardo DiCaprio, Tom Hardy
+            { "Avengers: Endgame", new List<int> { 8, 4 } }, // Leonardo DiCaprio, Henry Cavill
+            { "Forrest Gump", new List<int> { 13, 14 } } // Tom Hanks, Robin Wright
+        };
+
+        var characterNames = new Dictionary<string, Dictionary<int, string>>
+        {
+            { "Breaking Bad", new Dictionary<int, string> { 
+                {0, "Walter White"}, 
+                {1, "Jesse Pinkman"} 
+            }},
+            { "Game of Thrones", new Dictionary<int, string> { 
+                {3, "Daenerys Targaryen"}, 
+                {6, "Jon Snow"} 
+            }},
+            { "The Witcher", new Dictionary<int, string> { 
+                {4, "Geralt of Rivia"}, 
+                {5, "Yennefer"} 
+            }},
+            { "The Last of Us", new Dictionary<int, string> { 
+                {2, "Joel Miller"}, 
+                {11, "Ellie Williams"} 
+            }},
+            { "Friends", new Dictionary<int, string> { 
+                {7, "Rachel Green"}, 
+                {12, "Monica Geller"} 
+            }},
+            { "The Dark Knight", new Dictionary<int, string> { 
+                {8, "Bruce Wayne"}, 
+                {9, "Joker"},
+                {10, "Bane"}
+            }},
+            { "Inception", new Dictionary<int, string> { 
+                {8, "Dom Cobb"}, 
+                {10, "Eames"} 
+            }},
+            { "Forrest Gump", new Dictionary<int, string> { 
+                {13, "Forrest Gump"},
+                {14, "Jenny Curran"}
+            }}
+        };
+
+        foreach (var tvShow in tvShows)
+        {
+            if (actorAssignments.ContainsKey(tvShow.Title))
             {
-                var tvShows = await _context.TvShows.ToListAsync();
-                var actors = await _context.Actors.ToListAsync();
-
-                Console.WriteLine($"📊 Criando relações: {tvShows.Count} TV Shows e {actors.Count} Atores");
-
-                var tvShowActors = new List<TvShowActor>();
-
-                // Mapeamento específico ATUALIZADO
-                var actorAssignments = new Dictionary<string, List<int>>
+                var actorIndices = actorAssignments[tvShow.Title];
+                
+                foreach (var actorIndex in actorIndices)
                 {
-                    { "Breaking Bad", new List<int> { 0, 1 } }, // Bryan Cranston, Aaron Paul
-                    { "Stranger Things", new List<int> { 1, 2 } },
-                    { "Game of Thrones", new List<int> { 3, 6 } },
-                    { "The Witcher", new List<int> { 4, 5 } },
-                    { "The Last of Us", new List<int> { 2, 11 } },
-                    { "Friends", new List<int> { 7, 12 } },
-                    { "The Dark Knight", new List<int> { 8, 9 } },
-                    { "Inception", new List<int> { 8, 10 } },
-                    { "Avengers: Endgame", new List<int> { 8, 4 } },
-                    { "Forrest Gump", new List<int> { 13, 14 } } // ATUALIZADO: Tom Hanks (13) e Robin Wright (14)
-                };
-
-                var characterNames = new Dictionary<string, Dictionary<int, string>>
-                {
-                    { "Breaking Bad", new Dictionary<int, string> { {0, "Walter White"}, {1, "Jesse Pinkman"} } },
-                    { "Game of Thrones", new Dictionary<int, string> { {3, "Daenerys Targaryen"}, {6, "Jon Snow"} } },
-                    { "The Witcher", new Dictionary<int, string> { {4, "Geralt of Rivia"}, {5, "Yennefer"} } },
-                    { "The Last of Us", new Dictionary<int, string> { {2, "Joel Miller"}, {11, "Ellie Williams"} } },
-                    { "Friends", new Dictionary<int, string> { {7, "Rachel Green"}, {12, "Monica Geller"} } },
-                    { "The Dark Knight", new Dictionary<int, string> { {8, "Bruce Wayne"}, {9, "Joker"} } },
-                    { "Inception", new Dictionary<int, string> { {8, "Dom Cobb"}, {10, "Eames"} } },
-                    { "Forrest Gump", new Dictionary<int, string> { 
-                        {13, "Forrest Gump" },
-                        {14, "Jenny Curran" } // NOVO PERSONAGEM ADICIONADO
-                    }}
-                };
-
-                foreach (var tvShow in tvShows)
-                {
-                    if (actorAssignments.ContainsKey(tvShow.Title))
+                    if (actorIndex < actors.Count)
                     {
-                        var actorIndices = actorAssignments[tvShow.Title];
-                        
-                        foreach (var actorIndex in actorIndices)
+                        string? characterName = null;
+                        if (characterNames.ContainsKey(tvShow.Title) && 
+                            characterNames[tvShow.Title].ContainsKey(actorIndex))
                         {
-                            if (actorIndex < actors.Count)
-                            {
-                                string? characterName = null;
-                                if (characterNames.ContainsKey(tvShow.Title) && 
-                                    characterNames[tvShow.Title].ContainsKey(actorIndex))
-                                {
-                                    characterName = characterNames[tvShow.Title][actorIndex];
-                                }
-
-                                tvShowActors.Add(new TvShowActor
-                                {
-                                    TvShowId = tvShow.Id,
-                                    ActorId = actors[actorIndex].Id,
-                                    IsFeatured = true,
-                                    CharacterName = characterName
-                                });
-
-                                Console.WriteLine($"🎬 Relação: {tvShow.Title} - {actors[actorIndex].Name} como {characterName}");
-                            }
-                            else
-                            {
-                                Console.WriteLine($"⚠️ Índice inválido: {actorIndex} para {tvShow.Title}");
-                            }
+                            characterName = characterNames[tvShow.Title][actorIndex];
                         }
+
+                        tvShowActors.Add(new TvShowActor
+                        {
+                            TvShowId = tvShow.Id,
+                            ActorId = actors[actorIndex].Id,
+                            IsFeatured = true,
+                            CharacterName = characterName
+                        });
+
+                        Console.WriteLine($"🎬 Relação: {tvShow.Title} - {actors[actorIndex].Name} como {characterName}");
                     }
                 }
-
-                await _context.TvShowActors.AddRangeAsync(tvShowActors);
-                await _context.SaveChangesAsync();
-                Console.WriteLine($"✅ Relações criadas! {tvShowActors.Count} relações adicionadas.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"❌ Erro ao criar relações: {ex.Message}");
             }
         }
 
-        // MÉTODO PARA LIMPAR O BANCO (adicione este método também)
-        public async Task ClearDatabaseAsync()
-        {
-            await _semaphore.WaitAsync();
-            try
-            {
-                Console.WriteLine("🗑️  Limpando banco de dados...");
-
-                // Limpar todas as tabelas na ordem correta (devido às relações FK)
-                _context.TvShowActors.RemoveRange(_context.TvShowActors);
-                _context.TvShows.RemoveRange(_context.TvShows);
-                _context.Actors.RemoveRange(_context.Actors);
-
-                await _context.SaveChangesAsync();
-                
-                _hasSeeded = false; // Resetar flag para permitir novo seed
-                
-                Console.WriteLine("✅ Banco de dados limpo com sucesso!");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"❌ Erro ao limpar banco de dados: {ex.Message}");
-            }
-            finally
-            {
-                _semaphore.Release();
-            }
-        }
+        await _context.TvShowActors.AddRangeAsync(tvShowActors);
+        await _context.SaveChangesAsync();
+        Console.WriteLine($"✅ Relações criadas! {tvShowActors.Count} relações adicionadas.");
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"❌ Erro ao criar relações: {ex.Message}");
+    }
+}
     }
 }

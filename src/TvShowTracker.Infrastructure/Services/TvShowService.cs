@@ -657,16 +657,16 @@ namespace TvShowTracker.Infrastructure.Services
                     // Pegar os 3 principais atores
                     // No método GetTvShowsAsync - substitua a criação do ActorDto:
                     dto.FeaturedActors = tvShow.TvShowActors?
-                        .Where(ta => ta.IsFeatured && ta.Actor != null)
-                        .Take(3)
-                        .Select(ta => new ActorDto 
-                        { 
-                            Id = ta.Actor.Id,
-                            Name = ta.Actor.Name,
-                            CharacterName = ta.CharacterName,
-                            ImageUrl = ta.Actor.ImageUrl // ← ADICIONE ESTA LINHA
-                        })
-                        .ToList() ?? new List<ActorDto>();
+    .Where(ta => ta.IsFeatured && ta.Actor != null)
+    .Take(3)
+    .Select(ta => new ActorDto 
+    { 
+        Id = ta.Actor.Id,
+        Name = ta.Actor.Name,
+        CharacterName = ta.CharacterName,
+        ImageUrl = ta.Actor.ImageUrl // ← ADICIONE ESTA LINHA
+    })
+    .ToList() ?? new List<ActorDto>();
                         
                     Console.WriteLine($"🎭 {tvShow.Title} - Atores mapeados: {dto.FeaturedActors.Count}");
                         

@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+// src/components/ActorCard.jsx
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import  useModal  from '../hooks/useModal';
+import useModal from '../hooks/useModal';
 import ActorModal from './ActorModal';
 
 const ActorCard = ({ actor, onFavoriteUpdate }) => {
@@ -9,25 +10,46 @@ const ActorCard = ({ actor, onFavoriteUpdate }) => {
   const [loading, setLoading] = useState(false);
   const [imageError, setImageError] = useState(false);
   const [currentImageUrl, setCurrentImageUrl] = useState(actor.imageUrl);
+  const [actorTvShows, setActorTvShows] = useState([]);
   
   // Hook do modal
   const { isOpen, modalData, openModal, closeModal } = useModal();
 
-  // Mapeamento completo de fallback images para atores
+  // Carrega os TV shows do ator
+  useEffect(() => {
+    const fetchActorTvShows = async () => {
+      try {
+        const { actorsAPI } = await import('../services/api');
+        const response = await actorsAPI.getTvShows(actor.id);
+        setActorTvShows(response.data || []);
+      } catch (error) {
+        console.error('❌ Erro ao carregar TV shows do ator:', error);
+      }
+    };
+
+    if (actor.id) {
+      fetchActorTvShows();
+    }
+  }, [actor.id]);
+
+  // Mapeamento de fallback images
   const getActorFallbackImage = (actorName) => {
     const fallbackImages = {
       'Bryan Cranston': 'https://image.tmdb.org/t/p/w500/3gIO6mCd4s4mT2aUdS9dVMXZ9g6.jpg',
-      'Millie Bobby Brown': 'https://image.tmdb.org/t/p/w500/4D7fFjD4Ok3bD5iMGRWOM5r7cL6.jpg',
+      'Aaron Paul': 'https://image.tmdb.org/t/p/w500/7kR4s4k2dW0qwxgQNlMxO7X6xUf.jpg',
       'Pedro Pascal': 'https://image.tmdb.org/t/p/w500/dBOrm29cr7NUrjiDQMTtrTyDpfy.jpg',
       'Emilia Clarke': 'https://image.tmdb.org/t/p/w500/xMIjqwhPDfS1L2l8EWhWhDKpTQQ.jpg',
       'Henry Cavill': 'https://image.tmdb.org/t/p/w500/5h3Dk3g9w8Yd1qwlvWGPWYUBrJ2.jpg',
-      'Zendaya': 'https://image.tmdb.org/t/p/w500/soXY5hq1i4K9LZEqY3WidBQD2KJ.jpg',
-      'Tom Hanks': 'https://image.tmdb.org/t/p/w500/xndWFsBlClOJFRdhSt4NBwiPq2o.jpg',
+      'Anya Chalotra': 'https://image.tmdb.org/t/p/w500/1vL1VU5VKy6O8WJzN9kXZ5Qe5b2.jpg',
+      'Kit Harington': 'https://image.tmdb.org/t/p/w500/4MqUjb1SYrzHmOodXzQEeZfg3sP.jpg',
       'Jennifer Aniston': 'https://image.tmdb.org/t/p/w500/9Y5q9dW95e9dY4tlgj5YdT2Y4n4.jpg',
       'Leonardo DiCaprio': 'https://image.tmdb.org/t/p/w500/5Brc5dLifH3UInk3wUaCuGXpCqy.jpg',
-      'Margot Robbie': 'https://image.tmdb.org/t/p/w500/euDPyqLnuwaWMHajcU3oZ9uZezR.jpg',
-      'Keanu Reeves': 'https://image.tmdb.org/t/p/w500/4D0PpNI0km5y0h1hqHkFcCqML6o.jpg',
-      'Scarlett Johansson': 'https://image.tmdb.org/t/p/w500/6NsMbJXRlDZuDzatN2akFdGuTvx.jpg'
+      'Heath Ledger': 'https://image.tmdb.org/t/p/w500/5Y9HnYYa9jF4NunY9lSgJGjSe8E.jpg',
+      'Tom Hardy': 'https://image.tmdb.org/t/p/w500/d81K0RH8UX7tZj49tZaQxqEQJp1.jpg',
+      'Bella Ramsey': 'https://image.tmdb.org/t/p/w500/xU5fpn6qqSOJD3v3x1x3Z3w3z5Z.jpg',
+      'Courteney Cox': 'https://image.tmdb.org/t/p/w500/4CkY4UEEG2h6xB2DnK1BZ7N86Fz.jpg',
+      'Tom Hanks': 'https://image.tmdb.org/t/p/w500/xndWFsBlClOJFRdhSt4NBwiPq2o.jpg',
+      'Robin Wright': 'https://image.tmdb.org/t/p/w500/1cT13dS2Swif6o8Q6Qd1JSKOGUc.jpg'
     };
     
     return fallbackImages[actorName] || null;
@@ -89,14 +111,13 @@ const ActorCard = ({ actor, onFavoriteUpdate }) => {
   const handleImageError = () => {
     console.log('❌ Erro a carregar imagem para:', actor.name);
     
-    // Tenta usar o fallback
     const fallbackUrl = getActorFallbackImage(actor.name);
     if (fallbackUrl && fallbackUrl !== currentImageUrl) {
       console.log('🔄 Tentando fallback image:', fallbackUrl);
       setCurrentImageUrl(fallbackUrl);
-      setImageError(false); // Reseta o erro para tentar carregar o fallback
+      setImageError(false);
     } else {
-      setImageError(true); // Se não há fallback, mostra placeholder
+      setImageError(true);
     }
   };
 
@@ -105,7 +126,6 @@ const ActorCard = ({ actor, onFavoriteUpdate }) => {
     setImageError(false);
   };
 
-  // Determina qual imagem mostrar
   const showFallback = imageError || !isValidImageUrl(currentImageUrl);
 
   return (
@@ -119,7 +139,8 @@ const ActorCard = ({ actor, onFavoriteUpdate }) => {
           border: '1px solid #e5e7eb',
           transition: 'transform 0.2s, box-shadow 0.2s',
           cursor: 'pointer',
-          position: 'relative'
+          position: 'relative',
+          marginBottom: '7px'
         }}
         onMouseEnter={(e) => {
           e.currentTarget.style.transform = 'translateY(-4px)';
@@ -162,7 +183,7 @@ const ActorCard = ({ actor, onFavoriteUpdate }) => {
           </button>
         )}
 
-        {/* Actor Image com Fallback Robusto */}
+        {/* Actor Image */}
         <div style={{ 
           width: '100%', 
           height: '200px', 
@@ -187,7 +208,7 @@ const ActorCard = ({ actor, onFavoriteUpdate }) => {
               }}
               onError={handleImageError}
               onLoad={handleImageLoad}
-              loading="lazy" // Otimização de performance
+              loading="lazy"
             />
           ) : (
             <div style={{
@@ -248,6 +269,91 @@ const ActorCard = ({ actor, onFavoriteUpdate }) => {
           <p style={{ color: '#6b7280', marginBottom: '5px', fontSize: '14px' }}>
             🎂 {new Date(actor.birthDate).toLocaleDateString('pt-BR')}
           </p>
+        )}
+
+        {/* TV Shows/Filmes - NOVA SEÇÃO ADICIONADA */}
+        {actorTvShows.length > 0 && (
+          <div style={{ 
+            marginBottom: '15px',
+            paddingTop: '15px',
+            borderTop: '1px solid #e5e7eb'
+          }}>
+            <h4 style={{ 
+              fontSize: '14px', 
+              fontWeight: '600', 
+              marginBottom: '8px',
+              color: '#4b5563'
+            }}>
+              Conhecido por:
+            </h4>
+            <div style={{ 
+              display: 'flex', 
+              flexDirection: 'column', 
+              gap: '6px' 
+            }}>
+              {actorTvShows.slice(0, 3).map((tvShow) => (
+                <div key={tvShow.id} style={{ 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  gap: '8px' 
+                }}>
+                  <div style={{
+                    width: '28px',
+                    height: '28px',
+                    borderRadius: '6px',
+                    backgroundColor: tvShow.type === 'Movie' ? '#fef3c7' : '#f0f9ff',
+                    color: tvShow.type === 'Movie' ? '#d97706' : '#0369a1',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '12px',
+                    fontWeight: 'bold',
+                    flexShrink: 0
+                  }}>
+                    {tvShow.type === 'Movie' ? '🎬' : '📺'}
+                  </div>
+                  <div style={{ 
+                    display: 'flex', 
+                    flexDirection: 'column',
+                    minWidth: 0,
+                    flexGrow: 1
+                  }}>
+                    <span style={{ 
+                      fontSize: '12px', 
+                      fontWeight: '500', 
+                      color: '#1f2937',
+                      whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis'
+                    }}>
+                      {tvShow.title}
+                    </span>
+                    <span style={{ 
+                      fontSize: '10px', 
+                      color: '#6b7280',
+                      whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis'
+                    }}>
+                      {tvShow.genre} • {tvShow.rating}/10
+                    </span>
+                  </div>
+                </div>
+              ))}
+              {actorTvShows.length > 3 && (
+                <div style={{ 
+                  fontSize: '11px', 
+                  color: '#6b7280',
+                  textAlign: 'center',
+                  padding: '4px',
+                  backgroundColor: '#f9fafb',
+                  borderRadius: '4px'
+                }}>
+                  +{actorTvShows.length - 3} mais
+                </div>
+              )}
+            </div>
+          </div>
         )}
 
         {actor.bio && (

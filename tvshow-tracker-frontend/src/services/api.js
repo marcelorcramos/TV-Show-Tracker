@@ -1,3 +1,4 @@
+// src/services/api.js
 import axios from 'axios';
 
 const API_BASE_URL = 'http://localhost:5023/api';
@@ -15,6 +16,13 @@ api.interceptors.request.use(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+    
+    // DEBUG: Log das requisições
+    console.log(`📡 API Request: ${config.method?.toUpperCase()} ${config.url}`, {
+      params: config.params,
+      data: config.data
+    });
+    
     return config;
   },
   (error) => {
@@ -24,8 +32,21 @@ api.interceptors.request.use(
 
 // Interceptor para tratar erros globalmente
 api.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    // DEBUG: Log das respostas bem-sucedidas
+    console.log(`✅ API Response: ${response.status} ${response.config.url}`, {
+      data: response.data,
+      count: response.data?.items?.length || response.data?.length || 'N/A'
+    });
+    return response;
+  },
   (error) => {
+    // DEBUG: Log dos erros
+    console.error(`❌ API Error: ${error.response?.status} ${error.config?.url}`, {
+      error: error.message,
+      response: error.response?.data
+    });
+    
     if (error.response?.status === 401) {
       // Token expirado ou inválido
       localStorage.removeItem('authToken');
@@ -43,22 +64,84 @@ export const authAPI = {
 };
 
 export const tvShowsAPI = {
-  getAll: (params = {}) => api.get('/tvshows', { params }),
-  getById: (id) => api.get(`/tvshows/${id}`),
-  getGenres: () => api.get('/tvshows/genres'),
-  getTypes: () => api.get('/tvshows/types'),
-  getRecommendations: () => api.get('/tvshows/recommendations'),
+  getAll: (params = {}) => {
+    console.log('🎬 TVShowsAPI.getAll chamado com params:', params);
+    return api.get('/tvshows', { params });
+  },
+  getById: (id) => {
+    console.log(`🎬 TVShowsAPI.getById chamado para ID: ${id}`);
+    return api.get(`/tvshows/${id}`);
+  },
+  getGenres: () => {
+    console.log('🎬 TVShowsAPI.getGenres chamado');
+    return api.get('/tvshows/genres');
+  },
+  getTypes: () => {
+    console.log('🎬 TVShowsAPI.getTypes chamado');
+    return api.get('/tvshows/types');
+  },
+  getRecommendations: () => {
+    console.log('🎬 TVShowsAPI.getRecommendations chamado');
+    return api.get('/tvshows/recommendations');
+  },
 };
 
 export const actorsAPI = {
-  getAll: (params = {}) => api.get('/actors', { params }),
-  getById: (id) => api.get(`/actors/${id}`),
+  getAll: (params = {}) => {
+    console.log('🎭 ActorsAPI.getAll chamado com params:', params);
+    return api.get('/actors', { 
+      params: {
+        page: params.page || 1,
+        pageSize: params.pageSize || 12,
+        search: params.search || '',
+        nationality: params.nationality || '',
+        sortBy: params.sortBy || 'Name'
+      }
+    });
+  },
+  getById: (id) => {
+    console.log(`🎭 ActorsAPI.getById chamado para ID: ${id}`);
+    return api.get(`/actors/${id}`);
+  },
+  getTvShows: (actorId) => {
+    console.log(`🎭 ActorsAPI.getTvShows chamado para actorId: ${actorId}`);
+    return api.get(`/actors/${actorId}/tvshows`);
+  },
+  getNationalities: () => {
+    console.log('🎭 ActorsAPI.getNationalities chamado');
+    return api.get('/actors/nationalities');
+  }
 };
 
 export const favoritesAPI = {
-  getAll: () => api.get('/favorites'),
-  add: (tvShowId) => api.post(`/favorites/${tvShowId}`),
-  remove: (tvShowId) => api.delete(`/favorites/${tvShowId}`),
+  getAll: () => {
+    console.log('❤️ FavoritesAPI.getAll chamado');
+    return api.get('/favorites');
+  },
+  add: (tvShowId) => {
+    console.log(`❤️ FavoritesAPI.add chamado para tvShowId: ${tvShowId}`);
+    return api.post(`/favorites/${tvShowId}`);
+  },
+  remove: (tvShowId) => {
+    console.log(`❤️ FavoritesAPI.remove chamado para tvShowId: ${tvShowId}`);
+    return api.delete(`/favorites/${tvShowId}`);
+  },
+};
+
+// Função de teste para verificar se a API está respondendo
+export const testAPI = {
+  health: () => {
+    console.log('🏥 TestAPI.health chamado');
+    return api.get('/health');
+  },
+  testActors: () => {
+    console.log('🧪 TestAPI.testActors chamado');
+    return api.get('/actors?pageSize=5');
+  },
+  testTvShows: () => {
+    console.log('🧪 TestAPI.testTvShows chamado');
+    return api.get('/tvshows?pageSize=5');
+  }
 };
 
 export default api;
