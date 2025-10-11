@@ -17,43 +17,70 @@ export const useActors = (filters = {}) => {
       setLoading(true);
       setError(null);
       
+      // Prepara os parâmetros para a API
       const params = {
-        page,
+        page: page,
         pageSize: pagination.pageSize,
-        ...filters
       };
 
-      // Remove parâmetros vazios para não enviar à API
-      Object.keys(params).forEach(key => {
-        if (params[key] === '' || params[key] == null) {
-          delete params[key];
-        }
-      });
+      // Adiciona apenas os filtros que têm valor
+      if (filters.search && filters.search.trim() !== '') {
+        params.search = filters.search.trim();
+      }
 
-      console.log('🔍 Parâmetros enviados para a API:', params); // Debug
+      if (filters.nationality && filters.nationality.trim() !== '') {
+        params.nationality = filters.nationality.trim();
+      }
+
+      if (filters.sortBy && filters.sortBy.trim() !== '') {
+        params.sortBy = filters.sortBy.trim();
+      }
+
+      console.log('🔍 [useActors] Parâmetros enviados para a API:', params);
+      console.log('🔍 [useActors] Filtros atuais:', filters);
       
       const response = await actorsAPI.getAll(params);
       const data = response.data;
       
-      setActors(data.items);
+      console.log('✅ [useActors] Resposta da API:', {
+        itemsCount: data.items?.length || 0,
+        totalCount: data.totalCount || 0,
+        page: data.page || 1,
+        totalPages: data.totalPages || 0,
+        items: data.items?.map(item => ({ 
+          id: item.id, 
+          name: item.name, 
+          nationality: item.nationality 
+        }))
+      });
+      
+      setActors(data.items || []);
       setPagination(prev => ({
         ...prev,
-        page: data.page,
-        totalCount: data.totalCount,
-        totalPages: data.totalPages
+        page: data.page || 1,
+        totalCount: data.totalCount || 0,
+        totalPages: data.totalPages || 0
       }));
+
+      console.log('🎭 [useActors] Actors no state:', data.items?.length || 0);
+      
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to fetch actors');
+      const errorMessage = err.response?.data?.message || err.message || 'Failed to fetch actors';
+      setError(errorMessage);
+      console.error('❌ [useActors] Erro no fetchActors:', err);
     } finally {
       setLoading(false);
     }
   };
 
+  // Recarrega quando os filtros mudam
   useEffect(() => {
+    console.log('🔄 [useActors] Filtros mudaram, recarregando atores...', filters);
     fetchActors(1);
-  }, [filters.search, filters.sortBy, filters.nationality]); // ← ADICIONE filters.nationality aqui
+  }, [filters.search, filters.nationality, filters.sortBy]);
 
   const changePage = (page) => {
+    console.log('📄 [useActors] Mudando para página:', page);
     if (page >= 1 && page <= pagination.totalPages) {
       fetchActors(page);
     }

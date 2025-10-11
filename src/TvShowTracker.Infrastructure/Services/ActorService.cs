@@ -182,53 +182,60 @@ namespace TvShowTracker.Infrastructure.Services
         }
 
         // ... (resto dos métodos permanece igual)
-        public async Task<PagedResult<ActorDto>> GetActorsAsync(ActorQuery query)
+       public async Task<PagedResult<ActorDto>> GetActorsAsync(ActorQuery query)
+{
+    try
+    {
+        var actorsQuery = _context.Actors.AsQueryable();
+
+        // Filtro por search (nome)
+        if (!string.IsNullOrEmpty(query.Search))
         {
-            try
-            {
-                var actorsQuery = _context.Actors.AsQueryable();
-
-                if (!string.IsNullOrEmpty(query.Search))
-                {
-                    actorsQuery = actorsQuery.Where(a => a.Name.Contains(query.Search));
-                }
-
-                actorsQuery = query.SortBy?.ToLower() switch
-                {
-                    "name" => query.SortDescending 
-                        ? actorsQuery.OrderByDescending(a => a.Name)
-                        : actorsQuery.OrderBy(a => a.Name),
-                    "birthdate" => query.SortDescending
-                        ? actorsQuery.OrderByDescending(a => a.BirthDate)
-                        : actorsQuery.OrderBy(a => a.BirthDate),
-                    "nationality" => query.SortDescending
-                        ? actorsQuery.OrderByDescending(a => a.Nationality)
-                        : actorsQuery.OrderBy(a => a.Nationality),
-                    _ => actorsQuery.OrderBy(a => a.Name)
-                };
-
-                var totalCount = await actorsQuery.CountAsync();
-                var actors = await actorsQuery
-                    .Skip((query.Page - 1) * query.PageSize)
-                    .Take(query.PageSize)
-                    .ToListAsync();
-
-                var actorDtos = _mapper.Map<List<ActorDto>>(actors);
-
-                return new PagedResult<ActorDto>
-                {
-                    Items = actorDtos,
-                    TotalCount = totalCount,
-                    Page = query.Page,
-                    PageSize = query.PageSize
-                };
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"❌ Error in GetActorsAsync: {ex.Message}");
-                throw;
-            }
+            actorsQuery = actorsQuery.Where(a => a.Name.Contains(query.Search));
         }
+
+        // ✅ ADICIONA ESTE FILTRO PARA NACIONALIDADE
+        if (!string.IsNullOrEmpty(query.Nationality))
+        {
+            actorsQuery = actorsQuery.Where(a => a.Nationality.Contains(query.Nationality));
+        }
+
+        actorsQuery = query.SortBy?.ToLower() switch
+        {
+            "name" => query.SortDescending 
+                ? actorsQuery.OrderByDescending(a => a.Name)
+                : actorsQuery.OrderBy(a => a.Name),
+            "birthdate" => query.SortDescending
+                ? actorsQuery.OrderByDescending(a => a.BirthDate)
+                : actorsQuery.OrderBy(a => a.BirthDate),
+            "nationality" => query.SortDescending
+                ? actorsQuery.OrderByDescending(a => a.Nationality)
+                : actorsQuery.OrderBy(a => a.Nationality),
+            _ => actorsQuery.OrderBy(a => a.Name)
+        };
+
+        var totalCount = await actorsQuery.CountAsync();
+        var actors = await actorsQuery
+            .Skip((query.Page - 1) * query.PageSize)
+            .Take(query.PageSize)
+            .ToListAsync();
+
+        var actorDtos = _mapper.Map<List<ActorDto>>(actors);
+
+        return new PagedResult<ActorDto>
+        {
+            Items = actorDtos,
+            TotalCount = totalCount,
+            Page = query.Page,
+            PageSize = query.PageSize
+        };
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"❌ Error in GetActorsAsync: {ex.Message}");
+        throw;
+    }
+}
 
         public async Task<ActorDetailDto?> GetActorByIdAsync(int id)
         {

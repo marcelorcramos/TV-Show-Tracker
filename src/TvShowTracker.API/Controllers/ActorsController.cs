@@ -16,15 +16,24 @@ namespace TvShowTracker.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetActors([FromQuery] string? search = null, [FromQuery] string? sortBy = "Name")
+        public async Task<IActionResult> GetActors(
+            [FromQuery] string? search = null, 
+            [FromQuery] string? nationality = null, // ✅ ADICIONA ESTE PARÂMETRO
+            [FromQuery] string? sortBy = "Name",
+            [FromQuery] bool sortDescending = false,
+            [FromQuery] int page = 1,
+            [FromQuery] int pageSize = 10)
         {
             try
             {
-                // Corrige o primeiro erro - usar ActorQuery em vez de parâmetros separados
                 var query = new ActorQuery 
                 { 
                     Search = search, 
-                    SortBy = sortBy 
+                    Nationality = nationality, // ✅ PASSA A NACIONALIDADE
+                    SortBy = sortBy,
+                    SortDescending = sortDescending,
+                    Page = page,
+                    PageSize = pageSize
                 };
                 
                 var actors = await _actorService.GetActorsAsync(query);
@@ -59,7 +68,6 @@ namespace TvShowTracker.API.Controllers
         {
             try
             {
-                // Corrige o segundo erro - usar o novo método
                 var tvShows = await _actorService.GetActorTvShowsAsync(id);
                 return Ok(tvShows);
             }
