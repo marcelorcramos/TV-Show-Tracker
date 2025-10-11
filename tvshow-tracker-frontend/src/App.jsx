@@ -6,57 +6,19 @@ import { Actors } from './pages/actors/Actors';
 import Login from './pages/Login';
 import Registration from './pages/Registration';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
+import SearchBar from './components/SearchBar';
 
-// Componente de busca heroica
+// Componente de busca heroica (ATUALIZADO)
 const HeroSearch = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [searchType, setSearchType] = useState('all');
-  const navigate = useNavigate();
-
-  const handleSearch = (e) => {
-    e.preventDefault();
-    if (searchTerm.trim()) {
-      if (searchType === 'tvshows' || searchType === 'all') {
-        navigate(`/tvshows?search=${encodeURIComponent(searchTerm)}`);
-      } else if (searchType === 'actors') {
-        navigate(`/actors?search=${encodeURIComponent(searchTerm)}`);
-      }
-    }
-  };
-
   return (
     <div style={styles.heroSearch}>
       <h2 style={styles.heroTitle}>Encontre suas séries e filmes favoritos</h2>
       <p style={styles.heroSubtitle}>Descubra, explore e acompanhe tudo em um só lugar</p>
       
-      <form onSubmit={handleSearch} style={styles.searchForm}>
-        <div style={styles.searchContainer}>
-          <div style={styles.searchInputWrapper}>
-            <input
-              type="text"
-              placeholder="Buscar séries, filmes, atores..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              style={styles.searchInput}
-            />
-            <select
-              value={searchType}
-              onChange={(e) => setSearchType(e.target.value)}
-              style={styles.searchSelect}
-            >
-              <option value="all">Tudo</option>
-              <option value="tvshows">Séries & Filmes</option>
-              <option value="actors">Atores</option>
-            </select>
-          </div>
-          <button type="submit" style={styles.searchButton}>
-            <svg style={styles.searchIcon} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
-            Buscar
-          </button>
-        </div>
-      </form>
+      {/* Search Bar Integrada */}
+      <div style={styles.searchWrapper}>
+        <SearchBar />
+      </div>
     </div>
   );
 };
@@ -311,57 +273,9 @@ const styles = {
     opacity: 0.8,
     marginBottom: '2rem',
   },
-  searchForm: {
-    width: '100%',
-  },
-  searchContainer: {
-    display: 'flex',
-    gap: '10px',
-    alignItems: 'stretch',
-  },
-  searchInputWrapper: {
-    flex: '1',
-    display: 'flex',
-    background: 'rgba(255, 255, 255, 0.95)',
-    borderRadius: '12px',
-    overflow: 'hidden',
-    boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
-  },
-  searchInput: {
-    flex: '1',
-    border: 'none',
-    padding: '16px 20px',
-    fontSize: '1rem',
-    outline: 'none',
-    background: 'transparent',
-  },
-  searchSelect: {
-    border: 'none',
-    borderLeft: '1px solid #e5e7eb',
-    padding: '16px 20px',
-    fontSize: '1rem',
-    background: 'transparent',
-    outline: 'none',
-    cursor: 'pointer',
-  },
-  searchButton: {
-    background: '#1e40af',
-    color: 'white',
-    border: 'none',
-    padding: '16px 24px',
-    borderRadius: '12px',
-    fontSize: '1rem',
-    fontWeight: '600',
-    cursor: 'pointer',
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
-    transition: 'all 0.2s ease',
-    boxShadow: '0 8px 32px rgba(30, 64, 175, 0.3)',
-  },
-  searchIcon: {
-    width: '20px',
-    height: '20px',
+  searchWrapper: {
+    maxWidth: '500px',
+    margin: '0 auto',
   },
   statsSection: {
     background: '#f8fafc',
@@ -451,6 +365,10 @@ const styles = {
     transition: 'all 0.3s ease',
     border: '1px solid #e5e7eb',
     boxShadow: '0 4px 6px rgba(0, 0, 0, 0.05)',
+    ':hover': {
+      transform: 'translateY(-2px)',
+      boxShadow: '0 8px 15px rgba(0, 0, 0, 0.1)',
+    }
   },
   quickNavIcon: {
     fontSize: '2.5rem',
@@ -510,6 +428,10 @@ const styles = {
     fontWeight: '600',
     fontSize: '1.1rem',
     transition: 'all 0.2s ease',
+    ':hover': {
+      transform: 'translateY(-2px)',
+      boxShadow: '0 8px 15px rgba(255, 255, 255, 0.2)',
+    }
   },
   ctaButtonSecondary: {
     background: 'transparent',
@@ -521,6 +443,11 @@ const styles = {
     fontSize: '1.1rem',
     border: '2px solid white',
     transition: 'all 0.2s ease',
+    ':hover': {
+      background: 'white',
+      color: '#1e40af',
+      transform: 'translateY(-2px)',
+    }
   },
 };
 
