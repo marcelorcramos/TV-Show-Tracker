@@ -1,20 +1,36 @@
 // src/components/TvShowCard.jsx
 import React, { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { favoritesAPI } from '../services/api';
+import { useFavorites } from '../contexts/FavoritesContext';
 import useModal from '../hooks/useModal';
 import TvShowModal from './TvShowModal';
 
 const TvShowCard = ({ tvShow, onFavoriteUpdate }) => {
-  const { isAuthenticated } = useAuth();
-  const [isFavorite, setIsFavorite] = useState(tvShow.isFavorite || false);
+  const { isAuthenticated, user } = useAuth();
+  const { isFavorite, addFavorite, removeFavorite, favorites } = useFavorites();
   const [loading, setLoading] = useState(false);
   
   // Hook do modal
   const { isOpen, modalData, openModal, closeModal } = useModal();
 
-  const handleFavoriteClick = async (e) => {
-    e.stopPropagation(); // Prevenir que abra o modal
+  // No TvShowCard.jsx - ADICIONE este debug no handleFavoriteClick:
+const handleFavoriteClick = async (e) => {
+  e.stopPropagation();
+  
+  console.log('❤️ Clicou no favorito:', {
+    tvShowId: tvShow.id,
+    tvShowTitle: tvShow.title,
+    tvShowGenre: tvShow.genre, // ← ADICIONE ESTA LINHA
+    currentlyFavorite: isFavorite(tvShow.id)
+  });
+
+  // ... resto do código
+    
+    console.log('❤️ Clicou no favorito:', {
+      tvShowId: tvShow.id,
+      currentlyFavorite: isFavorite(tvShow.id)
+    });
+
     if (!isAuthenticated) {
       alert('Please login to add favorites');
       return;
@@ -22,19 +38,19 @@ const TvShowCard = ({ tvShow, onFavoriteUpdate }) => {
 
     setLoading(true);
     try {
-      if (isFavorite) {
-        await favoritesAPI.remove(tvShow.id);
-        setIsFavorite(false);
+      if (isFavorite(tvShow.id)) {
+        console.log('🗑️ Removendo favorito...');
+        await removeFavorite(tvShow.id);
       } else {
-        await favoritesAPI.add(tvShow.id);
-        setIsFavorite(true);
+        console.log('➕ Adicionando favorito...');
+        await addFavorite(tvShow.id);
       }
       
       if (onFavoriteUpdate) {
         onFavoriteUpdate();
       }
     } catch (error) {
-      console.error('Failed to update favorite:', error);
+      console.error('❌ Failed to update favorite:', error);
       alert('Failed to update favorite');
     } finally {
       setLoading(false);
@@ -81,7 +97,7 @@ const TvShowCard = ({ tvShow, onFavoriteUpdate }) => {
         transition: 'transform 0.2s, box-shadow 0.2s',
         cursor: 'pointer',
         position: 'relative',
-        marginBottom: '7px' // ← ESPAÇO ADICIONADO AQUI
+        marginBottom: '7px'
       }}
       onMouseEnter={(e) => {
         e.currentTarget.style.transform = 'translateY(-4px)';
@@ -93,7 +109,7 @@ const TvShowCard = ({ tvShow, onFavoriteUpdate }) => {
       }}
       onClick={handleCardClick}
       >
-        {/* Favorite Button */}
+        {/* Botão de Favorito - CORAÇÃO SIMPLES */}
         {isAuthenticated && (
           <button
             onClick={handleFavoriteClick}
@@ -102,25 +118,38 @@ const TvShowCard = ({ tvShow, onFavoriteUpdate }) => {
               position: 'absolute',
               top: '15px',
               right: '15px',
-              background: 'none',
+              background: 'rgba(255, 255, 255, 0.9)',
               border: 'none',
               fontSize: '24px',
-              cursor: 'pointer',
-              color: isFavorite ? '#ef4444' : '#d1d5db',
-              transition: 'color 0.2s',
+              cursor: loading ? 'not-allowed' : 'pointer',
+              color: isFavorite(tvShow.id) ? '#ef4444' : '#9ca3af',
+              transition: 'all 0.3s ease',
               zIndex: 2,
-              padding: '4px',
-              borderRadius: '4px'
+              padding: '8px',
+              borderRadius: '50%',
+              opacity: loading ? 0.6 : 1,
+              width: '40px',
+              height: '40px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.8)';
+              if (!loading) {
+                e.currentTarget.style.background = 'white';
+                e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.2)';
+                e.currentTarget.style.transform = 'scale(1.1)';
+              }
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = 'transparent';
+              e.currentTarget.style.background = 'rgba(255, 255, 255, 0.9)';
+              e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.15)';
+              e.currentTarget.style.transform = 'scale(1)';
             }}
-            title={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
+            title={isFavorite(tvShow.id) ? 'Remove from favorites' : 'Add to favorites'}
           >
-            {isFavorite ? '❤️' : '🤍'}
+            {loading ? '⏳' : (isFavorite(tvShow.id) ? '❤️' : '🤍')}
           </button>
         )}
 
@@ -234,7 +263,7 @@ const TvShowCard = ({ tvShow, onFavoriteUpdate }) => {
           </p>
         )}
 
-        {/* Atores Principais - SEÇÃO ADICIONADA */}
+        {/* Atores Principais */}
         {tvShow.featuredActors && tvShow.featuredActors.length > 0 && (
           <div style={{ 
             marginBottom: '15px',
