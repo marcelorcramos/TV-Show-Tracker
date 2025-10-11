@@ -14,6 +14,9 @@ namespace TvShowTracker.Application.DTOs
         public decimal? Rating { get; set; }
         public string? ImageUrl { get; set; }
         public bool IsFavorite { get; set; }
+        
+        // ✅ ADICIONA ESTA LINHA - Atores de destaque para a card
+        public List<ActorDto> FeaturedActors { get; set; } = new();
     }
 
     public class TvShowDetailDto : TvShowDto
@@ -39,6 +42,7 @@ namespace TvShowTracker.Application.DTOs
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public DateTime? BirthDate { get; set; }
+        public string? CharacterName { get; set; }
         public string? Nationality { get; set; }
         public string? Bio { get; set; }
         public string? ImageUrl { get; set; }

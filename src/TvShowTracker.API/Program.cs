@@ -47,9 +47,6 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-
-
-
 // JWT Authentication
 var jwtSecret = builder.Configuration["Jwt:Secret"];
 if (string.IsNullOrEmpty(jwtSecret))
@@ -83,25 +80,31 @@ builder.Services.AddScoped<ICacheService, FakeCacheService>();
 builder.Services.AddScoped<IGdprService, GdprService>();
 builder.Services.AddScoped<IExportService, ExportService>();
 
+// Data Seed Service - ADICIONAR ESTA LINHA
+builder.Services.AddScoped<DataSeedService>();
+
 // Background Services
 builder.Services.AddHostedService<EmailBackgroundService>();
 
 // AutoMapper
 builder.Services.AddAutoMapper(typeof(TvShowTracker.Application.Mappings.MappingProfile));
 
-// CORS - ADD REACT PORT 5173
+// CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactApp", policy =>
     {
-        policy.WithOrigins("http://localhost:3000",
-                        "http://localhost:5173",
-                         "http://localhost:5174",
-                        "http://localhost:5023",
-                        "https://localhost:7023")
-              .AllowAnyHeader()
-              .AllowAnyMethod()
-              .AllowCredentials();
+        policy.WithOrigins(
+            "http://localhost:3000",
+            "http://localhost:5173", 
+            "http://localhost:5174",
+            "https://localhost:3000",
+            "https://localhost:5173",
+            "https://localhost:5174"
+        )
+        .AllowAnyHeader()
+        .AllowAnyMethod()
+        .AllowCredentials();
     });
 });
 
@@ -115,9 +118,29 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+// CORS DEVE VIR ANTES de Authentication e Authorization
 app.UseCors("AllowReactApp");
+
 app.UseAuthentication();
 app.UseAuthorization();
+
 app.MapControllers();
+
+// ✅ INICIALIZAÇÃO DO BANCO DE DADOS - ADICIONAR ESTA PARTE
+try
+{
+    Console.WriteLine("🚀 Iniciando aplicação...");
+    using var scope = app.Services.CreateScope();
+    var seedService = scope.ServiceProvider.GetRequiredService<DataSeedService>();
+    Console.WriteLine("📥 Executando seed do banco de dados...");
+    await seedService.InitializeDatabaseAsync();
+    Console.WriteLine("✅ Seed concluído com sucesso!");
+}
+catch (Exception ex)
+{
+    Console.WriteLine($"❌ Erro durante o seed: {ex.Message}");
+    Console.WriteLine($"❌ StackTrace: {ex.StackTrace}");
+}
 
 app.Run();

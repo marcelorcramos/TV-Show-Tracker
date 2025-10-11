@@ -15,7 +15,35 @@ const TvShows = () => {
   const { genres } = useTvShowGenres();
   const { types } = useTvShowTypes();
 
-  // Debug
+  // DEBUG DETALHADO: Verificar se os atores estão chegando
+  React.useEffect(() => {
+    console.log('🎬 TV SHOWS CARREGADAS:', tvShows.length);
+    
+    if (tvShows.length > 0) {
+      console.log('🔍 DETALHES DAS TV SHOWS:');
+      
+      tvShows.forEach((show, index) => {
+        console.log(`📺 ${index + 1}. ${show.title}`, {
+          id: show.id,
+          hasActors: !!show.featuredActors,
+          actorsCount: show.featuredActors?.length || 0,
+          actors: show.featuredActors?.map(a => ({
+            id: a.id,
+            name: a.name,
+            characterName: a.characterName
+          })) || []
+        });
+      });
+
+      // Verificar a primeira TV show em detalhe
+      const firstShow = tvShows[0];
+      if (firstShow) {
+        console.log('🔬 PRIMEIRA TV SHOW EM DETALHE:', firstShow);
+      }
+    }
+  }, [tvShows]);
+
+  // Debug dos filtros
   React.useEffect(() => {
     console.log('🎬 Filtros ativos:', filters);
   }, [filters]);

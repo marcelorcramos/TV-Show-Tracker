@@ -80,7 +80,8 @@ const TvShowCard = ({ tvShow, onFavoriteUpdate }) => {
         border: '1px solid #e5e7eb',
         transition: 'transform 0.2s, box-shadow 0.2s',
         cursor: 'pointer',
-        position: 'relative'
+        position: 'relative',
+        marginBottom: '7px' // ← ESPAÇO ADICIONADO AQUI
       }}
       onMouseEnter={(e) => {
         e.currentTarget.style.transform = 'translateY(-4px)';
@@ -231,6 +232,81 @@ const TvShowCard = ({ tvShow, onFavoriteUpdate }) => {
           }}>
             {tvShow.description}
           </p>
+        )}
+
+        {/* Atores Principais - SEÇÃO ADICIONADA */}
+        {tvShow.featuredActors && tvShow.featuredActors.length > 0 && (
+          <div style={{ 
+            marginBottom: '15px',
+            paddingTop: '15px',
+            borderTop: '1px solid #e5e7eb'
+          }}>
+            <h4 style={{ 
+              fontSize: '14px', 
+              fontWeight: '600', 
+              marginBottom: '8px',
+              color: '#4b5563'
+            }}>
+              Elenco Principal:
+            </h4>
+            <div style={{ 
+              display: 'flex', 
+              flexDirection: 'column', 
+              gap: '6px' 
+            }}>
+              {tvShow.featuredActors.slice(0, 3).map((actor) => (
+                <div key={actor.id} style={{ 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  gap: '8px' 
+                }}>
+                  <div style={{
+                    width: '28px',
+                    height: '28px',
+                    borderRadius: '50%',
+                    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                    color: 'white',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '12px',
+                    fontWeight: 'bold',
+                    flexShrink: 0
+                  }}>
+                    {actor.name.charAt(0)}
+                  </div>
+                  <div style={{ 
+                    display: 'flex', 
+                    flexDirection: 'column',
+                    minWidth: 0,
+                    flexGrow: 1
+                  }}>
+                    <span style={{ 
+                      fontSize: '12px', 
+                      fontWeight: '500', 
+                      color: '#1f2937',
+                      whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis'
+                    }}>
+                      {actor.name}
+                    </span>
+                    {actor.characterName && (
+                      <span style={{ 
+                        fontSize: '10px', 
+                        color: '#6b7280',
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis'
+                      }}>
+                        como {actor.characterName}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         )}
 
         <button 

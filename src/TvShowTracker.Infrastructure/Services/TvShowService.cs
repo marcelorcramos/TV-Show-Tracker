@@ -481,6 +481,12 @@ namespace TvShowTracker.Infrastructure.Services
                 await _context.SaveChangesAsync();
 
                 Console.WriteLine($"✅ Seed completado! Adicionados {tvShows.Count} itens com imagens (Séries: 15, Filmes: 17).");
+                
+                // Aguardar um pouco para garantir que os atores foram criados
+                await Task.Delay(2000);
+                
+                // Agora criar as relações entre TV shows e atores
+                await SeedTvShowActorRelationsAsync();
             }
             catch (Exception ex)
             {
@@ -488,14 +494,114 @@ namespace TvShowTracker.Infrastructure.Services
             }
         }
 
-        // RESTANTE DOS MÉTODOS PERMANECEM EXATAMENTE IGUAIS
+        private async Task SeedTvShowActorRelationsAsync()
+{
+    try
+    {
+        // Verificar se já existem relações
+        if (await _context.TvShowActors.AnyAsync()) 
+        {
+            Console.WriteLine("✅ Relações TvShow-Actor já existem.");
+            return;
+        }
+
+        var tvShows = await _context.TvShows.ToListAsync();
+        var actors = await _context.Actors.ToListAsync();
+
+        Console.WriteLine($"📊 Encontrados {tvShows.Count} TV Shows e {actors.Count} Atores");
+
+        var tvShowActors = new List<TvShowActor>();
+
+        // Mapeamento específico de atores para séries/filmes
+        var actorAssignments = new Dictionary<string, List<int>>
+        {
+            { "Breaking Bad", new List<int> { 0, 1 } }, // Bryan Cranston, Aaron Paul
+            { "Stranger Things", new List<int> { 1, 2 } }, // Millie Bobby Brown, Finn Wolfhard
+            { "The Witcher", new List<int> { 4 } }, // Henry Cavill
+            { "Game of Thrones", new List<int> { 3 } }, // Emilia Clarke
+            { "The Dark Knight", new List<int> { 8 } }, // Leonardo DiCaprio
+            { "Inception", new List<int> { 8 } }, // Leonardo DiCaprio
+            { "The Last of Us", new List<int> { 2 } }, // Pedro Pascal
+            { "Friends", new List<int> { 7 } }, // Jennifer Aniston
+            { "The Mandalorian", new List<int> { 2 } } // Pedro Pascal
+        };
+
+        // Nomes dos personagens
+        var characterNames = new Dictionary<string, Dictionary<int, string>>
+        {
+            { "Breaking Bad", new Dictionary<int, string> { {0, "Walter White"}, {1, "Jesse Pinkman"} } },
+            { "Stranger Things", new Dictionary<int, string> { {1, "Eleven"} } },
+            { "The Witcher", new Dictionary<int, string> { {4, "Geralt of Rivia"} } },
+            { "Game of Thrones", new Dictionary<int, string> { {3, "Daenerys Targaryen"} } },
+            { "The Dark Knight", new Dictionary<int, string> { {8, "Bruce Wayne"} } },
+            { "Inception", new Dictionary<int, string> { {8, "Dom Cobb"} } },
+            { "The Last of Us", new Dictionary<int, string> { {2, "Joel Miller"} } },
+            { "Friends", new Dictionary<int, string> { {7, "Rachel Green"} } },
+            { "The Mandalorian", new Dictionary<int, string> { {2, "The Mandalorian"} } }
+        };
+
+        foreach (var tvShow in tvShows)
+        {
+            List<int> actorIndices;
+            if (actorAssignments.ContainsKey(tvShow.Title))
+            {
+                actorIndices = actorAssignments[tvShow.Title];
+            }
+            else
+            {
+                // Para séries/filmes não mapeados, usar alguns atores aleatórios
+                actorIndices = Enumerable.Range(0, Math.Min(2, actors.Count))
+                    .OrderBy(a => Guid.NewGuid())
+                    .Take(1)
+                    .ToList();
+            }
+
+            for (int i = 0; i < actorIndices.Count; i++)
+            {
+                if (actorIndices[i] < actors.Count)
+                {
+                    string? characterName = null; // ✅ CORRIGIDO: nullable
+                    if (characterNames.ContainsKey(tvShow.Title) && 
+                        characterNames[tvShow.Title].ContainsKey(actorIndices[i]))
+                    {
+                        characterName = characterNames[tvShow.Title][actorIndices[i]];
+                    }
+
+                    tvShowActors.Add(new TvShowActor
+                    {
+                        TvShowId = tvShow.Id,
+                        ActorId = actors[actorIndices[i]].Id,
+                        IsFeatured = true, // Todos são principais para demonstração
+                        CharacterName = characterName
+                        // ✅ REMOVIDO: CreatedAt se não existir na entidade
+                    });
+
+                    Console.WriteLine($"🎬 Relação criada: {tvShow.Title} - {actors[actorIndices[i]].Name} como {characterName ?? "Personagem"}");
+                }
+            }
+        }
+
+        await _context.TvShowActors.AddRangeAsync(tvShowActors);
+        await _context.SaveChangesAsync();
+
+        Console.WriteLine($"✅ Relações TvShow-Actor criadas! {tvShowActors.Count} relações adicionadas.");
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"❌ Erro ao criar relações TvShow-Actor: {ex.Message}");
+    }
+}
+
         public async Task<PagedResult<TvShowDto>> GetTvShowsAsync(TvShowQuery query)
         {
             try
             {
-                var tvShowsQuery = _context.TvShows.AsQueryable();
+                var tvShowsQuery = _context.TvShows
+                    .Include(t => t.TvShowActors)
+                        .ThenInclude(ta => ta.Actor)
+                    .AsQueryable();
 
-                // Apply filters - FILTRAGENS RESTAURADAS
+                // Apply filters
                 if (!string.IsNullOrEmpty(query.Genre))
                 {
                     tvShowsQuery = tvShowsQuery.Where(t => t.Genre == query.Genre);
@@ -540,7 +646,32 @@ namespace TvShowTracker.Infrastructure.Services
                     .Take(query.PageSize)
                     .ToListAsync();
 
-                var tvShowDtos = _mapper.Map<List<TvShowDto>>(tvShows);
+                // Mapear para DTO e incluir os 3 principais atores
+                var tvShowDtos = tvShows.Select(tvShow =>
+                {
+                    var dto = _mapper.Map<TvShowDto>(tvShow);
+                    
+                    // DEBUG: Log para verificar
+                    Console.WriteLine($"🎭 {tvShow.Title} - Total relações: {tvShow.TvShowActors?.Count}");
+                    
+                    // Pegar os 3 principais atores
+                    // No método GetTvShowsAsync - substitua a criação do ActorDto:
+                    dto.FeaturedActors = tvShow.TvShowActors?
+                        .Where(ta => ta.IsFeatured && ta.Actor != null)
+                        .Take(3)
+                        .Select(ta => new ActorDto 
+                        { 
+                            Id = ta.Actor.Id,
+                            Name = ta.Actor.Name,
+                            CharacterName = ta.CharacterName,
+                            ImageUrl = ta.Actor.ImageUrl // ← ADICIONE ESTA LINHA
+                        })
+                        .ToList() ?? new List<ActorDto>();
+                        
+                    Console.WriteLine($"🎭 {tvShow.Title} - Atores mapeados: {dto.FeaturedActors.Count}");
+                        
+                    return dto;
+                }).ToList();
 
                 return new PagedResult<TvShowDto>
                 {
@@ -629,7 +760,12 @@ namespace TvShowTracker.Infrastructure.Services
                 
                 tvShowDetail.FeaturedActors = tvShow.TvShowActors
                     .Where(ta => ta.IsFeatured)
-                    .Select(ta => _mapper.Map<ActorDto>(ta.Actor))
+                    .Select(ta => new ActorDto 
+                    { 
+                        Id = ta.Actor.Id,
+                        Name = ta.Actor.Name,
+                        CharacterName = ta.CharacterName
+                    })
                     .ToList();
 
                 return tvShowDetail;
@@ -660,10 +796,11 @@ namespace TvShowTracker.Infrastructure.Services
             try
             {
                 var tvShowsCount = await _context.TvShows.CountAsync();
+                var actorsCount = await _context.Actors.CountAsync();
+                var tvShowActorsCount = await _context.TvShowActors.CountAsync();
                 var types = await _context.TvShows.Select(t => t.Type).Distinct().ToListAsync();
-                var titles = await _context.TvShows.Select(t => t.Title).ToListAsync();
                 
-                return $"Total: {tvShowsCount}, Types: {string.Join(", ", types)}, Titles: {string.Join(", ", titles.Take(5))}";
+                return $"Total TvShows: {tvShowsCount}, Actors: {actorsCount}, Relations: {tvShowActorsCount}, Types: {string.Join(", ", types)}";
             }
             catch (Exception ex)
             {
