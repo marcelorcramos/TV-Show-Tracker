@@ -32,7 +32,7 @@ const ActorCard = ({ actor, onFavoriteUpdate }) => {
     }
   }, [actor.id]);
 
-  // Mapeamento de fallback images
+  // Mapeamento de fallback images melhorado
   const getActorFallbackImage = (actorName) => {
     const fallbackImages = {
       'Bryan Cranston': 'https://image.tmdb.org/t/p/w500/3gIO6mCd4s4mT2aUdS9dVMXZ9g6.jpg',
@@ -49,7 +49,12 @@ const ActorCard = ({ actor, onFavoriteUpdate }) => {
       'Bella Ramsey': 'https://image.tmdb.org/t/p/w500/xU5fpn6qqSOJD3v3x1x3Z3w3z5Z.jpg',
       'Courteney Cox': 'https://image.tmdb.org/t/p/w500/4CkY4UEEG2h6xB2DnK1BZ7N86Fz.jpg',
       'Tom Hanks': 'https://image.tmdb.org/t/p/w500/xndWFsBlClOJFRdhSt4NBwiPq2o.jpg',
-      'Robin Wright': 'https://image.tmdb.org/t/p/w500/1cT13dS2Swif6o8Q6Qd1JSKOGUc.jpg'
+      'Robin Wright': 'https://image.tmdb.org/t/p/w500/1cT13dS2Swif6o8Q6Qd1JSKOGUc.jpg',
+      'Robert Downey Jr.': 'https://image.tmdb.org/t/p/w500/5qHNjhtjMD4YWH3UP0rm4tKwxCL.jpg',
+      'Scarlett Johansson': 'https://image.tmdb.org/t/p/w500/6NsMbJXRlDZuDzatN2akFdGuTvx.jpg',
+      'Chris Hemsworth': 'https://image.tmdb.org/t/p/w500/jpurJ9jAcLCYjgHHfYF32m3zJYm.jpg',
+      'Margot Robbie': 'https://image.tmdb.org/t/p/w500/euDPyqLnuwaWMHajcU3oZ9uZezR.jpg',
+      'Keanu Reeves': 'https://image.tmdb.org/t/p/w500/4D0PpNI0km5y0h1hqHkFcCqML6o.jpg'
     };
     
     return fallbackImages[actorName] || null;
@@ -58,7 +63,8 @@ const ActorCard = ({ actor, onFavoriteUpdate }) => {
   // Verifica se a URL da imagem é válida
   const isValidImageUrl = (url) => {
     if (!url) return false;
-    if (!url.includes('http')) return false;
+    if (!url.startsWith('http')) return false;
+    if (url.includes('encrypted-tbn0.gstatic.com')) return false; // Remove imagens do Google
     if (url.includes('placeholder.com')) return false;
     return true;
   };
@@ -122,11 +128,13 @@ const ActorCard = ({ actor, onFavoriteUpdate }) => {
   };
 
   const handleImageLoad = () => {
-    console.log('✅ Imagem carregada com sucesso:', actor.name);
+    console.log('✅ Imagem carregada com sucesso:', actor.name, currentImageUrl);
     setImageError(false);
   };
 
-  const showFallback = imageError || !isValidImageUrl(currentImageUrl);
+  // Determina qual imagem mostrar
+  const displayImageUrl = isValidImageUrl(currentImageUrl) ? currentImageUrl : getActorFallbackImage(actor.name);
+  const showFallback = imageError || !displayImageUrl;
 
   return (
     <>
@@ -183,7 +191,7 @@ const ActorCard = ({ actor, onFavoriteUpdate }) => {
           </button>
         )}
 
-        {/* Actor Image */}
+        {/* Actor Image com tratamento melhorado */}
         <div style={{ 
           width: '100%', 
           height: '200px', 
@@ -197,9 +205,9 @@ const ActorCard = ({ actor, onFavoriteUpdate }) => {
           overflow: 'hidden',
           position: 'relative'
         }}>
-          {!showFallback && currentImageUrl ? (
+          {!showFallback && displayImageUrl ? (
             <img 
-              src={currentImageUrl} 
+              src={displayImageUrl} 
               alt={actor.name}
               style={{ 
                 width: '100%', 
@@ -271,7 +279,7 @@ const ActorCard = ({ actor, onFavoriteUpdate }) => {
           </p>
         )}
 
-        {/* TV Shows/Filmes - NOVA SEÇÃO ADICIONADA */}
+        {/* TV Shows/Filmes */}
         {actorTvShows.length > 0 && (
           <div style={{ 
             marginBottom: '15px',

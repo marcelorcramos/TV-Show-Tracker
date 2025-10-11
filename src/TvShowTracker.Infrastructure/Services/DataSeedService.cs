@@ -57,38 +57,39 @@ namespace TvShowTracker.Infrastructure.Services
             }
         }
 
-        private async Task SeedActorsAsync()
+        // No método SeedActorsAsync, atualize a lista de atores:
+private async Task SeedActorsAsync()
+{
+    try
+    {
+        var actors = new List<Actor>
         {
-            try
-            {
-                var actors = new List<Actor>
-                {
-                    new Actor { Name = "Bryan Cranston" },
-                    new Actor { Name = "Aaron Paul" },
-                    new Actor { Name = "Pedro Pascal" },
-                    new Actor { Name = "Emilia Clarke" },
-                    new Actor { Name = "Henry Cavill" },
-                    new Actor { Name = "Anya Chalotra" },
-                    new Actor { Name = "Kit Harington" },
-                    new Actor { Name = "Jennifer Aniston" },
-                    new Actor { Name = "Leonardo DiCaprio" },
-                    new Actor { Name = "Heath Ledger" },
-                    new Actor { Name = "Tom Hardy" },
-                    new Actor { Name = "Bella Ramsey" },
-                    new Actor { Name = "Courteney Cox" },
-                    new Actor { Name = "Tom Hanks"},
-                    new Actor { Name = "Robin Wright"} // NOVO ATOR ADICIONADO
-                };
+            new Actor { Name = "Bryan Cranston", Nationality = "American" },
+            new Actor { Name = "Aaron Paul", Nationality = "American" },
+            new Actor { Name = "Pedro Pascal", Nationality = "Chilean-American" },
+            new Actor { Name = "Emilia Clarke", Nationality = "British" },
+            new Actor { Name = "Henry Cavill", Nationality = "British" },
+            new Actor { Name = "Anya Chalotra", Nationality = "British" },
+            new Actor { Name = "Kit Harington", Nationality = "British" },
+            new Actor { Name = "Jennifer Aniston", Nationality = "American" },
+            new Actor { Name = "Leonardo DiCaprio", Nationality = "American" },
+            new Actor { Name = "Heath Ledger", Nationality = "Australian" },
+            new Actor { Name = "Tom Hardy", Nationality = "British" },
+            new Actor { Name = "Bella Ramsey", Nationality = "British" },
+            new Actor { Name = "Courteney Cox", Nationality = "American" },
+            new Actor { Name = "Tom Hanks", Nationality = "American" },
+            new Actor { Name = "Robin Wright", Nationality = "American" }
+        };
 
-                await _context.Actors.AddRangeAsync(actors);
-                await _context.SaveChangesAsync();
-                Console.WriteLine($"✅ Atores seed completado! {actors.Count} atores criados.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"❌ Erro no seed de atores: {ex.Message}");
-            }
-        }
+        await _context.Actors.AddRangeAsync(actors);
+        await _context.SaveChangesAsync();
+        Console.WriteLine($"✅ Atores seed completado! {actors.Count} atores criados.");
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"❌ Erro no seed de atores: {ex.Message}");
+    }
+}
 
         private async Task SeedTvShowsAsync()
         {
