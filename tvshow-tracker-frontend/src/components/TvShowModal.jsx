@@ -1,6 +1,12 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
+import { episodesAPI } from '../services/api';
 
 const TvShowModal = ({ isOpen, data, onClose }) => {
+  const [episodes, setEpisodes] = useState([]);
+  const [loadingEpisodes, setLoadingEpisodes] = useState(false);
+  const [selectedSeason, setSelectedSeason] = useState(1);
+  const [seasons, setSeasons] = useState([]);
+
   useEffect(() => {
     const handleEscape = (e) => {
       if (e.key === 'Escape') {
@@ -16,6 +22,44 @@ const TvShowModal = ({ isOpen, data, onClose }) => {
       document.removeEventListener('keydown', handleEscape);
     };
   }, [isOpen, onClose]);
+
+  // Carregar episódios quando o modal abrir
+  useEffect(() => {
+    if (isOpen && data && data.id) {
+      loadEpisodes(data.id);
+    }
+  }, [isOpen, data]);
+
+  const loadEpisodes = async (tvShowId) => {
+    if (data.type !== 'Series') return; // Só carrega episódios para séries
+    
+    setLoadingEpisodes(true);
+    try {
+      const response = await episodesAPI.getByTvShow(tvShowId);
+      const episodesData = response.data;
+      
+      setEpisodes(episodesData);
+      
+      // Extrair temporadas únicas
+      const uniqueSeasons = [...new Set(episodesData.map(ep => ep.seasonNumber))].sort((a, b) => a - b);
+      setSeasons(uniqueSeasons);
+      
+      if (uniqueSeasons.length > 0) {
+        setSelectedSeason(uniqueSeasons[0]);
+      }
+      
+      console.log(`✅ Carregados ${episodesData.length} episódios para ${uniqueSeasons.length} temporadas`);
+    } catch (error) {
+      console.error('❌ Erro ao carregar episódios:', error);
+      setEpisodes([]);
+      setSeasons([]);
+    } finally {
+      setLoadingEpisodes(false);
+    }
+  };
+
+  // Filtrar episódios por temporada selecionada
+  const seasonEpisodes = episodes.filter(ep => ep.seasonNumber === selectedSeason);
 
   if (!isOpen || !data) return null;
 
@@ -66,10 +110,16 @@ const TvShowModal = ({ isOpen, data, onClose }) => {
                 </div>
 
                 {data.type === 'Series' ? (
-                  <div style={styles.detailItem}>
-                    <span style={styles.detailLabel}>Temporadas:</span>
-                    <span style={styles.detailValue}>{data.seasons}</span>
-                  </div>
+                  <>
+                    <div style={styles.detailItem}>
+                      <span style={styles.detailLabel}>Temporadas:</span>
+                      <span style={styles.detailValue}>{data.seasons}</span>
+                    </div>
+                    <div style={styles.detailItem}>
+                      <span style={styles.detailLabel}>Episódios:</span>
+                      <span style={styles.detailValue}>{episodes.length}</span>
+                    </div>
+                  </>
                 ) : (
                   <div style={styles.detailItem}>
                     <span style={styles.detailLabel}>Duração:</span>
@@ -87,6 +137,84 @@ const TvShowModal = ({ isOpen, data, onClose }) => {
               {data.description || 'Descrição não disponível.'}
             </p>
           </div>
+
+          {/* SEÇÃO DE EPISÓDIOS - APENAS PARA SÉRIES */}
+          {data.type === 'Series' && (
+            <div style={styles.episodesSection}>
+              <h3 style={styles.sectionTitle}>📺 Episódios</h3>
+              
+              {/* Seletor de Temporadas */}
+              {seasons.length > 0 && (
+                <div style={styles.seasonSelector}>
+                  <label style={styles.seasonLabel}>Temporada:</label>
+                  <select 
+                    value={selectedSeason} 
+                    onChange={(e) => setSelectedSeason(parseInt(e.target.value))}
+                    style={styles.seasonSelect}
+                  >
+                    {seasons.map(season => (
+                      <option key={season} value={season}>
+                        Temporada {season}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+
+              {/* Lista de Episódios */}
+              {loadingEpisodes ? (
+                <div style={styles.loading}>
+                  <p>Carregando episódios...</p>
+                </div>
+              ) : seasonEpisodes.length > 0 ? (
+                <div style={styles.episodesList}>
+                  {seasonEpisodes.map((episode) => (
+                    <div key={episode.id} style={styles.episodeCard}>
+                      <div style={styles.episodeHeader}>
+                        <h4 style={styles.episodeTitle}>
+                          {episode.episodeCode} - {episode.title}
+                        </h4>
+                        <div style={styles.episodeMeta}>
+                          {episode.rating && (
+                            <span style={styles.episodeRating}>⭐ {episode.rating}</span>
+                          )}
+                          <span style={{
+                            ...styles.episodeStatus,
+                            backgroundColor: episode.hasAired ? '#10b981' : '#f59e0b'
+                          }}>
+                            {episode.status}
+                          </span>
+                        </div>
+                      </div>
+                      
+                      <div style={styles.episodeDetails}>
+                        {episode.description && (
+                          <p style={styles.episodeDescription}>{episode.description}</p>
+                        )}
+                        
+                        <div style={styles.episodeInfo}>
+                          {episode.releaseDate && (
+                            <span style={styles.episodeInfoItem}>
+                              📅 {episode.formattedReleaseDate}
+                            </span>
+                          )}
+                          {episode.duration && (
+                            <span style={styles.episodeInfoItem}>
+                              ⏱️ {episode.formattedDuration}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div style={styles.noEpisodes}>
+                  <p>Nenhum episódio encontrado para esta temporada.</p>
+                </div>
+              )}
+            </div>
+          )}
 
           {/* Informações Adicionais */}
           <div style={styles.additionalInfo}>
@@ -106,9 +234,14 @@ const TvShowModal = ({ isOpen, data, onClose }) => {
                   <strong>Lançamento:</strong> {new Date(data.releaseDate).toLocaleDateString('pt-BR')}
                 </div>
                 {data.type === 'Series' ? (
-                  <div style={styles.infoItem}>
-                    <strong>Temporadas:</strong> {data.seasons}
-                  </div>
+                  <>
+                    <div style={styles.infoItem}>
+                      <strong>Temporadas:</strong> {data.seasons}
+                    </div>
+                    <div style={styles.infoItem}>
+                      <strong>Total de Episódios:</strong> {episodes.length}
+                    </div>
+                  </>
                 ) : (
                   <div style={styles.infoItem}>
                     <strong>Duração:</strong> {data.duration} min
@@ -140,7 +273,7 @@ const styles = {
   modal: {
     backgroundColor: 'white',
     borderRadius: '12px',
-    maxWidth: '800px',
+    maxWidth: '900px',
     width: '100%',
     maxHeight: '90vh',
     overflowY: 'auto',
@@ -252,6 +385,104 @@ const styles = {
     color: '#4b5563',
     lineHeight: '1.6',
     fontSize: '1rem',
+  },
+  // NOVOS ESTILOS PARA EPISÓDIOS
+  episodesSection: {
+    marginBottom: '30px',
+    padding: '20px',
+    backgroundColor: '#f8fafc',
+    borderRadius: '8px',
+    border: '1px solid #e5e7eb',
+  },
+  seasonSelector: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '10px',
+    marginBottom: '20px',
+  },
+  seasonLabel: {
+    fontWeight: '600',
+    color: '#374151',
+  },
+  seasonSelect: {
+    padding: '8px 12px',
+    border: '2px solid #e5e7eb',
+    borderRadius: '6px',
+    backgroundColor: 'white',
+    cursor: 'pointer',
+  },
+  episodesList: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '12px',
+  },
+  episodeCard: {
+    backgroundColor: 'white',
+    padding: '16px',
+    borderRadius: '8px',
+    border: '1px solid #e5e7eb',
+    boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
+  },
+  episodeHeader: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    marginBottom: '8px',
+  },
+  episodeTitle: {
+    fontSize: '1rem',
+    fontWeight: '600',
+    color: '#1f2937',
+    margin: 0,
+    flex: 1,
+  },
+  episodeMeta: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '10px',
+  },
+  episodeRating: {
+    fontSize: '0.8rem',
+    color: '#f59e0b',
+    fontWeight: '600',
+  },
+  episodeStatus: {
+    fontSize: '0.7rem',
+    color: 'white',
+    padding: '2px 8px',
+    borderRadius: '12px',
+    fontWeight: '600',
+  },
+  episodeDetails: {
+    marginTop: '8px',
+  },
+  episodeDescription: {
+    color: '#6b7280',
+    fontSize: '0.9rem',
+    lineHeight: '1.4',
+    margin: '0 0 8px 0',
+  },
+  episodeInfo: {
+    display: 'flex',
+    gap: '15px',
+    fontSize: '0.8rem',
+    color: '#9ca3af',
+  },
+  episodeInfoItem: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '4px',
+  },
+  loading: {
+    textAlign: 'center',
+    padding: '20px',
+    color: '#6b7280',
+  },
+  noEpisodes: {
+    textAlign: 'center',
+    padding: '20px',
+    color: '#6b7280',
+    fontStyle: 'italic',
   },
   additionalInfo: {
     display: 'grid',

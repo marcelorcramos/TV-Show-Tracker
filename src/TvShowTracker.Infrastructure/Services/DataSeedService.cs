@@ -24,46 +24,49 @@ namespace TvShowTracker.Infrastructure.Services
         }
 
         public async Task InitializeDatabaseAsync()
+{
+    await _semaphore.WaitAsync();
+    try
+    {
+        if (_hasSeeded) return;
+
+        Console.WriteLine("🔧 Inicializando banco de dados...");
+        await _context.Database.EnsureCreatedAsync();
+        
+        var hasData = await _context.TvShows.AnyAsync();
+        if (hasData)
         {
-            await _semaphore.WaitAsync();
-            try
-            {
-                if (_hasSeeded) return;
-
-                Console.WriteLine("🔧 Inicializando banco de dados...");
-                await _context.Database.EnsureCreatedAsync();
-                
-                var hasData = await _context.TvShows.AnyAsync();
-                if (hasData)
-                {
-                    Console.WriteLine("✅ Banco de dados já populado.");
-                    _hasSeeded = true;
-                    return;
-                }
-
-                Console.WriteLine("📥 Executando seed completo...");
-                
-                // 1. Primeiro criar atores
-                await SeedActorsAsync();
-                
-                // 2. Depois criar TV shows
-                await SeedTvShowsAsync();
-                
-                // 3. Finalmente criar as relações
-                await SeedTvShowActorRelationsAsync();
-
-                _hasSeeded = true;
-                Console.WriteLine("✅ Seed completo finalizado!");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"❌ Erro no seed: {ex.Message}");
-            }
-            finally
-            {
-                _semaphore.Release();
-            }
+            Console.WriteLine("✅ Banco de dados já populado.");
+            _hasSeeded = true;
+            return;
         }
+
+        Console.WriteLine("📥 Executando seed completo...");
+        
+        // 1. Primeiro criar atores
+        await SeedActorsAsync();
+        
+        // 2. Depois criar TV shows
+        await SeedTvShowsAsync();
+        
+        // 3. Criar episódios
+        await SeedEpisodesAsync();
+        
+        // 4. Finalmente criar as relações
+        await SeedTvShowActorRelationsAsync();
+
+        _hasSeeded = true;
+        Console.WriteLine("✅ Seed completo finalizado!");
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"❌ Erro no seed: {ex.Message}");
+    }
+    finally
+    {
+        _semaphore.Release();
+    }
+}
 
         // ✅ MÉTODO PARA LIMPAR BANCO
         public async Task ClearDatabaseAsync()
@@ -536,6 +539,67 @@ namespace TvShowTracker.Infrastructure.Services
                 return new List<TvShowDto>();
             }
         }
+        
+        private async Task SeedEpisodesAsync()
+{
+    try
+    {
+        var tvShows = await _context.TvShows.ToListAsync();
+        var episodes = new List<Episode>();
+
+        foreach (var tvShow in tvShows)
+        {
+            if (tvShow.Type == "Series" && tvShow.Seasons.HasValue)
+            {
+                // Criar episódios para séries
+                for (int season = 1; season <= tvShow.Seasons.Value; season++)
+                {
+                    int episodesPerSeason = season == 1 ? 6 : 8; // Primeira temporada menor
+                    
+                    for (int episodeNum = 1; episodeNum <= episodesPerSeason; episodeNum++)
+                    {
+                        var releaseDate = tvShow.ReleaseDate?.AddDays((season - 1) * 30 + (episodeNum - 1) * 7);
+                        
+                        episodes.Add(new Episode
+                        {
+                            Title = $"Episode {episodeNum}",
+                            Description = $"Season {season}, Episode {episodeNum} of {tvShow.Title}",
+                            SeasonNumber = season,
+                            EpisodeNumber = episodeNum,
+                            ReleaseDate = releaseDate,
+                            Duration = TimeSpan.FromMinutes(45),
+                            Rating = (decimal)(8.0 + (new Random().NextDouble() * 1.5)), // Rating entre 8.0 e 9.5
+                            TvShowId = tvShow.Id
+                        });
+                    }
+                }
+            }
+            else if (tvShow.Type == "Movie")
+            {
+                // Para filmes, criar um único "episódio" que representa o filme
+                episodes.Add(new Episode
+                {
+                    Title = "Full Movie",
+                    Description = $"The complete {tvShow.Title} movie",
+                    SeasonNumber = 1,
+                    EpisodeNumber = 1,
+                    ReleaseDate = tvShow.ReleaseDate,
+                    Duration = TimeSpan.FromMinutes(tvShow.Duration ?? 120),
+                    Rating = tvShow.Rating,
+                    TvShowId = tvShow.Id
+                });
+            }
+        }
+
+        await _context.Episodes.AddRangeAsync(episodes);
+        await _context.SaveChangesAsync();
+        Console.WriteLine($"✅ Episodes seed completado! {episodes.Count} episódios criados.");
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"❌ Erro no seed de episódios: {ex.Message}");
+    }
+}
 
         public async Task<string> DebugDatabase()
         {
@@ -545,7 +609,7 @@ namespace TvShowTracker.Infrastructure.Services
                 var actorsCount = await _context.Actors.CountAsync();
                 var tvShowActorsCount = await _context.TvShowActors.CountAsync();
                 var types = await _context.TvShows.Select(t => t.Type).Distinct().ToListAsync();
-                
+
                 return $"Total TvShows: {tvShowsCount}, Actors: {actorsCount}, Relations: {tvShowActorsCount}, Types: {string.Join(", ", types)}";
             }
             catch (Exception ex)

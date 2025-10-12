@@ -128,6 +128,20 @@ export const favoritesAPI = {
   },
 };
 
+export const episodesAPI = {
+  getByTvShow: (tvShowId) => {
+    console.log(`🎬 EpisodesAPI.getByTvShow chamado para tvShowId: ${tvShowId}`);
+    return api.get(`/episodes/tvshow/${tvShowId}`);
+  },
+  getById: (id) => {
+    console.log(`🎬 EpisodesAPI.getById chamado para ID: ${id}`);
+    return api.get(`/episodes/${id}`);
+  },
+  getBySeason: (tvShowId, seasonNumber) => {
+    console.log(`🎬 EpisodesAPI.getBySeason chamado para tvShowId: ${tvShowId}, season: ${seasonNumber}`);
+    return api.get(`/episodes/tvshow/${tvShowId}/season/${seasonNumber}`);
+  }
+};
 // Função de teste para verificar se a API está respondendo
 export const testAPI = {
   health: () => {

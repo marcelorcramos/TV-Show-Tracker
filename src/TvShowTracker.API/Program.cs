@@ -70,19 +70,22 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 // Application Services - ✅ ATUALIZADO
+// Application Services - ✅ ATUALIZADO
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<JwtService>();
 builder.Services.AddScoped<IUserService, UserService>();
-// ❌ REMOVER: builder.Services.AddScoped<ITvShowService, TvShowService>();
 builder.Services.AddScoped<IActorService, ActorService>();
 builder.Services.AddScoped<IRecommendationService, RecommendationService>();
 builder.Services.AddScoped<ICacheService, FakeCacheService>();
 builder.Services.AddScoped<IGdprService, GdprService>();
 builder.Services.AddScoped<IExportService, ExportService>();
 
+// ✅ ADICIONAR ESTA LINHA - Episode Service
+builder.Services.AddScoped<IEpisodeService, EpisodeService>();
+
 // ✅ DATA SEED SERVICE AGORA SUBSTITUI O TVSHOWSERVICE
-builder.Services.AddScoped<ITvShowService, DataSeedService>(); // ✅ IMPLEMENTA A INTERFACE
-builder.Services.AddScoped<DataSeedService>(); // ✅ PARA INICIALIZAÇÃO DO BANCO
+builder.Services.AddScoped<ITvShowService, DataSeedService>();
+builder.Services.AddScoped<DataSeedService>();
 
 // Background Services
 builder.Services.AddHostedService<EmailBackgroundService>();
