@@ -1,5 +1,5 @@
 // src/App.jsx - VERSÃO CORRIGIDA
-import React from 'react';
+import React, {useEffect} from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import Layout from './components/Layout';
 import TvShows from './pages/TvShows';
@@ -10,6 +10,11 @@ import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { FavoritesProvider, useFavorites } from './contexts/FavoritesContext';
 import { useRecommendations } from './hooks/useRecommendations';
 import TvShowCard from './components/TvShowCard';
+import GDPRBanner from './components/GDPRBanner';
+import EmailPreferences from './components/EmailPreferences';
+import ExportData from './components/ExportData';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import { backgroundWorker } from './services/backgroundWorker';
 
 // Componente de Recomendações
 const RecommendationsSection = () => {
@@ -322,17 +327,28 @@ const Home = () => {
 
 // Componente App principal
 function App() {
+  useEffect(() => {
+    // Iniciar trabalhador em segundo plano
+    backgroundWorker.start();
+    
+    return () => {
+      backgroundWorker.stop();
+    };
+  }, []);
+
   return (
     <AuthProvider>
       <FavoritesProvider>
         <Router>
           <Layout>
+            <GDPRBanner /> {/* Banner RGPD */}
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/tvshows" element={<TvShows />} />
               <Route path="/actors" element={<Actors />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Registration />} />
+              <Route path="/privacy" element={<PrivacyPolicy />} /> {/* Nova rota */}
             </Routes>
           </Layout>
         </Router>

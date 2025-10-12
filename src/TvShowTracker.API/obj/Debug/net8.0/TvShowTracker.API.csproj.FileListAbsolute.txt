@@ -1,5 +1,7 @@
 /Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.API/bin/Debug/net8.0/appsettings.Development.json
 /Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.API/bin/Debug/net8.0/appsettings.json
+/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.API/bin/Debug/net8.0/package-lock.json
+/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.API/bin/Debug/net8.0/package.json
 /Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.API/bin/Debug/net8.0/TvShowTracker.API.staticwebassets.endpoints.json
 /Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.API/bin/Debug/net8.0/LatoFont/Lato-Black.ttf
 /Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.API/bin/Debug/net8.0/LatoFont/Lato-BlackItalic.ttf
