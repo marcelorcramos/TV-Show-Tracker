@@ -1,4 +1,6 @@
+// src/contexts/AuthContext.jsx - VERSÃO CORRIGIDA
 import React, { createContext, useState, useContext, useEffect } from 'react';
+import { authAPI } from '../services/api';
 
 const AuthContext = createContext();
 
@@ -11,10 +13,9 @@ export const useAuth = () => {
 };
 
 export const AuthProvider = ({ children }) => {
-  // ✅ TODOS OS HOOKS DENTRO DO COMPONENTE
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [emailNotifications, setEmailNotifications] = useState(false); // ✅ MOVIDO PARA DENTRO
+  const [emailNotifications, setEmailNotifications] = useState(false);
 
   // DEBUG: Estado do contexto
   console.log('🔐 AuthContext State:', {
@@ -22,7 +23,7 @@ export const AuthProvider = ({ children }) => {
     loading,
     isAuthenticated: !!user,
     hasLocalStorageToken: !!localStorage.getItem('authToken'),
-    hasLocalStorageUser: !!localStorage.getItem('userData')
+    hasLocalStorageUser: !!localStorage.getItem('user')
   });
 
   useEffect(() => {
@@ -47,59 +48,80 @@ export const AuthProvider = ({ children }) => {
       }
     } else {
       console.log('ℹ️ AuthContext - Nenhum usuário encontrado no localStorage');
+      setUser(null); // ✅ GARANTIR que o estado fica null
     }
     setLoading(false);
   }, []);
 
+  // ✅ LOGIN REAL COM API
   const login = async (email, password) => {
     console.log('🔐 AuthContext.login chamado:', { email });
     
     try {
-      const mockUser = { 
-        id: 1, 
-        name: 'Test User', 
-        email: email 
-      };
-      const mockToken = 'mock-token-' + Date.now();
+      const response = await authAPI.login({ email, password });
+      const { token, user: userData } = response.data;
       
-      console.log('✅ AuthContext - Salvando no localStorage:', {
-        user: mockUser,
-        token: mockToken
-      });
+      console.log('✅ AuthContext - Login bem-sucedido via API:', userData.email);
 
-      localStorage.setItem('authToken', mockToken);
-      localStorage.setItem('userData', JSON.stringify(mockUser));
+      // Salvar no localStorage
+      localStorage.setItem('authToken', token);
+      localStorage.setItem('user', JSON.stringify(userData));
       
-      setTimeout(() => {
-        setUser(mockUser);
-        console.log('🎉 AuthContext - Estado atualizado após timeout');
-      }, 100);
+      // Atualizar estado
+      setUser(userData);
       
-      console.log('🎉 AuthContext - Login bem-sucedido:', mockUser.email);
+      console.log('🎉 AuthContext - Estado atualizado após login real');
+      return { success: true, user: userData, token };
       
-      return { success: true, user: mockUser, token: mockToken };
     } catch (error) {
-      console.error('❌ AuthContext - Erro no login:', error);
-      return { success: false, error: error.message };
+      console.error('❌ AuthContext - Erro no login:', error.response?.data || error.message);
+      return { 
+        success: false, 
+        error: error.response?.data?.message || 'Login failed' 
+      };
     }
   };
 
+  // ✅ REGISTER REAL COM API
   const register = async (name, email, password) => {
     console.log('👤 AuthContext.register chamado:', { name, email });
-    return { success: true };
+    
+    try {
+      const response = await authAPI.register({ name, email, password });
+      const userData = response.data;
+      
+      console.log('✅ AuthContext - Registro bem-sucedido via API:', userData.email);
+      return { success: true, user: userData };
+      
+    } catch (error) {
+      console.error('❌ AuthContext - Erro no registro:', error.response?.data || error.message);
+      return { 
+        success: false, 
+        error: error.response?.data?.message || 'Registration failed' 
+      };
+    }
   };
 
+  // ✅ LOGOUT COMPLETO
   const logout = () => {
-    console.log('🚪 AuthContext.logout - Removendo dados do localStorage');
+    console.log('🚪 AuthContext.logout - Removendo dados do localStorage e estado');
     
+    // 1. Limpar localStorage
     localStorage.removeItem('authToken');
-    localStorage.removeItem('userData');
-    setUser(null);
+    localStorage.removeItem('user');
+    localStorage.removeItem('favorites');
     
-    console.log('✅ AuthContext - Logout completo');
+    // 2. Limpar estado
+    setUser(null);
+    setEmailNotifications(false);
+    
+    // 3. Forçar atualização
+    setTimeout(() => {
+      console.log('✅ AuthContext - Logout completo, estado resetado');
+    }, 100);
   };
 
-  // ✅ VALUE DEFINIDO DENTRO DO COMPONENTE, APÓS TODAS AS FUNÇÕES
+  // ✅ VALUE DEFINIDO DENTRO DO COMPONENTE
   const value = {
     user,
     login,

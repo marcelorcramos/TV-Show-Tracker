@@ -15,6 +15,7 @@ import EmailPreferences from './components/EmailPreferences';
 import ExportData from './components/ExportData';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import { backgroundWorker } from './services/backgroundWorker';
+import UserProfile from './pages/auth/UserProfile';
 
 // Componente de Recomendações
 const RecommendationsSection = () => {
@@ -348,7 +349,8 @@ function App() {
               <Route path="/actors" element={<Actors />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Registration />} />
-              <Route path="/privacy" element={<PrivacyPolicy />} /> {/* Nova rota */}
+              <Route path="/privacy" element={<PrivacyPolicy />} />
+              <Route path="/profile" element={<UserProfile />} />
             </Routes>
           </Layout>
         </Router>

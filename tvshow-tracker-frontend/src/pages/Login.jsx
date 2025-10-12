@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+// src/pages/Login.jsx - VERSÃO COMPLETA E CORRIGIDA
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -7,6 +9,14 @@ const Login = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { login, isAuthenticated } = useAuth();
+
+  // ✅ REDIRECIONAR SE JÁ ESTIVER AUTENTICADO
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/profile');
+    }
+  }, [isAuthenticated, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -14,31 +24,20 @@ const Login = () => {
     setError('');
 
     try {
-      const response = await fetch('http://localhost:5023/api/Auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: email,
-          password: password
-        }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Login failed');
+      console.log('🔐 Tentando login com:', { email });
+      
+      // ✅ USAR A FUNÇÃO DO AUTHCONTEXT
+      const result = await login(email, password);
+      
+      if (result.success) {
+        console.log('✅ Login bem-sucedido, redirecionando...');
+        navigate('/profile');
+      } else {
+        throw new Error(result.error || 'Login failed');
       }
-
-      const data = await response.json();
-      
-      localStorage.setItem('authToken', data.token);
-      localStorage.setItem('user', JSON.stringify(data.user));
-      
-      console.log('Login successful:', data.user);
-      navigate('/');
       
     } catch (err) {
+      console.error('❌ Erro no login:', err);
       setError(err.message);
     } finally {
       setLoading(false);
@@ -100,10 +99,10 @@ const Login = () => {
       marginBottom: '0.5rem',
       textTransform: 'uppercase',
       letterSpacing: '0.5px',
-      paddingLeft: '0.5rem' // Alinha labels com os inputs
+      paddingLeft: '0.5rem'
     },
     input: {
-      width: '100%', // Largura total do container
+      width: '100%',
       padding: '0.75rem 1rem',
       border: '1px solid #d1d5db',
       borderRadius: '8px',
@@ -111,14 +110,14 @@ const Login = () => {
       transition: 'all 0.2s ease',
       outline: 'none',
       backgroundColor: 'white',
-      boxSizing: 'border-box' // Inclui padding na largura total
+      boxSizing: 'border-box'
     },
     inputFocus: {
       borderColor: '#1e293b',
       boxShadow: '0 0 0 3px rgba(30, 41, 59, 0.1)'
     },
     button: {
-      width: '100%', // Mesma largura que os inputs
+      width: '100%',
       padding: '0.875rem',
       background: '#1e293b',
       color: 'white',
@@ -129,7 +128,7 @@ const Login = () => {
       cursor: 'pointer',
       transition: 'all 0.2s ease',
       marginTop: '0.5rem',
-      boxSizing: 'border-box' // Inclui padding na largura total
+      boxSizing: 'border-box'
     },
     buttonHover: {
       background: '#374151',
@@ -178,7 +177,7 @@ const Login = () => {
       boxSizing: 'border-box'
     },
     formContainer: {
-      padding: '0 0.5rem' // Move tudo um pouco para a esquerda
+      padding: '0 0.5rem'
     }
   };
 
@@ -263,7 +262,7 @@ const Login = () => {
               disabled={loading}
               style={{
                 ...styles.button,
-                ...(loading ? styles.buttonDisabled : {}),
+                ...(loading ? styles.buttonDisabled : {})
               }}
               onMouseOver={(e) => {
                 if (!loading) {
@@ -279,12 +278,16 @@ const Login = () => {
               {loading ? 'Signing In...' : 'Sign In'}
             </button>
 
-            {/* Link para Registro - NOVO */}
+            {/* Link para Registro */}
             <div style={styles.registerLink}>
               Ainda não tem conta criada?{' '}
               <Link 
                 to="/register" 
-                style={{color: '#059669', fontWeight: '500', textDecoration: 'none'}}
+                style={{
+                  color: '#059669', 
+                  fontWeight: '500', 
+                  textDecoration: 'none'
+                }}
                 onMouseOver={(e) => e.target.style.color = '#047857'}
                 onMouseOut={(e) => e.target.style.color = '#059669'}
               >
@@ -297,7 +300,7 @@ const Login = () => {
               to="/" 
               style={styles.backLink}
               onMouseOver={(e) => e.target.style.color = '#374151'}
-              onMouseOut={(e) => e.target.style.color = styles.backLink.color}
+              onMouseOut={(e) => e.target.style.color = '#64748b'}
             >
               <svg style={{width: '0.875rem', height: '0.875rem', marginRight: '0.5rem'}} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -308,13 +311,28 @@ const Login = () => {
 
           {/* Demo Credentials */}
           <div style={styles.demoBox}>
-            <p style={{margin: '0 0 0.5rem 0', fontSize: '0.75rem', color: '#64748b', fontWeight: '500'}}>
+            <p style={{
+              margin: '0 0 0.5rem 0', 
+              fontSize: '0.75rem', 
+              color: '#64748b', 
+              fontWeight: '500'
+            }}>
               💡 Demo Credentials
             </p>
-            <p style={{margin: '0 0 0.25rem 0', fontSize: '0.7rem', color: '#94a3b8', fontFamily: 'monospace'}}>
+            <p style={{
+              margin: '0 0 0.25rem 0', 
+              fontSize: '0.7rem', 
+              color: '#94a3b8', 
+              fontFamily: 'monospace'
+            }}>
               novo@example.com
             </p>
-            <p style={{margin: 0, fontSize: '0.7rem', color: '#94a3b8', fontFamily: 'monospace'}}>
+            <p style={{
+              margin: 0, 
+              fontSize: '0.7rem', 
+              color: '#94a3b8', 
+              fontFamily: 'monospace'
+            }}>
               Password123!
             </p>
           </div>
