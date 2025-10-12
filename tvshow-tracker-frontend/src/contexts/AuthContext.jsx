@@ -101,7 +101,15 @@ export const AuthProvider = ({ children }) => {
       };
     }
   };
+  
+  const saveEmailPreference = (email, preference) => {
+    localStorage.setItem('userEmail', email);
+    localStorage.setItem('emailNotifications', preference.toString());
+    setEmailNotifications(preference);
+    console.log('📧 Preferência de e-mail salva:', { email, preference });
+  };
 
+  
   // ✅ LOGOUT COMPLETO
   const logout = () => {
     console.log('🚪 AuthContext.logout - Removendo dados do localStorage e estado');
@@ -131,9 +139,15 @@ export const AuthProvider = ({ children }) => {
     isAuthenticated: !!user,
     emailNotifications,
     setEmailNotifications,
-    toggleEmailNotifications: () => setEmailNotifications(prev => !prev)
-  };
-
+    toggleEmailNotifications: () => {
+      const newValue = !emailNotifications;
+      setEmailNotifications(newValue);
+      if (user?.email) {
+        saveEmailPreference(user.email, newValue);
+      }
+  },
+  saveEmailPreference 
+};
   console.log('🏗️ AuthContext - Provider renderizado:', {
     user: user?.email,
     isAuthenticated: !!user,

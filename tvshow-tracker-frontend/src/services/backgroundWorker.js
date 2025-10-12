@@ -1,25 +1,30 @@
-// src/services/backgroundWorker.js
+// src/services/backgroundWorker.js - VERSÃO CORRIGIDA
 import { emailService } from './emailService';
+import { authAPI, tvShowsAPI } from './api';
 
 class BackgroundWorker {
   constructor() {
     this.isRunning = false;
     this.interval = null;
+    this.checkInterval = 5 * 60 * 1000; // ✅ Verificar a cada 5 minutos (para teste)
   }
 
-  start() {
+ // No backgroundWorker.js, modifique o método start():
+    start() {
     if (this.isRunning) return;
     
     this.isRunning = true;
     console.log('🔄 Trabalhador em segundo plano iniciado');
     
-    // Verificar a cada 24 horas
+    // ✅ Aguardar um pouco para garantir que o usuário esteja carregado
+    setTimeout(() => {
+      this.checkAndSendRecommendations();
+    }, 2000);
+    
+    // ✅ Verificar a cada 5 minutos (em produção seria 24 horas)
     this.interval = setInterval(() => {
       this.checkAndSendRecommendations();
-    }, 24 * 60 * 60 * 1000); // 24 horas
-    
-    // Executar imediatamente na primeira vez
-    this.checkAndSendRecommendations();
+    }, this.checkInterval);
   }
 
   stop() {
@@ -34,67 +39,109 @@ class BackgroundWorker {
     try {
       console.log('🔍 Verificando recomendações para e-mail...');
       
-      // Obter usuários que optaram por receber e-mails
-      const users = await this.getUsersWithEmailPreference();
+      // ✅ Verificar se usuário está autenticado
+      const token = localStorage.getItem('authToken');
+      if (!token) {
+        console.log('ℹ️ Usuário não autenticado, pulando verificação de e-mails');
+        return;
+      }
+
+      // ✅ Obter preferências do usuário atual
+      const userEmail = localStorage.getItem('userEmail');
+      const emailPreference = localStorage.getItem('emailNotifications') === 'true';
       
-      for (const user of users) {
-        await this.sendUserRecommendations(user);
+      if (!userEmail || !emailPreference) {
+        console.log('ℹ️ Usuário não optou por receber e-mails ou e-mail não encontrado');
+        return;
+      }
+
+      console.log('📧 Preparando para enviar recomendações para:', userEmail);
+      
+      // ✅ Buscar recomendações reais da API
+      const recommendations = await this.getUserRecommendations();
+      
+      if (recommendations.length > 0) {
+        const success = await emailService.sendRecommendationEmail(
+          userEmail, 
+          recommendations
+        );
+        
+        if (success) {
+          console.log('✅ E-mail enviado para:', userEmail);
+          this.updateLastEmailSent();
+        } else {
+          console.log('❌ Falha ao enviar e-mail para:', userEmail);
+        }
+      } else {
+        console.log('ℹ️ Nenhuma recomendação encontrada para:', userEmail);
       }
     } catch (error) {
       console.error('❌ Erro no trabalhador em segundo plano:', error);
     }
   }
 
-  async getUsersWithEmailPreference() {
-    // Mock - em produção, buscar da base de dados
-    const userEmail = localStorage.getItem('userEmail');
-    const emailPreference = localStorage.getItem('emailNotifications') === 'true';
-    
-    if (userEmail && emailPreference) {
-      return [{ email: userEmail, id: 1 }];
-    }
-    
-    return [];
-  }
-
-  async sendUserRecommendations(user) {
+  async getUserRecommendations() {
     try {
-      // Buscar recomendações do usuário
-      const recommendations = await this.getUserRecommendations(user.id);
+      console.log('🎯 Buscando recomendações da API...');
       
-      if (recommendations.length > 0) {
-        const success = await emailService.sendRecommendationEmail(
-          user.email, 
-          recommendations
-        );
-        
-        if (success) {
-          console.log('✅ E-mail enviado para:', user.email);
-          this.updateLastEmailSent(user.id);
-        }
-      }
+      // ✅ Buscar recomendações reais da API
+      const response = await tvShowsAPI.getRecommendations();
+      const recommendations = response.data;
+      
+      console.log(`✅ ${recommendations.length} recomendações encontradas`);
+      
+      return recommendations.map(show => ({
+        id: show.id,
+        title: show.title,
+        genre: show.genre,
+        type: show.type,
+        rating: show.rating,
+        description: show.description,
+        releaseDate: show.releaseDate
+      }));
+      
     } catch (error) {
-      console.error('❌ Erro ao enviar e-mail para', user.email, error);
+      console.error('❌ Erro ao buscar recomendações:', error);
+      
+      // ✅ Fallback: buscar dos favoritos locais
+      return this.getFallbackRecommendations();
     }
   }
 
-  async getUserRecommendations(userId) {
-    // Mock - em produção, usar lógica real de recomendações
+  getFallbackRecommendations() {
+    // ✅ Fallback baseado nos favoritos locais
     const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
     
-    if (favorites.length === 0) return [];
+    if (favorites.length === 0) {
+      console.log('ℹ️ Nenhum favorito encontrado para fallback');
+      return [];
+    }
     
-    // Lógica simplificada de recomendações
+    console.log(`🔄 Usando ${favorites.length} favoritos para fallback`);
+    
     return favorites.slice(0, 3).map(fav => ({
+      id: fav.id,
       title: fav.title,
       genre: fav.genre,
       type: fav.type,
-      rating: fav.rating
+      rating: fav.rating,
+      description: fav.description
     }));
   }
 
-  updateLastEmailSent(userId) {
+  updateLastEmailSent() {
+    const userId = 1; // Em produção, obter do usuário logado
     localStorage.setItem(`lastEmailSent_${userId}`, new Date().toISOString());
+    console.log('📅 Último e-mail registrado em:', new Date().toISOString());
+  }
+
+  // ✅ NOVO: Método para verificar status
+  getStatus() {
+    return {
+      isRunning: this.isRunning,
+      lastCheck: localStorage.getItem('lastEmailSent_1'),
+      nextCheck: this.isRunning ? new Date(Date.now() + this.checkInterval).toISOString() : null
+    };
   }
 }
 

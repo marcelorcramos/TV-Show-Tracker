@@ -1,15 +1,20 @@
-// src/pages/auth/UserProfile.jsx
+// src/pages/auth/UserProfile.jsx - VERSÃO COMPLETA COM EXPORTAÇÃO
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
+import ExportData from '../../components/ExportData';
 
 const UserProfile = () => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [emailNotifications, setEmailNotifications] = useState(false);
   const navigate = useNavigate();
+  const { logout } = useAuth();
 
   useEffect(() => {
     fetchUserData();
+    loadEmailPreferences();
   }, []);
 
   const fetchUserData = async () => {
@@ -44,9 +49,25 @@ const UserProfile = () => {
     }
   };
 
+  const loadEmailPreferences = () => {
+    const savedPreference = localStorage.getItem('emailNotifications') === 'true';
+    setEmailNotifications(savedPreference);
+  };
+
+  const saveEmailPreference = (preference) => {
+    setEmailNotifications(preference);
+    localStorage.setItem('emailNotifications', preference.toString());
+    if (user?.email) {
+      localStorage.setItem('userEmail', user.email);
+    }
+    console.log('📧 Preferência de e-mail salva:', { 
+      email: user?.email, 
+      preference 
+    });
+  };
+
   const handleLogout = () => {
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('user');
+    logout();
     navigate('/login');
   };
 
@@ -66,7 +87,7 @@ const UserProfile = () => {
       padding: '2.5rem 2rem',
       boxShadow: '0 4px 6px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.1)',
       width: '100%',
-      maxWidth: '450px',
+      maxWidth: '550px',
       border: '1px solid #e2e8f0',
       textAlign: 'center'
     },
@@ -98,7 +119,7 @@ const UserProfile = () => {
       background: '#f8fafc',
       borderRadius: '8px',
       padding: '1.5rem',
-      marginBottom: '2rem',
+      marginBottom: '1.5rem',
       textAlign: 'left'
     },
     infoItem: {
@@ -124,6 +145,68 @@ const UserProfile = () => {
       color: '#6b7280',
       fontSize: '0.9rem'
     },
+    preferencesSection: {
+      background: '#f8fafc',
+      borderRadius: '8px',
+      padding: '1.5rem',
+      marginBottom: '1.5rem',
+      textAlign: 'left'
+    },
+    preferencesTitle: {
+      fontSize: '1.1rem',
+      fontWeight: '600',
+      color: '#1e293b',
+      marginBottom: '1rem',
+      display: 'flex',
+      alignItems: 'center',
+      gap: '0.5rem'
+    },
+    preferenceItem: {
+      marginBottom: '0.5rem'
+    },
+    preferenceLabel: {
+      display: 'flex',
+      alignItems: 'center',
+      fontWeight: '500',
+      color: '#374151',
+      cursor: 'pointer',
+      fontSize: '0.9rem'
+    },
+    checkbox: {
+      marginRight: '0.75rem',
+      width: '1.1rem',
+      height: '1.1rem',
+      cursor: 'pointer'
+    },
+    preferenceDescription: {
+      fontSize: '0.8rem',
+      color: '#6b7280',
+      margin: '0.5rem 0 0 1.85rem',
+      lineHeight: '1.4'
+    },
+    exportSection: {
+      background: '#f0f9ff',
+      borderRadius: '8px',
+      padding: '1.5rem',
+      marginBottom: '2rem',
+      textAlign: 'left',
+      border: '1px solid #bae6fd'
+    },
+    exportTitle: {
+      fontSize: '1.1rem',
+      fontWeight: '600',
+      color: '#0369a1',
+      marginBottom: '1rem',
+      display: 'flex',
+      alignItems: 'center',
+      gap: '0.5rem'
+    },
+    exportDescription: {
+      fontSize: '0.85rem',
+      color: '#0c4a6e',
+      marginBottom: '1rem',
+      lineHeight: '1.5'
+    },
     button: {
       width: '100%',
       padding: '0.875rem',
@@ -141,10 +224,29 @@ const UserProfile = () => {
       background: '#b91c1c',
       transform: 'translateY(-1px)'
     },
-    backButton: {
+    secondaryButton: {
       width: '100%',
       padding: '0.875rem',
       background: '#6b7280',
+      color: 'white',
+      border: 'none',
+      borderRadius: '8px',
+      fontSize: '0.9rem',
+      fontWeight: '500',
+      cursor: 'pointer',
+      transition: 'all 0.2s ease',
+      marginBottom: '1rem',
+      textDecoration: 'none',
+      display: 'block',
+      textAlign: 'center'
+    },
+    secondaryButtonHover: {
+      background: '#4b5563'
+    },
+    backButton: {
+      width: '100%',
+      padding: '0.875rem',
+      background: '#374151',
       color: 'white',
       border: 'none',
       borderRadius: '8px',
@@ -157,7 +259,7 @@ const UserProfile = () => {
       textAlign: 'center'
     },
     backButtonHover: {
-      background: '#4b5563'
+      background: '#1f2937'
     },
     loading: {
       textAlign: 'center',
@@ -172,6 +274,23 @@ const UserProfile = () => {
       borderRadius: '6px',
       marginBottom: '1rem',
       fontSize: '0.8rem'
+    },
+    statusIndicator: {
+      display: 'inline-flex',
+      alignItems: 'center',
+      padding: '0.25rem 0.5rem',
+      borderRadius: '12px',
+      fontSize: '0.7rem',
+      fontWeight: '500',
+      marginLeft: '0.5rem'
+    },
+    statusActive: {
+      background: '#dcfce7',
+      color: '#166534'
+    },
+    statusInactive: {
+      background: '#fef2f2',
+      color: '#dc2626'
     }
   };
 
@@ -245,7 +364,49 @@ const UserProfile = () => {
           </div>
         )}
 
-        {/* Logout Button */}
+        {/* Email Preferences Section */}
+        <div style={styles.preferencesSection}>
+          <h3 style={styles.preferencesTitle}>
+            📧 Email Preferences
+            <span 
+              style={{
+                ...styles.statusIndicator,
+                ...(emailNotifications ? styles.statusActive : styles.statusInactive)
+              }}
+            >
+              {emailNotifications ? 'ACTIVE' : 'INACTIVE'}
+            </span>
+          </h3>
+          <div style={styles.preferenceItem}>
+            <label style={styles.preferenceLabel}>
+              <input
+                type="checkbox"
+                checked={emailNotifications}
+                onChange={(e) => saveEmailPreference(e.target.checked)}
+                style={styles.checkbox}
+              />
+              Receive weekly recommendations by email
+            </label>
+            <p style={styles.preferenceDescription}>
+              Get personalized TV show and movie recommendations based on your favorites 
+              delivered to your inbox every week. You can change this setting at any time.
+            </p>
+          </div>
+        </div>
+
+        {/* Export Data Section - NOVA SEÇÃO ADICIONADA */}
+        <div style={styles.exportSection}>
+          <h3 style={styles.exportTitle}>
+            📤 Export My Data
+          </h3>
+          <p style={styles.exportDescription}>
+            Export your personal data, favorites, and account information in CSV or PDF format. 
+            This is useful for backup purposes or GDPR compliance.
+          </p>
+          <ExportData />
+        </div>
+
+        {/* Action Buttons */}
         <button
           onClick={handleLogout}
           style={styles.button}
@@ -261,15 +422,14 @@ const UserProfile = () => {
           Logout
         </button>
 
-        {/* Back to Home */}
         <Link 
           to="/" 
-          style={styles.backButton}
+          style={styles.secondaryButton}
           onMouseOver={(e) => {
-            e.target.style.background = styles.backButtonHover.background;
+            e.target.style.background = styles.secondaryButtonHover.background;
           }}
           onMouseOut={(e) => {
-            e.target.style.background = styles.backButton.background;
+            e.target.style.background = styles.secondaryButton.background;
           }}
         >
           Back to Home
