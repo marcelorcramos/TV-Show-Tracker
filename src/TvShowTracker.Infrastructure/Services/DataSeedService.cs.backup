@@ -1,0 +1,486 @@
+using Microsoft.EntityFrameworkCore;
+using TvShowTracker.Domain.Entities;
+using TvShowTracker.Infrastructure.Data;
+using TvShowTracker.Application.DTOs;
+using TvShowTracker.Application.Interfaces;
+using AutoMapper;
+
+namespace TvShowTracker.Infrastructure.Services
+{
+    public class DataSeedService : ITvShowService
+    {
+        private readonly ApplicationDbContext _context;
+        private readonly IMapper _mapper;
+        private readonly ICacheService _cacheService;
+        private static bool _hasSeeded = false;
+        private static readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
+
+        public DataSeedService(ApplicationDbContext context, IMapper mapper, ICacheService cacheService)
+        {
+            _context = context;
+            _mapper = mapper;
+            _cacheService = cacheService;
+        }
+
+        public async Task InitializeDatabaseAsync()
+        {
+            await _semaphore.WaitAsync();
+            try
+            {
+                if (_hasSeeded) return;
+
+                Console.WriteLine("🔧 Inicializando banco de dados...");
+                await _context.Database.EnsureCreatedAsync();
+                
+                var hasData = await _context.TvShows.AnyAsync();
+                if (hasData)
+                {
+                    Console.WriteLine("✅ Banco de dados já populado.");
+                    _hasSeeded = true;
+                    return;
+                }
+
+                Console.WriteLine("📥 Executando seed completo...");
+                
+                // 1. Primeiro criar atores
+                await SeedActorsAsync();
+                
+                // 2. Depois criar TV shows
+                await SeedTvShowsAsync();
+                
+                // 3. Criar episódios para séries
+                await SeedEpisodesAsync();
+                
+                // 4. Finalmente criar as relações
+                await SeedTvShowActorRelationsAsync();
+
+                _hasSeeded = true;
+                Console.WriteLine("✅ Seed completo finalizado!");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ Erro no seed: {ex.Message}");
+            }
+            finally
+            {
+                _semaphore.Release();
+            }
+        }
+
+        public async Task ClearDatabaseAsync()
+        {
+            await _semaphore.WaitAsync();
+            try
+            {
+                Console.WriteLine("🗑️  Limpando banco de dados...");
+
+                _context.TvShowActors.RemoveRange(_context.TvShowActors);
+                _context.TvShows.RemoveRange(_context.TvShows);
+                _context.Actors.RemoveRange(_context.Actors);
+                _context.Episodes.RemoveRange(_context.Episodes);
+
+                await _context.SaveChangesAsync();
+                
+                _hasSeeded = false;
+                
+                Console.WriteLine("✅ Banco de dados limpo com sucesso!");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ Erro ao limpar banco de dados: {ex.Message}");
+            }
+            finally
+            {
+                _semaphore.Release();
+            }
+        }
+
+        // ✅ SEED DE ATORES (mantenha o SEU código existente aqui)
+        private async Task SeedActorsAsync()
+        {
+            try
+            {
+                var actors = new List<Actor>
+                {
+                    new Actor 
+                    { 
+                        Name = "Bryan Cranston", 
+                        Nationality = "American",
+                        BirthDate = new DateTime(1956, 3, 7),
+                        Bio = "American actor known for his role as Walter White in Breaking Bad.",
+                        ImageUrl = "https://image.tmdb.org/t/p/w500/3gIO6mCd4s4mT2aUdS9dVMXZ9g6.jpg"
+                    },
+                    new Actor 
+                    { 
+                        Name = "Aaron Paul", 
+                        Nationality = "American",
+                        BirthDate = new DateTime(1979, 8, 27),
+                        Bio = "American actor known for his role as Jesse Pinkman in Breaking Bad.",
+                        ImageUrl = "https://image.tmdb.org/t/p/w500/7kR4s4k2dW0qwxgQNlMxO7X6xUf.jpg"
+                    },
+                    // ... (COLE AQUI SEU CÓDIGO COMPLETO DE SeedActorsAsync)
+                };
+
+                await _context.Actors.AddRangeAsync(actors);
+                await _context.SaveChangesAsync();
+                Console.WriteLine($"✅ Atores seed completado! {actors.Count} atores criados.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ Erro no seed de atores: {ex.Message}");
+            }
+        }
+
+        // ✅ SEED DE TV SHOWS (mantenha o SEU código existente aqui)  
+        private async Task SeedTvShowsAsync()
+        {
+            try
+            {
+                var tvShows = new List<TvShow>
+                {
+                    new TvShow { Title = "Breaking Bad", Genre = "Drama", Type = "Series", ReleaseDate = new DateTime(2008, 1, 20), Rating = 9.5m, Seasons = 5, ImageUrl = "https://image.tmdb.org/t/p/w500/3xnWaLQjelJDDF7LT1WBo6f4BRe.jpg" },
+                    new TvShow { Title = "Stranger Things", Genre = "Sci-Fi", Type = "Series", ReleaseDate = new DateTime(2016, 7, 15), Rating = 8.7m, Seasons = 4, ImageUrl = "https://image.tmdb.org/t/p/w500/49WJfeN0moxb9IPfGn8AIqMGskD.jpg" },
+                    // ... (COLE AQUI SEU CÓDIGO COMPLETO DE SeedTvShowsAsync)
+                };
+
+                await _context.TvShows.AddRangeAsync(tvShows);
+                await _context.SaveChangesAsync();
+                Console.WriteLine($"✅ TV Shows seed completado! {tvShows.Count} itens criados.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ Erro no seed de TV shows: {ex.Message}");
+            }
+        }
+
+        // ✅ SEED DE EPISÓDIOS APENAS PARA SÉRIES
+        private async Task SeedEpisodesAsync()
+        {
+            try
+            {
+                var tvShows = await _context.TvShows.ToListAsync();
+                var episodes = new List<Episode>();
+
+                // Obter as séries (não filmes)
+                var series = tvShows.Where(t => t.Type?.ToLower() == "series").ToList();
+                
+                Console.WriteLine($"🎬 Criando episódios para {series.Count} séries...");
+
+                foreach (var seriesItem in series)
+                {
+                    var seriesEpisodes = CreateEpisodesForSeries(seriesItem);
+                    episodes.AddRange(seriesEpisodes);
+                    
+                    Console.WriteLine($"📺 {seriesItem.Title}: {seriesEpisodes.Count} episódios criados");
+                }
+
+                await _context.Episodes.AddRangeAsync(episodes);
+                await _context.SaveChangesAsync();
+                Console.WriteLine($"✅ Episódios seed completado! {episodes.Count} episódios criados.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ Erro no seed de episódios: {ex.Message}");
+            }
+        }
+
+        // ✅ CRIAR EPISÓDIOS PARA CADA SÉRIE
+        private List<Episode> CreateEpisodesForSeries(TvShow series)
+        {
+            var episodes = new List<Episode>();
+            var random = new Random();
+
+            var seriesConfig = new Dictionary<string, (int seasons, int episodesPerSeason, DateTime startDate)>
+            {
+                { "Breaking Bad", (5, 6, new DateTime(2008, 1, 20)) },
+                { "Stranger Things", (4, 8, new DateTime(2016, 7, 15)) },
+                { "Game of Thrones", (8, 6, new DateTime(2011, 4, 17)) },
+                { "The Witcher", (3, 8, new DateTime(2019, 12, 20)) },
+                { "The Last of Us", (1, 9, new DateTime(2023, 1, 15)) },
+                { "Friends", (10, 6, new DateTime(1994, 9, 22)) }
+            };
+
+            if (seriesConfig.ContainsKey(series.Title))
+            {
+                var (seasons, episodesPerSeason, startDate) = seriesConfig[series.Title];
+
+                for (int season = 1; season <= seasons; season++)
+                {
+                    for (int episodeNum = 1; episodeNum <= episodesPerSeason; episodeNum++)
+                    {
+                        var releaseDate = startDate
+                            .AddYears(season - 1)
+                            .AddDays((episodeNum - 1) * 7);
+
+                        if (releaseDate > DateTime.UtcNow)
+                            releaseDate = DateTime.UtcNow.AddDays(-random.Next(1, 30));
+
+                        var episode = new Episode
+                        {
+                            Title = $"Episode {episodeNum}",
+                            Description = GetEpisodeDescription(series.Title, season, episodeNum),
+                            SeasonNumber = season,
+                            EpisodeNumber = episodeNum,
+                            ReleaseDate = releaseDate,
+                            Duration = TimeSpan.FromMinutes(GetEpisodeDuration(series.Title, season)),
+                            Rating = GetEpisodeRating(series.Rating ?? 8.0m, random),
+                            TvShowId = series.Id
+                        };
+
+                        episodes.Add(episode);
+                    }
+                }
+            }
+
+            return episodes;
+        }
+
+        // ✅ MÉTODOS AUXILIARES (APENAS UMA VEZ CADA)
+        private string GetEpisodeDescription(string seriesTitle, int season, int episode)
+        {
+            var descriptions = new Dictionary<string, Func<int, int, string>>
+            {
+                { "Breaking Bad", (s, e) => $"Walter White faces new challenges in season {s}. In episode {e}, the stakes get higher as the meth business expands." },
+                { "Stranger Things", (s, e) => $"The kids of Hawkins encounter supernatural events in season {s}. Episode {e} reveals new mysteries about the Upside Down." },
+                { "Game of Thrones", (s, e) => $"The battle for the Iron Throne intensifies in season {s}. Episode {e} features political intrigue and epic battles." },
+                { "The Witcher", (s, e) => $"Geralt of Rivia continues his monster hunting journey in season {s}. Episode {e} brings new contracts and dangers." },
+                { "The Last of Us", (s, e) => $"Joel and Ellie's journey across post-apocalyptic America continues in season {s}. Episode {e} reveals more about the infected world." },
+                { "Friends", (s, e) => $"The friends navigate life and relationships in season {s}. Episode {e} brings laughter and heartwarming moments in Central Perk." }
+            };
+
+            return descriptions.ContainsKey(seriesTitle) 
+                ? descriptions[seriesTitle](season, episode) 
+                : $"Episode {episode} of season {season} continues the story.";
+        }
+
+        private int GetEpisodeDuration(string seriesTitle, int season)
+        {
+            var durations = new Dictionary<string, int>
+            {
+                { "Breaking Bad", 48 }, { "Stranger Things", 52 }, { "Game of Thrones", 58 },
+                { "The Witcher", 62 }, { "The Last of Us", 56 }, { "Friends", 22 }
+            };
+            return durations.ContainsKey(seriesTitle) ? durations[seriesTitle] : 45;
+        }
+
+        private decimal GetEpisodeRating(decimal seriesRating, Random random)
+        {
+            var variation = (decimal)(random.NextDouble() * 0.6 - 0.3);
+            var episodeRating = seriesRating + variation;
+            return Math.Max(7.0m, Math.Min(10.0m, episodeRating));
+        }
+
+        // ✅ MANTENHA AQUI SEUS OUTROS MÉTODOS EXISTENTES:
+        // - SeedTvShowActorRelationsAsync()
+        // - GetTvShowsAsync()
+        // - GetAvailableGenresAsync() 
+        // - GetAvailableTypesAsync()
+        // - GetTvShowByIdAsync()
+        // - GetRecommendedTvShowsAsync()
+        // - DebugDatabase()
+    }
+}
+
+        // ✅ IMPLEMENTAÇÃO DOS MÉTODOS DA INTERFACE ITvShowService
+
+        public async Task<PagedResult<TvShowDto>> GetTvShowsAsync(TvShowQuery query)
+        {
+            try
+            {
+                var tvShowsQuery = _context.TvShows
+                    .Include(t => t.TvShowActors)
+                        .ThenInclude(ta => ta.Actor)
+                    .AsQueryable();
+
+                // Apply filters
+                if (!string.IsNullOrEmpty(query.Genre))
+                    tvShowsQuery = tvShowsQuery.Where(t => t.Genre == query.Genre);
+
+                if (!string.IsNullOrEmpty(query.Type))
+                    tvShowsQuery = tvShowsQuery.Where(t => t.Type == query.Type);
+
+                if (!string.IsNullOrEmpty(query.Search))
+                {
+                    tvShowsQuery = tvShowsQuery.Where(t =>
+                        t.Title.Contains(query.Search) ||
+                        (t.Description != null && t.Description.Contains(query.Search)));
+                }
+
+                // Apply sorting
+                tvShowsQuery = query.SortBy?.ToLower() switch
+                {
+                    "title" => query.SortDescending
+                        ? tvShowsQuery.OrderByDescending(t => t.Title)
+                        : tvShowsQuery.OrderBy(t => t.Title),
+                    "releasedate" => query.SortDescending
+                        ? tvShowsQuery.OrderByDescending(t => t.ReleaseDate)
+                        : tvShowsQuery.OrderBy(t => t.ReleaseDate),
+                    "rating" => query.SortDescending
+                        ? tvShowsQuery.OrderByDescending(t => t.Rating)
+                        : tvShowsQuery.OrderBy(t => t.Rating),
+                    "seasons" => query.SortDescending
+                        ? tvShowsQuery.OrderByDescending(t => t.Seasons)
+                        : tvShowsQuery.OrderBy(t => t.Seasons),
+                    _ => tvShowsQuery.OrderBy(t => t.Title)
+                };
+
+                // Get total count for pagination
+                var totalCount = await tvShowsQuery.CountAsync();
+
+                // Apply pagination
+                var tvShows = await tvShowsQuery
+                    .Skip((query.Page - 1) * query.PageSize)
+                    .Take(query.PageSize)
+                    .ToListAsync();
+
+                // Mapear para DTO e incluir os 3 principais atores
+                var tvShowDtos = tvShows.Select(tvShow =>
+                {
+                    var dto = _mapper.Map<TvShowDto>(tvShow);
+                    
+                    dto.FeaturedActors = tvShow.TvShowActors?
+                        .Where(ta => ta.IsFeatured && ta.Actor != null)
+                        .Take(3)
+                        .Select(ta => new ActorDto 
+                        { 
+                            Id = ta.Actor.Id,
+                            Name = ta.Actor.Name,
+                            CharacterName = ta.CharacterName,
+                            ImageUrl = ta.Actor.ImageUrl
+                        })
+                        .ToList() ?? new List<ActorDto>();
+                        
+                    return dto;
+                }).ToList();
+
+                return new PagedResult<TvShowDto>
+                {
+                    Items = tvShowDtos,
+                    TotalCount = totalCount,
+                    Page = query.Page,
+                    PageSize = query.PageSize
+                };
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ Erro em GetTvShowsAsync: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task<List<string>> GetAvailableGenresAsync()
+        {
+            try
+            {
+                var cacheKey = "available_genres";
+                var cachedGenres = await _cacheService.GetAsync<List<string>>(cacheKey);
+                if (cachedGenres != null) return cachedGenres;
+
+                var genres = await _context.TvShows
+                    .Where(t => t.Genre != null)
+                    .Select(t => t.Genre!)
+                    .Distinct()
+                    .OrderBy(g => g)
+                    .ToListAsync();
+
+                await _cacheService.SetAsync(cacheKey, genres, TimeSpan.FromHours(6));
+                return genres;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ Erro em GetAvailableGenresAsync: {ex.Message}");
+                return new List<string>();
+            }
+        }
+
+        public async Task<List<string>> GetAvailableTypesAsync()
+        {
+            try
+            {
+                var cacheKey = "available_types";
+                var cachedTypes = await _cacheService.GetAsync<List<string>>(cacheKey);
+                if (cachedTypes != null) return cachedTypes;
+
+                var types = await _context.TvShows
+                    .Where(t => t.Type != null)
+                    .Select(t => t.Type!)
+                    .Distinct()
+                    .OrderBy(t => t)
+                    .ToListAsync();
+
+                await _cacheService.SetAsync(cacheKey, types, TimeSpan.FromHours(6));
+                return types;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ Erro em GetAvailableTypesAsync: {ex.Message}");
+                return new List<string>();
+            }
+        }
+
+        public async Task<TvShowDetailDto?> GetTvShowByIdAsync(int id)
+        {
+            try
+            {
+                var tvShow = await _context.TvShows
+                    .Include(t => t.Episodes.OrderBy(e => e.SeasonNumber).ThenBy(e => e.EpisodeNumber))
+                    .Include(t => t.TvShowActors)
+                        .ThenInclude(ta => ta.Actor)
+                    .FirstOrDefaultAsync(t => t.Id == id);
+
+                if (tvShow == null) return null;
+
+                var tvShowDetail = _mapper.Map<TvShowDetailDto>(tvShow);
+                
+                tvShowDetail.FeaturedActors = tvShow.TvShowActors
+                    .Where(ta => ta.IsFeatured)
+                    .Select(ta => new ActorDto 
+                    { 
+                        Id = ta.Actor.Id,
+                        Name = ta.Actor.Name,
+                        CharacterName = ta.CharacterName
+                    })
+                    .ToList();
+
+                return tvShowDetail;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ Erro em GetTvShowByIdAsync: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task<List<TvShowDto>> GetRecommendedTvShowsAsync(int userId)
+        {
+            try
+            {
+                var recommendationService = new RecommendationService(_context, _mapper);
+                return await recommendationService.GetRecommendationsAsync(userId, 5);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ Erro em GetRecommendedTvShowsAsync: {ex.Message}");
+                return new List<TvShowDto>();
+            }
+        }
+
+        public async Task<string> DebugDatabase()
+        {
+            try
+            {
+                var tvShowsCount = await _context.TvShows.CountAsync();
+                var actorsCount = await _context.Actors.CountAsync();
+                var tvShowActorsCount = await _context.TvShowActors.CountAsync();
+                var episodesCount = await _context.Episodes.CountAsync();
+                var types = await _context.TvShows.Select(t => t.Type).Distinct().ToListAsync();
+                
+                return $"Total TvShows: {tvShowsCount}, Actors: {actorsCount}, Episodes: {episodesCount}, Relations: {tvShowActorsCount}, Types: {string.Join(", ", types)}";
+            }
+            catch (Exception ex)
+            {
+                return $"Erro no debug: {ex.Message}";
+            }
+        }
+    }
+}

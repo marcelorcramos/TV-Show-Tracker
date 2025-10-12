@@ -1,38 +1,34 @@
-// TvShowTracker.Application/DTOs/TvShowDto.cs
+using System.ComponentModel.DataAnnotations;
+
 namespace TvShowTracker.Application.DTOs
 {
     public class TvShowDto
     {
         public int Id { get; set; }
+        
+        [Required]
+        [MaxLength(200)]
         public string Title { get; set; } = string.Empty;
+        
         public string? Description { get; set; }
         public string? Genre { get; set; }
         public string? Type { get; set; }
+        public decimal? Rating { get; set; }
         public DateTime? ReleaseDate { get; set; }
-        public DateTime? EndDate { get; set; }
         public int? Seasons { get; set; }
         public int? Duration { get; set; }
-        public decimal? Rating { get; set; }
         public string? ImageUrl { get; set; }
+        
+        // Navigation properties
+        public List<ActorDto> FeaturedActors { get; set; } = new List<ActorDto>();
+        
+        // UI properties
         public bool IsFavorite { get; set; }
-        public List<ActorDto> FeaturedActors { get; set; } = new();
     }
 
     public class TvShowDetailDto : TvShowDto
     {
-        public List<EpisodeDto> Episodes { get; set; } = new();
-        // ✅ APENAS Episodes aqui - FeaturedActors é herdado de TvShowDto
-    }
-
-    public class EpisodeDto
-    {
-        public int Id { get; set; }
-        public string Title { get; set; } = string.Empty;
-        public string? Description { get; set; }
-        public int SeasonNumber { get; set; }
-        public int EpisodeNumber { get; set; }
-        public DateTime? ReleaseDate { get; set; }
-        public TimeSpan? Duration { get; set; }
-        public decimal? Rating { get; set; }
+        public List<ActorDto> Actors { get; set; } = new List<ActorDto>();
+        public List<EpisodeDto>? Episodes { get; set; }
     }
 }
