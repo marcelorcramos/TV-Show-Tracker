@@ -13,7 +13,7 @@ const EmailPreferences = () => {
       border: '1px solid #e5e7eb',
       margin: '20px 0'
     }}>
-      <h3 style={{ marginBottom: '15px' }}>📧 Preferências de E-mail</h3>
+      <h3 style={{ marginBottom: '15px' }}>📧 Email Preferences</h3>
       
       <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
         <input
@@ -23,7 +23,7 @@ const EmailPreferences = () => {
           onChange={toggleEmailNotifications}
         />
         <label htmlFor="emailNotifications" style={{ cursor: 'pointer' }}>
-          Receber recomendações por e-mail (uma vez por dia)
+        Receive recommendations by email (once a day)
         </label>
       </div>
       

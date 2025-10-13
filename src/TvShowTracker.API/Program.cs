@@ -71,7 +71,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 // Application Services
 builder.Services.AddScoped<IJwtService, JwtService>();
-builder.Services.AddScoped<JwtService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IActorService, ActorService>();
 builder.Services.AddScoped<IRecommendationService, RecommendationService>();

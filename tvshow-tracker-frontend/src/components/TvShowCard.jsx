@@ -276,7 +276,7 @@ const handleFavoriteClick = async (e) => {
               marginBottom: '8px',
               color: '#4b5563'
             }}>
-              Elenco Principal:
+              Main Cast:
             </h4>
             <div style={{ 
               display: 'flex', 
@@ -328,7 +328,7 @@ const handleFavoriteClick = async (e) => {
                         overflow: 'hidden',
                         textOverflow: 'ellipsis'
                       }}>
-                        como {actor.characterName}
+                        as {actor.characterName}
                       </span>
                     )}
                   </div>
@@ -358,7 +358,7 @@ const handleFavoriteClick = async (e) => {
           }}
           onClick={handleShowDetails}
         >
-          Mostrar Detalhes
+          Show Details
         </button>
       </div>
 

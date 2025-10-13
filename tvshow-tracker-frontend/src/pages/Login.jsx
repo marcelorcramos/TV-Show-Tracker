@@ -291,21 +291,7 @@ const Login = () => {
             </button>
 
             {/* Link para Registro */}
-            <div style={styles.registerLink}>
-              Ainda não tem conta criada?{' '}
-              <Link 
-                to="/register" 
-                style={{
-                  color: '#059669', 
-                  fontWeight: '500', 
-                  textDecoration: 'none'
-                }}
-                onMouseOver={(e) => e.target.style.color = '#047857'}
-                onMouseOut={(e) => e.target.style.color = '#059669'}
-              >
-                Criar conta
-              </Link>
-            </div>
+            
 
             {/* Back Button - MESMO TAMANHO DO LOG OUT */}
             <Link 
@@ -326,34 +312,21 @@ const Login = () => {
               Back To Home
             </Link>
           </form>
-
-          {/* Demo Credentials */}
-          <div style={styles.demoBox}>
-            <p style={{
-              margin: '0 0 0.5rem 0', 
-              fontSize: '0.75rem', 
-              color: '#64748b', 
-              fontWeight: '500'
-            }}>
-              💡 Demo Credentials
-            </p>
-            <p style={{
-              margin: '0 0 0.25rem 0', 
-              fontSize: '0.7rem', 
-              color: '#94a3b8', 
-              fontFamily: 'monospace'
-            }}>
-              novo@example.com
-            </p>
-            <p style={{
-              margin: 0, 
-              fontSize: '0.7rem', 
-              color: '#94a3b8', 
-              fontFamily: 'monospace'
-            }}>
-              Password123!
-            </p>
-          </div>
+          <div style={styles.registerLink}>
+            Don't have an account created yet?{' '}
+              <Link 
+                to="/register" 
+                style={{
+                  color: '#059669', 
+                  fontWeight: '500', 
+                  textDecoration: 'none'
+                }}
+                onMouseOver={(e) => e.target.style.color = '#047857'}
+                onMouseOut={(e) => e.target.style.color = '#059669'}
+              >
+                Create Account
+              </Link>
+            </div>
         </div>
       </div>
     </div>

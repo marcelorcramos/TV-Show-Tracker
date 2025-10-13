@@ -77,7 +77,7 @@ const SearchBar = () => {
           {results.tvShows.length > 0 && (
             <div style={styles.resultsSection}>
               <div style={styles.sectionTitle}>
-                📺 Séries & Filmes ({results.tvShows.length})
+                📺 Series and Movies ({results.tvShows.length})
               </div>
               {results.tvShows.map(tvShow => (
                 <div
@@ -100,7 +100,7 @@ const SearchBar = () => {
           {results.actors.length > 0 && (
             <div style={styles.resultsSection}>
               <div style={styles.sectionTitle}>
-                🎭 Atores ({results.actors.length})
+                🎭 Actors ({results.actors.length})
               </div>
               {results.actors.map(actor => (
                 <div
@@ -124,7 +124,7 @@ const SearchBar = () => {
             <div style={styles.noResults}>
               <div style={styles.noResultsIcon}>🔍</div>
               <div style={styles.noResultsText}>
-                Nenhum resultado encontrado para "{searchTerm}"
+              No results found for "{searchTerm}"
               </div>
             </div>
           )}

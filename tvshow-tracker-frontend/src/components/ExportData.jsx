@@ -314,7 +314,7 @@ const ExportData = () => {
   if (!user) {
     return (
       <div style={styles.emptyState}>
-        <p>🔐 Faça login para exportar seus dados</p>
+        <p>🔐 Log in to export your data</p>
       </div>
     );
   }
@@ -322,18 +322,18 @@ const ExportData = () => {
   return (
     <div style={styles.container}>
       <h2 style={styles.title}>
-        📤 Exportar Dados
+        📤 Export Data
       </h2>
       <p style={styles.subtitle}>
-        Exporte seus dados pessoais, favoritos e informações da plataforma
+      Export your personal data, favorites and platform information
       </p>
 
       {/* Seção de Favoritos */}
       <div style={styles.section}>
         <h3 style={styles.sectionTitle}>
-          ❤️ Meus Favoritos
+          ❤️ My Favorites
           <span style={{ fontSize: '0.8rem', background: '#e2e8f0', padding: '2px 8px', borderRadius: '12px' }}>
-            {favorites.length} itens
+            {favorites.length} items
           </span>
         </h3>
         
@@ -393,14 +393,14 @@ const ExportData = () => {
         
         {favorites.length === 0 && (
           <p style={{ color: '#ef4444', fontSize: '0.85rem', marginTop: '10px' }}>
-            Adicione alguns favoritos para exportar
+            Add some favorites to export
           </p>
         )}
       </div>
 
       {/* Seção de Dados Pessoais */}
       <div style={styles.section}>
-        <h3 style={styles.sectionTitle}>👤 Meus Dados Pessoais</h3>
+        <h3 style={styles.sectionTitle}>👤 My Personal Data</h3>
         
         <div style={styles.buttonGroup}>
           <button
@@ -432,7 +432,7 @@ const ExportData = () => {
         
         <div style={styles.stats}>
           <span>📧 {user.email}</span>
-          <span>📅 Conta criada em: {user.createdAt ? new Date(user.createdAt).toLocaleDateString('pt-BR') : 'N/A'}</span>
+          <span>📅 Account created on: {user.createdAt ? new Date(user.createdAt).toLocaleDateString('pt-BR') : 'N/A'}</span>
         </div>
       </div>
 
@@ -446,7 +446,7 @@ const ExportData = () => {
           fontSize: '0.9rem',
           color: '#92400e'
         }}>
-          ⏳ Exportando dados... Aguarde
+          ⏳ Exporting data... Please wait
         </div>
       )}
     </div>

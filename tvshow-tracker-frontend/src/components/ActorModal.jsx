@@ -63,21 +63,21 @@ const ActorModal = ({ isOpen, data, onClose }) => {
               
               <div style={styles.detailsGrid}>
                 <div style={styles.detailItem}>
-                  <span style={styles.detailLabel}>Nacionalidade:</span>
+                  <span style={styles.detailLabel}>Nationality:</span>
                   <span style={styles.detailValue}>{data.nationality}</span>
                 </div>
                 
                 <div style={styles.detailItem}>
-                  <span style={styles.detailLabel}>Data de Nascimento:</span>
+                  <span style={styles.detailLabel}>Date of birth:</span>
                   <span style={styles.detailValue}>
                     {new Date(data.birthDate).toLocaleDateString('pt-BR')}
                   </span>
                 </div>
 
                 <div style={styles.detailItem}>
-                  <span style={styles.detailLabel}>Idade:</span>
+                  <span style={styles.detailLabel}>Age:</span>
                   <span style={styles.detailValue}>
-                    {calculateAge(data.birthDate)} anos
+                    {calculateAge(data.birthDate)} years old
                   </span>
                 </div>
               </div>
@@ -86,7 +86,7 @@ const ActorModal = ({ isOpen, data, onClose }) => {
 
           {/* Biografia */}
           <div style={styles.bioSection}>
-            <h3 style={styles.sectionTitle}>Biografia</h3>
+            <h3 style={styles.sectionTitle}>Biography</h3>
             <p style={styles.bio}>
               {data.bio || 'Biografia não disponível.'}
             </p>
@@ -95,7 +95,7 @@ const ActorModal = ({ isOpen, data, onClose }) => {
           {/* Filmografia */}
           {data.tvShows && data.tvShows.length > 0 && (
             <div style={styles.filmographySection}>
-              <h3 style={styles.sectionTitle}>🎬 Filmografia</h3>
+              <h3 style={styles.sectionTitle}>🎬 Filmography</h3>
               <div style={styles.filmographyGrid}>
                 {data.tvShows.slice(0, 6).map((show) => (
                   <div key={show.id} style={styles.showCard}>
@@ -120,7 +120,7 @@ const ActorModal = ({ isOpen, data, onClose }) => {
               </div>
               {data.tvShows.length > 6 && (
                 <div style={styles.moreShows}>
-                  + {data.tvShows.length - 6} mais...
+                  + {data.tvShows.length - 6} more...
                 </div>
               )}
             </div>
@@ -129,19 +129,19 @@ const ActorModal = ({ isOpen, data, onClose }) => {
           {/* Informações Adicionais */}
           <div style={styles.additionalInfo}>
             <div style={styles.infoCard}>
-              <h4 style={styles.infoTitle}>📋 Informações Pessoais</h4>
+              <h4 style={styles.infoTitle}>📋 Personal Information</h4>
               <div style={styles.infoList}>
                 <div style={styles.infoItem}>
-                  <strong>Nome:</strong> {data.name}
+                  <strong>Name:</strong> {data.name}
                 </div>
                 <div style={styles.infoItem}>
-                  <strong>Nacionalidade:</strong> {data.nationality}
+                  <strong>Nationality:</strong> {data.nationality}
                 </div>
                 <div style={styles.infoItem}>
-                  <strong>Data de Nascimento:</strong> {new Date(data.birthDate).toLocaleDateString('pt-BR')}
+                  <strong>Date of birth:</strong> {new Date(data.birthDate).toLocaleDateString('pt-BR')}
                 </div>
                 <div style={styles.infoItem}>
-                  <strong>Idade:</strong> {calculateAge(data.birthDate)} anos
+                  <strong>Age:</strong> {calculateAge(data.birthDate)} years old
                 </div>
               </div>
             </div>

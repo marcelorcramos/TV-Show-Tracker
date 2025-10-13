@@ -240,8 +240,8 @@ const Actors = () => {
         </h3>
         
         <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap', alignItems: 'end' }}>
-          {/* Search */}
-          <div style={{ flex: '1', minWidth: '250px' }}>
+          {/* Search - DIMINUÍDA COM PADDING */}
+          <div style={{ flex: '1', minWidth: '200px', paddingRight: '20px' }}>
             <label style={{ 
               display: 'block', 
               marginBottom: '8px', 
@@ -268,7 +268,7 @@ const Actors = () => {
           </div>
 
           {/* Nationality Filter */}
-          <div style={{ minWidth: '180px' }}>
+          <div style={{ minWidth: '180px', paddingRight: '20px' }}>
             <label style={{ 
               display: 'block', 
               marginBottom: '8px', 
@@ -299,7 +299,7 @@ const Actors = () => {
           </div>
 
           {/* Sort */}
-          <div style={{ minWidth: '180px' }}>
+          <div style={{ minWidth: '180px', paddingRight: '20px' }}>
             <label style={{ 
               display: 'block', 
               marginBottom: '8px', 

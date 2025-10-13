@@ -26,9 +26,9 @@ const RecommendationsSection = () => {
   if (!isAuthenticated) {
     return (
       <div style={styles.recommendationsSection}>
-        <h2 style={styles.sectionTitle}>🎯 Recomendações Personalizadas</h2>
+        <h2 style={styles.sectionTitle}>🎯 Personalized Recommendations</h2>
         <p style={styles.recommendationsSubtitle}>
-          Faça login e adicione filmes/séries aos favoritos para receber recomendações personalizadas!
+        Log in and add movies/series to favorites to receive personalized recommendations!
         </p>
       </div>
     );
@@ -39,7 +39,7 @@ const RecommendationsSection = () => {
       <div style={styles.recommendationsSection}>
         <h2 style={styles.sectionTitle}>🎯 Suas Recomendações</h2>
         <p style={styles.recommendationsSubtitle}>
-          Adicione alguns filmes ou séries aos favoritos para receber recomendações personalizadas!
+        Add some movies or series to your favorites to receive personalized recommendations!
         </p>
       </div>
     );
@@ -48,7 +48,7 @@ const RecommendationsSection = () => {
   if (loading) {
     return (
       <div style={styles.recommendationsSection}>
-        <h2 style={styles.sectionTitle}>🎯 Carregando recomendações...</h2>
+        <h2 style={styles.sectionTitle}>🎯 Loading recommendations...</h2>
       </div>
     );
   }
@@ -56,9 +56,9 @@ const RecommendationsSection = () => {
   if (recommendations.length === 0) {
     return (
       <div style={styles.recommendationsSection}>
-        <h2 style={styles.sectionTitle}>🎯 Suas Recomendações</h2>
+        <h2 style={styles.sectionTitle}>🎯 Your Recommendations</h2>
         <p style={styles.recommendationsSubtitle}>
-          Ainda não encontramos recomendações baseadas nos seus favoritos. Tente favoritar mais conteúdos!
+        We haven't found recommendations based on your favorites yet. Try to favorite more content!
         </p>
       </div>
     );
@@ -66,9 +66,9 @@ const RecommendationsSection = () => {
 
   return (
     <div style={styles.recommendationsSection}>
-      <h2 style={styles.sectionTitle}>🎯 Recomendados para você</h2>
+      <h2 style={styles.sectionTitle}>🎯 Recommended for you</h2>
       <p style={styles.recommendationsSubtitle}>
-        Baseado nos seus gêneros favoritos: <span style={{fontWeight: 'bold'}}>{favoriteGenres.join(', ')}</span>
+      Based on your favorite genres: <span style={{fontWeight: 'bold'}}>{favoriteGenres.join(', ')}</span>
       </p>
       
       <div style={styles.recommendationsGrid}>
@@ -87,9 +87,9 @@ const QuickNavigation = () => {
   return (
     <div style={styles.quickNavSection}>
       <div style={styles.quickNavContainer}>
-        <h2 style={styles.sectionTitle}>Explore Nossa Plataforma</h2>
+        <h2 style={styles.sectionTitle}>Explore Our Platform</h2>
         <p style={styles.quickNavSubtitle}>
-          Descubra tudo o que temos para oferecer
+        Discover everything we have to offer
         </p>
         
         <div style={styles.quickNavGrid}>
@@ -97,12 +97,12 @@ const QuickNavigation = () => {
           <Link to="/tvshows" style={styles.quickNavCard}>
             <div style={styles.quickNavIcon}>🎬</div>
             <div style={styles.quickNavContent}>
-              <h3 style={styles.quickNavTitle}>Séries & Filmes</h3>
+              <h3 style={styles.quickNavTitle}>Series & Movies</h3>
               <p style={styles.quickNavDescription}>
-                Explore nosso catálogo completo com filtros avançados
+              Explore our complete catalog with advanced filters
               </p>
               <div style={styles.quickNavStats}>
-                <div style={styles.quickNavStat}>15+ Conteúdos</div>
+                <div style={styles.quickNavStat}>15+ Contents</div>
                 <div style={styles.quickNavStat}>⭐ 8.0+ Rating</div>
               </div>
             </div>
@@ -113,13 +113,13 @@ const QuickNavigation = () => {
           <Link to="/actors" style={styles.quickNavCard}>
             <div style={styles.quickNavIcon}>🎭</div>
             <div style={styles.quickNavContent}>
-              <h3 style={styles.quickNavTitle}>Atores & Elenco</h3>
+              <h3 style={styles.quickNavTitle}>Actors and Cast</h3>
               <p style={styles.quickNavDescription}>
-                Descubra os talentos por trás das produções
+              Discover the talents behind the productions
               </p>
               <div style={styles.quickNavStats}>
-                <div style={styles.quickNavStat}>15+ Atores</div>
-                <div style={styles.quickNavStat}>🎬 Multi-gêneros</div>
+                <div style={styles.quickNavStat}>15+ Actors</div>
+                <div style={styles.quickNavStat}>🎬 Multi-genres</div>
               </div>
             </div>
             <div style={styles.quickNavArrow}>→</div>
@@ -131,13 +131,13 @@ const QuickNavigation = () => {
               <Link to="/login" style={styles.quickNavCard}>
                 <div style={styles.quickNavIcon}>🔐</div>
                 <div style={styles.quickNavContent}>
-                  <h3 style={styles.quickNavTitle}>Fazer Login</h3>
+                  <h3 style={styles.quickNavTitle}>Login</h3>
                   <p style={styles.quickNavDescription}>
-                    Acesse sua conta para favoritar conteúdos
+                  Access your account to favorite content
                   </p>
                   <div style={styles.quickNavStats}>
-                    <div style={styles.quickNavStat}>💫 Personalização</div>
-                    <div style={styles.quickNavStat}>❤️ Favoritos</div>
+                    <div style={styles.quickNavStat}>💫 Customization</div>
+                    <div style={styles.quickNavStat}>❤️ Favorites</div>
                   </div>
                 </div>
                 <div style={styles.quickNavArrow}>→</div>
@@ -146,13 +146,13 @@ const QuickNavigation = () => {
               <Link to="/register" style={styles.quickNavCard}>
                 <div style={styles.quickNavIcon}>👤</div>
                 <div style={styles.quickNavContent}>
-                  <h3 style={styles.quickNavTitle}>Criar Conta</h3>
+                  <h3 style={styles.quickNavTitle}>Create Account</h3>
                   <p style={styles.quickNavDescription}>
-                    Junte-se à nossa comunidade de fãs
+                  Join our fan community
                   </p>
                   <div style={styles.quickNavStats}>
-                    <div style={styles.quickNavStat}>🚀 Grátis</div>
-                    <div style={styles.quickNavStat}>🎯 Recomendações</div>
+                    <div style={styles.quickNavStat}>🚀 Free</div>
+                    <div style={styles.quickNavStat}>🎯 Recommendations</div>
                   </div>
                 </div>
                 <div style={styles.quickNavArrow}>→</div>
@@ -162,12 +162,12 @@ const QuickNavigation = () => {
             <div style={styles.quickNavCard}>
               <div style={styles.quickNavIcon}>👋</div>
               <div style={styles.quickNavContent}>
-                <h3 style={styles.quickNavTitle}>Bem-vindo de volta!</h3>
+                <h3 style={styles.quickNavTitle}>Welcome back!</h3>
                 <p style={styles.quickNavDescription}>
-                  Continue explorando nossa plataforma
+                Continue exploring our platform
                 </p>
                 <div style={styles.quickNavStats}>
-                  <div style={styles.quickNavStat}>✅ Logado como</div>
+                  <div style={styles.quickNavStat}>✅ Logged in as</div>
                   <div style={styles.quickNavStat}>{user?.email}</div>
                 </div>
               </div>
@@ -207,8 +207,8 @@ const Footer = () => {
         <div style={styles.footerSection}>
           <h3 style={styles.footerTitle}>TV Show Tracker</h3>
           <p style={styles.footerDescription}>
-            Sua plataforma definitiva para descobrir, explorar e acompanhar séries, 
-            filmes e atores favoritos.
+          Your definitive platform to discover, explore and follow series, 
+          Favorite movies and actors.
           </p>
           <div style={styles.footerSocial}>
             <div style={styles.socialIcon}>🎬</div>
@@ -218,41 +218,41 @@ const Footer = () => {
         </div>
         
         <div style={styles.footerSection}>
-          <h4 style={styles.footerSubtitle}>Navegação</h4>
+          <h4 style={styles.footerSubtitle}>Navigation</h4>
           <div style={styles.footerLinks}>
-            <FooterListItem to="/">Início</FooterListItem>
-            <FooterListItem to="/tvshows">Séries & Filmes</FooterListItem>
-            <FooterListItem to="/actors">Atores</FooterListItem>
+            <FooterListItem to="/">Start</FooterListItem>
+            <FooterListItem to="/tvshows">Series & Movies</FooterListItem>
+            <FooterListItem to="/actors">Actors</FooterListItem>
             <FooterListItem to="/login">Login</FooterListItem>
-            <FooterListItem to="/register">Registro</FooterListItem>
+            <FooterListItem to="/register">Register</FooterListItem>
           </div>
         </div>
         
         <div style={styles.footerSection}>
-          <h4 style={styles.footerSubtitle}>Recursos</h4>
+          <h4 style={styles.footerSubtitle}>Features</h4>
           <div style={styles.footerLinks}>
-            <FooterListItem>🎯 Recomendações</FooterListItem>
-            <FooterListItem>❤️ Favoritos</FooterListItem>
-            <FooterListItem>🔍 Busca Avançada</FooterListItem>
-            <FooterListItem>⭐ Avaliações</FooterListItem>
-            <FooterListItem>🎭 Elenco</FooterListItem>
+            <FooterListItem>🎯 Recommendations</FooterListItem>
+            <FooterListItem>❤️ Favorites</FooterListItem>
+            <FooterListItem>🔍 Advanced Search</FooterListItem>
+            <FooterListItem>⭐ Reviews</FooterListItem>
+            <FooterListItem>🎭 Cast</FooterListItem>
           </div>
         </div>
         
         <div style={styles.footerSection}>
-          <h4 style={styles.footerSubtitle}>Estatísticas</h4>
+          <h4 style={styles.footerSubtitle}>Statistics</h4>
           <div style={styles.footerStats}>
             <div style={styles.footerStat}>
               <div style={styles.footerStatNumber}>15+</div>
-              <div style={styles.footerStatLabel}>Filmes & Séries</div>
+              <div style={styles.footerStatLabel}>Movies & Series</div>
             </div>
             <div style={styles.footerStat}>
               <div style={styles.footerStatNumber}>15+</div>
-              <div style={styles.footerStatLabel}>Atores</div>
+              <div style={styles.footerStatLabel}>Actors</div>
             </div>
             <div style={styles.footerStat}>
               <div style={styles.footerStatNumber}>6+</div>
-              <div style={styles.footerStatLabel}>Gêneros</div>
+              <div style={styles.footerStatLabel}>Genres</div>
             </div>
           </div>
         </div>
@@ -260,7 +260,7 @@ const Footer = () => {
       
       <div style={styles.footerBottom}>
         <p style={styles.footerCopyright}>
-          © 2024 TV Show Tracker. Desenvolvido com ❤️ para amantes de cinema e séries.
+        © 2024 TV Show Tracker.
         </p>
       </div>
     </footer>
@@ -278,14 +278,14 @@ const Home = () => {
             TV Show Tracker
           </h1>
           <p style={styles.mainSubtitle}>
-            Sua plataforma definitiva para descobrir, explorar e acompanhar séries, filmes e atores
+            Your definitive platform to discover, explore and follow series, films and actors
           </p>
           <div style={styles.ctaButtons}>
             <Link to="/tvshows" style={styles.ctaButtonPrimary}>
-              Explorar Catálogo
+              Explore Catalog
             </Link>
             <Link to="/register" style={styles.ctaButtonSecondary}>
-              Criar Conta
+            Create Account
             </Link>
           </div>
         </div>
@@ -299,23 +299,23 @@ const Home = () => {
 
       {/* Quick Stats */}
       <div style={styles.statsSection}>
-        <h2 style={styles.sectionTitle}>Nossa Biblioteca</h2>
+        <h2 style={styles.sectionTitle}>Our Library</h2>
         <div style={styles.statsContainer}>
           <div style={styles.statItem}>
             <div style={styles.statNumber}>9</div>
-            <div style={styles.statLabel}>Filmes</div>
+            <div style={styles.statLabel}>Movies</div>
           </div>
           <div style={styles.statItem}>
             <div style={styles.statNumber}>6</div>
-            <div style={styles.statLabel}>Séries</div>
+            <div style={styles.statLabel}>Series</div>
           </div>
           <div style={styles.statItem}>
             <div style={styles.statNumber}>15</div>
-            <div style={styles.statLabel}>Atores</div>
+            <div style={styles.statLabel}>Actors</div>
           </div>
           <div style={styles.statItem}>
             <div style={styles.statNumber}>6</div>
-            <div style={styles.statLabel}>Gêneros</div>
+            <div style={styles.statLabel}>Genres</div>
           </div>
         </div>
       </div>

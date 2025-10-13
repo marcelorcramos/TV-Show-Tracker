@@ -97,7 +97,7 @@ const TvShows = () => {
           fontSize: '2.5rem',
           fontWeight: '700'
         }}>
-          🎬 TV Shows & Movies
+          🎬 Series & Movies
         </h1>
         <div style={{ 
           backgroundColor: '#fef2f2', 
@@ -136,7 +136,7 @@ const TvShows = () => {
           fontSize: '2.5rem',
           fontWeight: '700'
         }}>
-          🎬 TV Shows & Movies
+          🎬 TV Series & Movies
         </h1>
         <p style={{ 
           color: '#6b7280', 
@@ -218,8 +218,8 @@ const TvShows = () => {
         </h3>
         
         <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap', alignItems: 'end' }}>
-          {/* Search */}
-          <div style={{ flex: '1', minWidth: '250px' }}>
+          {/* Search - DIMINUÍDA COM PADDING */}
+          <div style={{ flex: '1', minWidth: '200px', paddingRight: '20px' }}>
             <label style={{ 
               display: 'block', 
               marginBottom: '8px', 
@@ -246,7 +246,7 @@ const TvShows = () => {
           </div>
 
           {/* Genre Filter */}
-          <div style={{ minWidth: '180px' }}>
+          <div style={{ minWidth: '180px', paddingRight: '20px' }}>
             <label style={{ 
               display: 'block', 
               marginBottom: '8px', 
@@ -277,7 +277,7 @@ const TvShows = () => {
           </div>
 
           {/* Type Filter */}
-          <div style={{ minWidth: '180px' }}>
+          <div style={{ minWidth: '180px', paddingRight: '20px' }}>
             <label style={{ 
               display: 'block', 
               marginBottom: '8px', 
@@ -308,7 +308,7 @@ const TvShows = () => {
           </div>
 
           {/* Sort */}
-          <div style={{ minWidth: '180px' }}>
+          <div style={{ minWidth: '180px', paddingRight: '20px' }}>
             <label style={{ 
               display: 'block', 
               marginBottom: '8px', 

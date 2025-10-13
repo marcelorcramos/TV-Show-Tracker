@@ -268,7 +268,7 @@ const ActorCard = ({ actor, onFavoriteUpdate }) => {
               fontSize: '12px',
               fontWeight: '500'
             }}>
-              {calculateAge(actor.birthDate)} anos
+              {calculateAge(actor.birthDate)} years old
             </span>
           )}
         </div>
@@ -292,7 +292,7 @@ const ActorCard = ({ actor, onFavoriteUpdate }) => {
               marginBottom: '8px',
               color: '#4b5563'
             }}>
-              Conhecido por:
+              Known for:
             </h4>
             <div style={{ 
               display: 'flex', 
@@ -357,7 +357,7 @@ const ActorCard = ({ actor, onFavoriteUpdate }) => {
                   backgroundColor: '#f9fafb',
                   borderRadius: '4px'
                 }}>
-                  +{actorTvShows.length - 3} mais
+                  +{actorTvShows.length - 3} more
                 </div>
               )}
             </div>
@@ -398,7 +398,7 @@ const ActorCard = ({ actor, onFavoriteUpdate }) => {
           }}
           onClick={handleShowDetails}
         >
-          Mostrar Detalhes
+          Show Details
         </button>
       </div>
 

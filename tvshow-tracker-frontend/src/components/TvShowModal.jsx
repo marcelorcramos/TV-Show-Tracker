@@ -116,12 +116,12 @@ const TvShowModal = ({ isOpen, data, onClose }) => {
 
               <div style={styles.detailsGrid}>
                 <div style={styles.detailItem}>
-                  <span style={styles.detailLabel}>Gênero:</span>
+                  <span style={styles.detailLabel}>Genre:</span>
                   <span style={styles.detailValue}>{data.genre}</span>
                 </div>
                 
                 <div style={styles.detailItem}>
-                  <span style={styles.detailLabel}>Lançamento:</span>
+                  <span style={styles.detailLabel}>Launch:</span>
                   <span style={styles.detailValue}>
                     {new Date(data.releaseDate).toLocaleDateString('pt-BR')}
                   </span>
@@ -130,18 +130,18 @@ const TvShowModal = ({ isOpen, data, onClose }) => {
                 {data.type === 'Series' ? (
                   <>
                     <div style={styles.detailItem}>
-                      <span style={styles.detailLabel}>Temporadas:</span>
+                      <span style={styles.detailLabel}>Seasons:</span>
                       <span style={styles.detailValue}>{data.seasons}</span>
                     </div>
                     <div style={styles.detailItem}>
-                      <span style={styles.detailLabel}>Episódios:</span>
+                      <span style={styles.detailLabel}>Episodes:</span>
                       <span style={styles.detailValue}>{episodes.length}</span>
                     </div>
                   </>
                 ) : (
                   <div style={styles.detailItem}>
-                    <span style={styles.detailLabel}>Duração:</span>
-                    <span style={styles.detailValue}>{data.duration} minutos</span>
+                    <span style={styles.detailLabel}>Duration:</span>
+                    <span style={styles.detailValue}>{data.duration} minutes</span>
                   </div>
                 )}
               </div>
@@ -150,7 +150,7 @@ const TvShowModal = ({ isOpen, data, onClose }) => {
 
           {/* Descrição */}
           <div style={styles.descriptionSection}>
-            <h3 style={styles.sectionTitle}>Sinopse</h3>
+            <h3 style={styles.sectionTitle}>Synopsis</h3>
             <p style={styles.description}>
               {data.description || 'Descrição não disponível.'}
             </p>
@@ -159,12 +159,12 @@ const TvShowModal = ({ isOpen, data, onClose }) => {
           {/* SEÇÃO DE EPISÓDIOS - APENAS PARA SÉRIES */}
           {data.type === 'Series' && (
             <div style={styles.episodesSection}>
-              <h3 style={styles.sectionTitle}>📺 Episódios</h3>
+              <h3 style={styles.sectionTitle}>📺 Episodes</h3>
               
               {/* Seletor de Temporadas */}
               {seasons.length > 0 && (
                 <div style={styles.seasonSelector}>
-                  <label style={styles.seasonLabel}>Temporada:</label>
+                  <label style={styles.seasonLabel}>Season:</label>
                   <select 
                     value={selectedSeason} 
                     onChange={(e) => setSelectedSeason(parseInt(e.target.value))}
@@ -172,12 +172,12 @@ const TvShowModal = ({ isOpen, data, onClose }) => {
                   >
                     {seasons.map(season => (
                       <option key={season} value={season}>
-                        Temporada {season}
+                        Season {season}
                       </option>
                     ))}
                   </select>
                   <span style={styles.episodeCount}>
-                    {seasonEpisodes.length} episódio{seasonEpisodes.length !== 1 ? 's' : ''}
+                    {seasonEpisodes.length} episode{seasonEpisodes.length !== 1 ? 's' : ''}
                   </span>
                 </div>
               )}
@@ -186,7 +186,7 @@ const TvShowModal = ({ isOpen, data, onClose }) => {
               {loadingEpisodes ? (
                 <div style={styles.loading}>
                   <div style={styles.spinner}></div>
-                  <p>Carregando episódios...</p>
+                  <p>Loading episodes...</p>
                 </div>
               ) : seasonEpisodes.length > 0 ? (
                 <div style={styles.episodesList}>
@@ -233,7 +233,7 @@ const TvShowModal = ({ isOpen, data, onClose }) => {
                 </div>
               ) : (
                 <div style={styles.noEpisodes}>
-                  <p>Nenhum episódio encontrado para esta temporada.</p>
+                  <p>No episodes found for this season.</p>
                 </div>
               )}
             </div>
@@ -242,7 +242,7 @@ const TvShowModal = ({ isOpen, data, onClose }) => {
           {/* Para filmes, mostrar informações do "episódio único" */}
           {data.type === 'Movie' && episodes.length > 0 && (
             <div style={styles.episodesSection}>
-              <h3 style={styles.sectionTitle}>🎬 Detalhes do Filme</h3>
+              <h3 style={styles.sectionTitle}>🎬 Movie Details</h3>
               <div style={styles.movieEpisode}>
                 {episodes.map((episode) => (
                   <div key={episode.id} style={styles.episodeCard}>
@@ -282,32 +282,32 @@ const TvShowModal = ({ isOpen, data, onClose }) => {
           {/* Informações Adicionais */}
           <div style={styles.additionalInfo}>
             <div style={styles.infoCard}>
-              <h4 style={styles.infoTitle}>📊 Detalhes</h4>
+              <h4 style={styles.infoTitle}>📊 Details</h4>
               <div style={styles.infoList}>
                 <div style={styles.infoItem}>
-                  <strong>Tipo:</strong> {data.type}
+                  <strong>Type:</strong> {data.type}
                 </div>
                 <div style={styles.infoItem}>
-                  <strong>Gênero:</strong> {data.genre}
+                  <strong>Gener:</strong> {data.genre}
                 </div>
                 <div style={styles.infoItem}>
                   <strong>Rating:</strong> ⭐ {data.rating}/10
                 </div>
                 <div style={styles.infoItem}>
-                  <strong>Lançamento:</strong> {new Date(data.releaseDate).toLocaleDateString('pt-BR')}
+                  <strong>Launch:</strong> {new Date(data.releaseDate).toLocaleDateString('pt-BR')}
                 </div>
                 {data.type === 'Series' ? (
                   <>
                     <div style={styles.infoItem}>
-                      <strong>Temporadas:</strong> {data.seasons}
+                      <strong>Seasons:</strong> {data.seasons}
                     </div>
                     <div style={styles.infoItem}>
-                      <strong>Total de Episódios:</strong> {episodes.length}
+                      <strong>Total Episodes:</strong> {episodes.length}
                     </div>
                   </>
                 ) : (
                   <div style={styles.infoItem}>
-                    <strong>Duração:</strong> {data.duration} min
+                    <strong>Duration:</strong> {data.duration} min
                   </div>
                 )}
               </div>

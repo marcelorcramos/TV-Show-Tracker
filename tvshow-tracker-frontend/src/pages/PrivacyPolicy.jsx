@@ -17,11 +17,11 @@ const PrivacyPolicy = () => {
 
   return (
     <div style={{ padding: '40px 20px', maxWidth: '800px', margin: '0 auto' }}>
-      <h1>Política de Privacidade - TV Show Tracker</h1>
+      <h1>Privacy Policy - TV Show Tracker</h1>
       
       <div style={{ marginTop: '30px' }}>
-        <h2>📊 Seus Dados</h2>
-        <p>Você tem controle total sobre seus dados pessoais.</p>
+        <h2>📊 Your Data</h2>
+        <p>You have full control over your personal data.</p>
         
         <div style={{ 
           display: 'flex', 
@@ -54,17 +54,17 @@ const PrivacyPolicy = () => {
               cursor: 'pointer'
             }}
           >
-            🗑️ Excluir Todos os Meus Dados
+            🗑️ Delete All My Data
           </button>
         </div>
       </div>
       
       <div style={{ marginTop: '40px' }}>
-        <h2>🔒 Como Usamos Seus Dados</h2>
+        <h2>🔒 How We Use Your Data</h2>
         <ul>
-          <li><strong>Favoritos:</strong> Para recomendações personalizadas</li>
-          <li><strong>E-mail:</strong> Apenas com seu consentimento explícito</li>
-          <li><strong>Cookies:</strong> Para funcionalidade básica do site</li>
+          <li><strong>Favorites:</strong> For personalized recommendationss</li>
+          <li><strong>E-mail:</strong> Only with your explicit consent</li>
+          <li><strong>Cookies:</strong> For basic website functionality</li>
         </ul>
       </div>
     </div>

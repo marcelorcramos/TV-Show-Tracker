@@ -7,22 +7,21 @@ using TvShowTracker.Domain.Entities;
 using TvShowTracker.Infrastructure.Data;
 using TvShowTracker.Infrastructure.Services;
 
-namespace TvShowTracker.Infrastructure.Services
+namespace TvShowTracker.Infrastructure.Services;
+public class UserService : IUserService
 {
-    public class UserService : IUserService
-    {
-        private readonly ApplicationDbContext _context;
-        private readonly IMapper _mapper;
-        private readonly JwtService _jwtService;
-        private readonly IConfiguration _configuration;
+    private readonly ApplicationDbContext _context;
+    private readonly IMapper _mapper;
+    private readonly IJwtService _jwtService; // ✅ MUDAR DE JwtService PARA IJwtService
+    private readonly IConfiguration _configuration;
 
-        public UserService(ApplicationDbContext context, IMapper mapper, JwtService jwtService, IConfiguration configuration)
-        {
-            _context = context;
-            _mapper = mapper;
-            _jwtService = jwtService;
-            _configuration = configuration;
-        }
+    public UserService(ApplicationDbContext context, IMapper mapper, IJwtService jwtService, IConfiguration configuration)
+    {
+        _context = context;
+        _mapper = mapper;
+        _jwtService = jwtService; // ✅ AGORA COMPATÍVEL
+        _configuration = configuration;
+    }
 
         public async Task<UserDto> RegisterAsync(CreateUserDto createUserDto)
         {
@@ -124,4 +123,3 @@ namespace TvShowTracker.Infrastructure.Services
             return _mapper.Map<UserDto>(user);
         }
     }
-}

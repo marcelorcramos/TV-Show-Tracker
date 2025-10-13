@@ -32,12 +32,12 @@ const GDPRBanner = () => {
       }}>
         <div style={{ flex: '1' }}>
           <h4 style={{ margin: '0 0 8px 0', color: '#fbbf24' }}>
-            🍪 Consentimento de Cookies
+            🍪 Cookie Consent
           </h4>
           <p style={{ margin: '0', fontSize: '0.9rem', opacity: 0.9 }}>
-            Usamos cookies para melhorar sua experiência, personalizar conteúdo e recomendações. 
-            Ao aceitar, você concorda com nossa{' '}
-            <a href="/privacy" style={{ color: '#60a5fa' }}>Política de Privacidade</a>.
+          We use cookies to improve your experience, personalize content and recommendations. 
+          By accepting, you agree to our{' '}
+            <a href="/privacy" style={{ color: '#60a5fa' }}>Privacy Policy</a>.
           </p>
         </div>
         
@@ -53,7 +53,7 @@ const GDPRBanner = () => {
               cursor: 'pointer'
             }}
           >
-            Recusar
+            Refuse
           </button>
           <button
             onClick={acceptGDPR}
@@ -67,7 +67,7 @@ const GDPRBanner = () => {
               fontWeight: '600'
             }}
           >
-            Aceitar Cookies
+            Accept Cookies
           </button>
         </div>
       </div>
