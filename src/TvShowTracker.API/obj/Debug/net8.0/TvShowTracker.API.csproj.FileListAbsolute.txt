@@ -211,3 +211,4 @@
 /Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.API/obj/Debug/net8.0/TvShowTracker.API.pdb
 /Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.API/obj/Debug/net8.0/TvShowTracker.API.genruntimeconfig.cache
 /Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.API/obj/Debug/net8.0/ref/TvShowTracker.API.dll
+/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.API/bin/Debug/net8.0/TvShowTracker.API.staticwebassets.runtime.json

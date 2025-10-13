@@ -33,32 +33,33 @@ const ActorCard = ({ actor, onFavoriteUpdate }) => {
   }, [actor.id]);
 
   // Mapeamento de fallback images melhorado
-  const getActorFallbackImage = (actorName) => {
-    const fallbackImages = {
-      'Bryan Cranston': 'https://image.tmdb.org/t/p/w500/3gIO6mCd4s4mT2aUdS9dVMXZ9g6.jpg',
-      'Aaron Paul': 'https://image.tmdb.org/t/p/w500/7kR4s4k2dW0qwxgQNlMxO7X6xUf.jpg',
-      'Pedro Pascal': 'https://image.tmdb.org/t/p/w500/dBOrm29cr7NUrjiDQMTtrTyDpfy.jpg',
-      'Emilia Clarke': 'https://image.tmdb.org/t/p/w500/xMIjqwhPDfS1L2l8EWhWhDKpTQQ.jpg',
-      'Henry Cavill': 'https://image.tmdb.org/t/p/w500/5h3Dk3g9w8Yd1qwlvWGPWYUBrJ2.jpg',
-      'Anya Chalotra': 'https://image.tmdb.org/t/p/w500/1vL1VU5VKy6O8WJzN9kXZ5Qe5b2.jpg',
-      'Kit Harington': 'https://image.tmdb.org/t/p/w500/4MqUjb1SYrzHmOodXzQEeZfg3sP.jpg',
-      'Jennifer Aniston': 'https://image.tmdb.org/t/p/w500/9Y5q9dW95e9dY4tlgj5YdT2Y4n4.jpg',
-      'Leonardo DiCaprio': 'https://image.tmdb.org/t/p/w500/5Brc5dLifH3UInk3wUaCuGXpCqy.jpg',
-      'Heath Ledger': 'https://image.tmdb.org/t/p/w500/5Y9HnYYa9jF4NunY9lSgJGjSe8E.jpg',
-      'Tom Hardy': 'https://image.tmdb.org/t/p/w500/d81K0RH8UX7tZj49tZaQxqEQJp1.jpg',
-      'Bella Ramsey': 'https://image.tmdb.org/t/p/w500/xU5fpn6qqSOJD3v3x1x3Z3w3z5Z.jpg',
-      'Courteney Cox': 'https://image.tmdb.org/t/p/w500/4CkY4UEEG2h6xB2DnK1BZ7N86Fz.jpg',
-      'Tom Hanks': 'https://image.tmdb.org/t/p/w500/xndWFsBlClOJFRdhSt4NBwiPq2o.jpg',
-      'Robin Wright': 'https://image.tmdb.org/t/p/w500/1cT13dS2Swif6o8Q6Qd1JSKOGUc.jpg',
-      'Robert Downey Jr.': 'https://image.tmdb.org/t/p/w500/5qHNjhtjMD4YWH3UP0rm4tKwxCL.jpg',
-      'Scarlett Johansson': 'https://image.tmdb.org/t/p/w500/6NsMbJXRlDZuDzatN2akFdGuTvx.jpg',
-      'Chris Hemsworth': 'https://image.tmdb.org/t/p/w500/jpurJ9jAcLCYjgHHfYF32m3zJYm.jpg',
-      'Margot Robbie': 'https://image.tmdb.org/t/p/w500/euDPyqLnuwaWMHajcU3oZ9uZezR.jpg',
-      'Keanu Reeves': 'https://image.tmdb.org/t/p/w500/4D0PpNI0km5y0h1hqHkFcCqML6o.jpg'
-    };
-    
-    return fallbackImages[actorName] || null;
+  // NOVA FUNÇÃO getActorFallbackImage - SUBSTITUA A ATUAL
+const getActorFallbackImage = (actorName) => {
+  const fallbackImages = {
+    'Bryan Cranston': '/images/actors/bryan-cranston.jpg',
+    'Aaron Paul': '/images/actors/aaron-paul.jpg.webp', // ✅ CORRIGIDO
+    'Pedro Pascal': 'https://image.tmdb.org/t/p/w500/dBOrm29cr7NUrjiDQMTtrTyDpfy.jpg',
+    'Emilia Clarke': '/images/actors/emilia-clarke.jpg',
+    'Henry Cavill': '/images/actors/Henry-Cavill.jpg',
+    'Anya Chalotra': '/images/actors/anya-chalotra2.jpeg', // ✅ CORRIGIDO
+    'Kit Harington': '/images/actors/kit-harington.jpg',
+    'Jennifer Aniston': '/images/actors/jennifer-aniston.jpg',
+    'Leonardo DiCaprio': 'https://image.tmdb.org/t/p/w500/5Brc5dLifH3UInk3wUaCuGXpCqy.jpg',
+    'Heath Ledger': 'https://image.tmdb.org/t/p/w500/5Y9HnYYa9jF4NunY9lSgJGjSe8E.jpg',
+    'Tom Hardy': '/images/actors/tom-hardy.webp',
+    'Bella Ramsey': '/images/actors/bella-ramsey.jpg.avif',
+    'Courteney Cox': '/images/actors/courtney-cox.jpg',
+    'Tom Hanks': 'https://image.tmdb.org/t/p/w500/xndWFsBlClOJFRdhSt4NBwiPq2o.jpg',
+    'Robin Wright': '/images/actors/robin-wright2.jpg',
+    'Robert Downey Jr.': 'https://image.tmdb.org/t/p/w500/5qHNjhtjMD4YWH3UP0rm4tKwxCL.jpg',
+    'Scarlett Johansson': 'https://image.tmdb.org/t/p/w500/6NsMbJXRlDZuDzatN2akFdGuTvx.jpg',
+    'Chris Hemsworth': 'https://image.tmdb.org/t/p/w500/jpurJ9jAcLCYjgHHfYF32m3zJYm.jpg',
+    'Margot Robbie': 'https://image.tmdb.org/t/p/w500/euDPyqLnuwaWMHajcU3oZ9uZezR.jpg',
+    'Keanu Reeves': 'https://image.tmdb.org/t/p/w500/4D0PpNI0km5y0h1hqHkFcCqML6o.jpg'
   };
+  
+  return fallbackImages[actorName] || null;
+};
 
   // Verifica se a URL da imagem é válida
   const isValidImageUrl = (url) => {
