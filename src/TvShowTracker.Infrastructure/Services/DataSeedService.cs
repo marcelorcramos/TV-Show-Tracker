@@ -1,94 +1,56 @@
 using Microsoft.EntityFrameworkCore;
 using TvShowTracker.Domain.Entities;
 using TvShowTracker.Infrastructure.Data;
-using TvShowTracker.Application.DTOs;
 using TvShowTracker.Application.Interfaces;
 using AutoMapper;
 
 namespace TvShowTracker.Infrastructure.Services
 {
-    public class DataSeedService : ITvShowService // ✅ IMPLEMENTA A INTERFACE
+    public class DataSeedService : IDataSeedService // ✅ IMPLEMENTA APENAS IDataSeedService
     {
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
-        private readonly ICacheService _cacheService;
         private static bool _hasSeeded = false;
         private static readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
 
-        // ✅ CONSTRUTOR COM CACHE SERVICE
-        public DataSeedService(ApplicationDbContext context, IMapper mapper, ICacheService cacheService)
+        // ✅ CONSTRUTOR SIMPLIFICADO (sem cache service)
+        public DataSeedService(ApplicationDbContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
-            _cacheService = cacheService;
         }
 
         public async Task InitializeDatabaseAsync()
-{
-    await _semaphore.WaitAsync();
-    try
-    {
-        if (_hasSeeded) 
         {
-            Console.WriteLine("✅ Banco já foi seedado anteriormente.");
-            return;
+            await _semaphore.WaitAsync();
+            try
+            {
+                if (_hasSeeded) return;
+
+                Console.WriteLine("🔧 Inicializando banco de dados...");
+                await _context.Database.EnsureCreatedAsync();
+                
+                // ✅ PRIMEIRO criar usuários
+                await SeedUsersAsync();
+                
+                // Depois o resto...
+                await SeedActorsAsync();
+                await SeedTvShowsAsync();
+                await SeedEpisodesAsync();
+                await SeedTvShowActorRelationsAsync();
+
+                _hasSeeded = true;
+                Console.WriteLine("✅ Seed completo finalizado!");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ Erro no seed: {ex.Message}");
+            }
+            finally
+            {
+                _semaphore.Release();
+            }
         }
-
-        Console.WriteLine("🔧 INICIANDO CRIAÇÃO COMPLETA DO BANCO...");
-        
-        // ✅ FORÇAR criação do banco
-        await _context.Database.EnsureDeletedAsync();
-        await _context.Database.EnsureCreatedAsync();
-        
-        Console.WriteLine("✅ Estrutura do banco criada.");
-
-        // ✅ SEMPRE recriar todos os dados
-        Console.WriteLine("👥 Criando atores...");
-        await SeedActorsAsync();
-        
-        Console.WriteLine("🎬 Criando TV shows...");
-        await SeedTvShowsAsync();
-        
-        Console.WriteLine("📺 Criando episódios...");
-        await SeedEpisodesAsync();
-        
-        Console.WriteLine("🔗 Criando relações...");
-        await SeedTvShowActorRelationsAsync();
-
-        // ✅ VERIFICAÇÃO FINAL
-        var tvShowsCount = await _context.TvShows.CountAsync();
-        var actorsCount = await _context.Actors.CountAsync();
-        var episodesCount = await _context.Episodes.CountAsync();
-        var relationsCount = await _context.TvShowActors.CountAsync();
-        
-        Console.WriteLine($"✅ VERIFICAÇÃO FINAL:");
-        Console.WriteLine($"   TV Shows: {tvShowsCount}");
-        Console.WriteLine($"   Atores: {actorsCount}");
-        Console.WriteLine($"   Episódios: {episodesCount}");
-        Console.WriteLine($"   Relações: {relationsCount}");
-
-        // ✅ VERIFICAÇÃO DETALHADA DOS EPISÓDIOS
-        var tvShows = await _context.TvShows.ToListAsync();
-        foreach (var tvShow in tvShows)
-        {
-            var episodeCount = await _context.Episodes.CountAsync(e => e.TvShowId == tvShow.Id);
-            Console.WriteLine($"   📺 {tvShow.Title} (ID: {tvShow.Id}): {episodeCount} episódios");
-        }
-
-        _hasSeeded = true;
-        Console.WriteLine("🎉 BANCO CRIADO E POPULADO COM SUCESSO!");
-    }
-    catch (Exception ex)
-    {
-        Console.WriteLine($"❌ ERRO CRÍTICO NO SEED: {ex.Message}");
-        Console.WriteLine($"Stack trace: {ex.StackTrace}");
-        throw;
-    }
-    finally
-    {
-        _semaphore.Release();
-    }
-}
 
         // ✅ MÉTODO PARA LIMPAR BANCO
         public async Task ClearDatabaseAsync()
@@ -103,9 +65,9 @@ namespace TvShowTracker.Infrastructure.Services
                 _context.Actors.RemoveRange(_context.Actors);
 
                 await _context.SaveChangesAsync();
-                
+
                 _hasSeeded = false;
-                
+
                 Console.WriteLine("✅ Banco de dados limpo com sucesso!");
             }
             catch (Exception ex)
@@ -257,7 +219,51 @@ namespace TvShowTracker.Infrastructure.Services
             }
         }
 
-        // ✅ SEED DE TV SHOWS (DO TVSHOWSERVICE)
+        // ✅ SEED DE USUÁRIOS
+        private async Task SeedUsersAsync()
+        {
+            try
+            {
+                var usersExist = await _context.Users.AnyAsync();
+                if (usersExist)
+                {
+                    Console.WriteLine("✅ Usuários já existem no banco.");
+                    return;
+                }
+
+                var users = new List<User>
+                {
+                    new User 
+                    { 
+                        Name = "Demo User", 
+                        Email = "novo@example.com",
+                        // Hash BCrypt para "Password123!"
+                        PasswordHash = "$2a$11$rH6UJJ1a8p8b8Q8Z8Z8Z8e8Z8Z8Z8Z8Z8Z8Z8Z8Z8Z8Z8Z8Z8Z8Z8",
+                        IsActive = true,
+                        CreatedAt = DateTime.UtcNow
+                    },
+                    new User 
+                    { 
+                        Name = "Test User", 
+                        Email = "test@example.com",
+                        // Hash BCrypt para "Test123!"
+                        PasswordHash = "$2a$11$4R/X5T5u3qYzBqZJQ8q8Z.HR3eQ7p8Nc1uYzW2kZq3pYfXqYfXqYf",
+                        IsActive = true,
+                        CreatedAt = DateTime.UtcNow
+                    }
+                };
+
+                await _context.Users.AddRangeAsync(users);
+                await _context.SaveChangesAsync();
+                Console.WriteLine($"✅ Users seed completado! {users.Count} usuários criados.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ Erro no seed de usuários: {ex.Message}");
+            }
+        }
+
+        // ✅ SEED DE TV SHOWS
         private async Task SeedTvShowsAsync()
         {
             try
@@ -291,101 +297,101 @@ namespace TvShowTracker.Infrastructure.Services
 
         // ✅ SEED DE EPISÓDIOS MELHORADO
         private async Task SeedEpisodesAsync()
-{
-    try
-    {
-        // ✅ FORÇAR recarregamento dos TV Shows
-        _context.ChangeTracker.Clear();
-        var tvShows = await _context.TvShows.ToListAsync();
-        
-        Console.WriteLine($"🎬 SeedEpisodes: Encontrados {tvShows.Count} TV Shows");
-        
-        // ✅ DEBUG: Mostrar IDs reais
-        foreach (var tvShow in tvShows)
         {
-            Console.WriteLine($"🎬 TV Show: {tvShow.Title} (ID: {tvShow.Id})");
-        }
-
-        var episodes = new List<Episode>();
-        var random = new Random();
-
-        foreach (var tvShow in tvShows)
-        {
-            Console.WriteLine($"🎬 Criando episódios para: {tvShow.Title} (ID: {tvShow.Id})");
-
-            if (tvShow.Type == "Series" && tvShow.Seasons.HasValue)
+            try
             {
-                for (int season = 1; season <= tvShow.Seasons.Value; season++)
+                // ✅ FORÇAR recarregamento dos TV Shows
+                _context.ChangeTracker.Clear();
+                var tvShows = await _context.TvShows.ToListAsync();
+                
+                Console.WriteLine($"🎬 SeedEpisodes: Encontrados {tvShows.Count} TV Shows");
+                
+                // ✅ DEBUG: Mostrar IDs reais
+                foreach (var tvShow in tvShows)
                 {
-                    int episodesPerSeason = season == 1 ? 6 : 8;
-                    
-                    for (int episodeNum = 1; episodeNum <= episodesPerSeason; episodeNum++)
+                    Console.WriteLine($"🎬 TV Show: {tvShow.Title} (ID: {tvShow.Id})");
+                }
+
+                var episodes = new List<Episode>();
+                var random = new Random();
+
+                foreach (var tvShow in tvShows)
+                {
+                    Console.WriteLine($"🎬 Criando episódios para: {tvShow.Title} (ID: {tvShow.Id})");
+
+                    if (tvShow.Type == "Series" && tvShow.Seasons.HasValue)
                     {
-                        var baseReleaseDate = tvShow.ReleaseDate ?? new DateTime(2020, 1, 1);
-                        var releaseDate = baseReleaseDate.AddDays((season - 1) * 180 + (episodeNum - 1) * 7);
-                        
+                        for (int season = 1; season <= tvShow.Seasons.Value; season++)
+                        {
+                            int episodesPerSeason = season == 1 ? 6 : 8;
+                            
+                            for (int episodeNum = 1; episodeNum <= episodesPerSeason; episodeNum++)
+                            {
+                                var baseReleaseDate = tvShow.ReleaseDate ?? new DateTime(2020, 1, 1);
+                                var releaseDate = baseReleaseDate.AddDays((season - 1) * 180 + (episodeNum - 1) * 7);
+                                
+                                var episode = new Episode
+                                {
+                                    Title = GetEpisodeTitle(season, episodeNum),
+                                    Description = GetEpisodeDescription(tvShow.Title, season, episodeNum),
+                                    SeasonNumber = season,
+                                    EpisodeNumber = episodeNum,
+                                    ReleaseDate = releaseDate,
+                                    Duration = TimeSpan.FromMinutes(45 + random.Next(0, 15)),
+                                    Rating = (decimal)(7.5 + (random.NextDouble() * 2.0)),
+                                    TvShowId = tvShow.Id, // ✅ USAR ID CORRETO
+                                    CreatedAt = DateTime.UtcNow
+                                };
+                                
+                                episodes.Add(episode);
+                                Console.WriteLine($"   ✅ Episódio: S{season}E{episodeNum} - TvShowId: {episode.TvShowId}");
+                            }
+                        }
+                    }
+                    else if (tvShow.Type == "Movie")
+                    {
                         var episode = new Episode
                         {
-                            Title = GetEpisodeTitle(season, episodeNum),
-                            Description = GetEpisodeDescription(tvShow.Title, season, episodeNum),
-                            SeasonNumber = season,
-                            EpisodeNumber = episodeNum,
-                            ReleaseDate = releaseDate,
-                            Duration = TimeSpan.FromMinutes(45 + random.Next(0, 15)),
-                            Rating = (decimal)(7.5 + (random.NextDouble() * 2.0)),
+                            Title = "Full Movie",
+                            Description = $"The complete {tvShow.Title} movie experience",
+                            SeasonNumber = 1,
+                            EpisodeNumber = 1,
+                            ReleaseDate = tvShow.ReleaseDate,
+                            Duration = TimeSpan.FromMinutes(tvShow.Duration ?? 120),
+                            Rating = tvShow.Rating,
                             TvShowId = tvShow.Id, // ✅ USAR ID CORRETO
                             CreatedAt = DateTime.UtcNow
                         };
                         
                         episodes.Add(episode);
-                        Console.WriteLine($"   ✅ Episódio: S{season}E{episodeNum} - TvShowId: {episode.TvShowId}");
+                        Console.WriteLine($"   ✅ Episódio filme - TvShowId: {episode.TvShowId}");
                     }
                 }
-            }
-            else if (tvShow.Type == "Movie")
-            {
-                var episode = new Episode
-                {
-                    Title = "Full Movie",
-                    Description = $"The complete {tvShow.Title} movie experience",
-                    SeasonNumber = 1,
-                    EpisodeNumber = 1,
-                    ReleaseDate = tvShow.ReleaseDate,
-                    Duration = TimeSpan.FromMinutes(tvShow.Duration ?? 120),
-                    Rating = tvShow.Rating,
-                    TvShowId = tvShow.Id, // ✅ USAR ID CORRETO
-                    CreatedAt = DateTime.UtcNow
-                };
+
+                Console.WriteLine($"🎬 Total episódios a criar: {episodes.Count}");
                 
-                episodes.Add(episode);
-                Console.WriteLine($"   ✅ Episódio filme - TvShowId: {episode.TvShowId}");
+                await _context.Episodes.AddRangeAsync(episodes);
+                var saved = await _context.SaveChangesAsync();
+                
+                Console.WriteLine($"✅ Episodes seed: {saved} episódios salvos");
+
+                // ✅ VERIFICAÇÃO FINAL
+                var episodeCount = await _context.Episodes.CountAsync();
+                Console.WriteLine($"✅ Verificação: {episodeCount} episódios no banco");
+                
+                // ✅ VERIFICAÇÃO POR TV SHOW
+                foreach (var tvShow in tvShows)
+                {
+                    var count = await _context.Episodes.CountAsync(e => e.TvShowId == tvShow.Id);
+                    Console.WriteLine($"✅ {tvShow.Title} (ID: {tvShow.Id}): {count} episódios");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ Erro no seed de episódios: {ex.Message}");
+                throw;
             }
         }
-
-        Console.WriteLine($"🎬 Total episódios a criar: {episodes.Count}");
-        
-        await _context.Episodes.AddRangeAsync(episodes);
-        var saved = await _context.SaveChangesAsync();
-        
-        Console.WriteLine($"✅ Episodes seed: {saved} episódios salvos");
-
-        // ✅ VERIFICAÇÃO FINAL
-        var episodeCount = await _context.Episodes.CountAsync();
-        Console.WriteLine($"✅ Verificação: {episodeCount} episódios no banco");
-        
-        // ✅ VERIFICAÇÃO POR TV SHOW
-        foreach (var tvShow in tvShows)
-        {
-            var count = await _context.Episodes.CountAsync(e => e.TvShowId == tvShow.Id);
-            Console.WriteLine($"✅ {tvShow.Title} (ID: {tvShow.Id}): {count} episódios");
-        }
-    }
-    catch (Exception ex)
-    {
-        Console.WriteLine($"❌ Erro no seed de episódios: {ex.Message}");
-        throw;
-    }
-}
 
         // ✅ MÉTODOS AUXILIARES PARA GERAR TÍTULOS E DESCRIÇÕES
         private string GetEpisodeTitle(int season, int episode)
@@ -415,7 +421,7 @@ namespace TvShowTracker.Infrastructure.Services
             return descriptions[(season + episode) % descriptions.Length];
         }
 
-        // ✅ SEED DE RELAÇÕES (DO TVSHOWSERVICE)
+        // ✅ SEED DE RELAÇÕES
         private async Task SeedTvShowActorRelationsAsync()
         {
             try
@@ -491,217 +497,6 @@ namespace TvShowTracker.Infrastructure.Services
             catch (Exception ex)
             {
                 Console.WriteLine($"❌ Erro ao criar relações: {ex.Message}");
-            }
-        }
-
-        // ✅ MÉTODOS DO TVSHOWSERVICE (TODOS TRANSFERIDOS)
-
-        public async Task<PagedResult<TvShowDto>> GetTvShowsAsync(TvShowQuery query)
-        {
-            try
-            {
-                var tvShowsQuery = _context.TvShows
-                    .Include(t => t.TvShowActors)
-                        .ThenInclude(ta => ta.Actor)
-                    .AsQueryable();
-
-                // Apply filters
-                if (!string.IsNullOrEmpty(query.Genre))
-                {
-                    tvShowsQuery = tvShowsQuery.Where(t => t.Genre == query.Genre);
-                }
-
-                if (!string.IsNullOrEmpty(query.Type))
-                {
-                    tvShowsQuery = tvShowsQuery.Where(t => t.Type == query.Type);
-                }
-
-                if (!string.IsNullOrEmpty(query.Search))
-                {
-                    tvShowsQuery = tvShowsQuery.Where(t =>
-                        t.Title.Contains(query.Search) ||
-                        (t.Description != null && t.Description.Contains(query.Search)));
-                }
-
-                // Apply sorting
-                tvShowsQuery = query.SortBy?.ToLower() switch
-                {
-                    "title" => query.SortDescending
-                        ? tvShowsQuery.OrderByDescending(t => t.Title)
-                        : tvShowsQuery.OrderBy(t => t.Title),
-                    "releasedate" => query.SortDescending
-                        ? tvShowsQuery.OrderByDescending(t => t.ReleaseDate)
-                        : tvShowsQuery.OrderBy(t => t.ReleaseDate),
-                    "rating" => query.SortDescending
-                        ? tvShowsQuery.OrderByDescending(t => t.Rating)
-                        : tvShowsQuery.OrderBy(t => t.Rating),
-                    "seasons" => query.SortDescending
-                        ? tvShowsQuery.OrderByDescending(t => t.Seasons)
-                        : tvShowsQuery.OrderBy(t => t.Seasons),
-                    _ => tvShowsQuery.OrderBy(t => t.Title)
-                };
-
-                // Get total count for pagination
-                var totalCount = await tvShowsQuery.CountAsync();
-
-                // Apply pagination
-                var tvShows = await tvShowsQuery
-                    .Skip((query.Page - 1) * query.PageSize)
-                    .Take(query.PageSize)
-                    .ToListAsync();
-
-                // Mapear para DTO e incluir os 3 principais atores
-                var tvShowDtos = tvShows.Select(tvShow =>
-                {
-                    var dto = _mapper.Map<TvShowDto>(tvShow);
-                    
-                    dto.FeaturedActors = tvShow.TvShowActors?
-                        .Where(ta => ta.IsFeatured && ta.Actor != null)
-                        .Take(3)
-                        .Select(ta => new ActorDto 
-                        { 
-                            Id = ta.Actor.Id,
-                            Name = ta.Actor.Name,
-                            CharacterName = ta.CharacterName,
-                            ImageUrl = ta.Actor.ImageUrl
-                        })
-                        .ToList() ?? new List<ActorDto>();
-                        
-                    return dto;
-                }).ToList();
-
-                return new PagedResult<TvShowDto>
-                {
-                    Items = tvShowDtos,
-                    TotalCount = totalCount,
-                    Page = query.Page,
-                    PageSize = query.PageSize
-                };
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"❌ Erro em GetTvShowsAsync: {ex.Message}");
-                throw;
-            }
-        }
-
-        public async Task<List<string>> GetAvailableGenresAsync()
-        {
-            try
-            {
-                var cacheKey = "available_genres";
-                var cachedGenres = await _cacheService.GetAsync<List<string>>(cacheKey);
-                if (cachedGenres != null)
-                {
-                    return cachedGenres;
-                }
-
-                var genres = await _context.TvShows
-                    .Where(t => t.Genre != null)
-                    .Select(t => t.Genre!)
-                    .Distinct()
-                    .OrderBy(g => g)
-                    .ToListAsync();
-
-                await _cacheService.SetAsync(cacheKey, genres, TimeSpan.FromHours(6));
-                return genres;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"❌ Erro em GetAvailableGenresAsync: {ex.Message}");
-                return new List<string>();
-            }
-        }
-
-        public async Task<List<string>> GetAvailableTypesAsync()
-        {
-            try
-            {
-                var cacheKey = "available_types";
-                var cachedTypes = await _cacheService.GetAsync<List<string>>(cacheKey);
-                if (cachedTypes != null)
-                {
-                    return cachedTypes;
-                }
-
-                var types = await _context.TvShows
-                    .Where(t => t.Type != null)
-                    .Select(t => t.Type!)
-                    .Distinct()
-                    .OrderBy(t => t)
-                    .ToListAsync();
-
-                await _cacheService.SetAsync(cacheKey, types, TimeSpan.FromHours(6));
-                return types;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"❌ Erro em GetAvailableTypesAsync: {ex.Message}");
-                return new List<string>();
-            }
-        }
-
-        public async Task<TvShowDetailDto?> GetTvShowByIdAsync(int id)
-        {
-            try
-            {
-                var tvShow = await _context.TvShows
-                    .Include(t => t.Episodes.OrderBy(e => e.SeasonNumber).ThenBy(e => e.EpisodeNumber))
-                    .Include(t => t.TvShowActors)
-                        .ThenInclude(ta => ta.Actor)
-                    .FirstOrDefaultAsync(t => t.Id == id);
-
-                if (tvShow == null) return null;
-
-                var tvShowDetail = _mapper.Map<TvShowDetailDto>(tvShow);
-                
-                tvShowDetail.FeaturedActors = tvShow.TvShowActors
-                    .Where(ta => ta.IsFeatured)
-                    .Select(ta => new ActorDto 
-                    { 
-                        Id = ta.Actor.Id,
-                        Name = ta.Actor.Name,
-                        CharacterName = ta.CharacterName
-                    })
-                    .ToList();
-
-                return tvShowDetail;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"❌ Erro em GetTvShowByIdAsync: {ex.Message}");
-                throw;
-            }
-        }
-
-        public async Task<List<TvShowDto>> GetRecommendedTvShowsAsync(int userId)
-        {
-            try
-            {
-                var recommendationService = new RecommendationService(_context, _mapper);
-                return await recommendationService.GetRecommendationsAsync(userId, 5);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"❌ Erro em GetRecommendedTvShowsAsync: {ex.Message}");
-                return new List<TvShowDto>();
-            }
-        }
-
-        public async Task<string> DebugDatabase()
-        {
-            try
-            {
-                var tvShowsCount = await _context.TvShows.CountAsync();
-                var actorsCount = await _context.Actors.CountAsync();
-                var tvShowActorsCount = await _context.TvShowActors.CountAsync();
-                var types = await _context.TvShows.Select(t => t.Type).Distinct().ToListAsync();
-                
-                return $"Total TvShows: {tvShowsCount}, Actors: {actorsCount}, Relations: {tvShowActorsCount}, Types: {string.Join(", ", types)}";
-            }
-            catch (Exception ex)
-            {
-                return $"Erro no debug: {ex.Message}";
             }
         }
     }

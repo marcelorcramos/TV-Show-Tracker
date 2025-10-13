@@ -84,7 +84,7 @@ builder.Services.AddScoped<IExportService, ExportService>();
 builder.Services.AddScoped<IEpisodeService, EpisodeService>();
 
 // ✅ DATA SEED SERVICE AGORA SUBSTITUI O TVSHOWSERVICE
-builder.Services.AddScoped<ITvShowService, DataSeedService>();
+builder.Services.AddScoped<ITvShowService, TvShowService>();builder.Services.AddScoped<ITvShowService, TvShowService>();builder.Services.AddScoped<IDataSeedService, DataSeedService>();
 builder.Services.AddScoped<DataSeedService>();
 
 // Background Services

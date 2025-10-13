@@ -69,8 +69,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-// Application Services - ✅ ATUALIZADO
-// Application Services - ✅ ATUALIZADO
+// Application Services
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<JwtService>();
 builder.Services.AddScoped<IUserService, UserService>();
@@ -80,11 +79,14 @@ builder.Services.AddScoped<ICacheService, FakeCacheService>();
 builder.Services.AddScoped<IGdprService, GdprService>();
 builder.Services.AddScoped<IExportService, ExportService>();
 
-// ✅ ADICIONAR ESTA LINHA - Episode Service
+// Episode Service
 builder.Services.AddScoped<IEpisodeService, EpisodeService>();
 
-// ✅ DATA SEED SERVICE AGORA SUBSTITUI O TVSHOWSERVICE
-builder.Services.AddScoped<ITvShowService, DataSeedService>();
+// TV Show Service
+builder.Services.AddScoped<ITvShowService, TvShowService>();
+
+// Data Seed Service  
+builder.Services.AddScoped<IDataSeedService, DataSeedService>();
 builder.Services.AddScoped<DataSeedService>();
 
 // Background Services
@@ -123,7 +125,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-// ✅ CORS DEVE VIR PRIMEIRO - ANTES de qualquer outro middleware
+// CORS deve vir primeiro
 app.UseCors("AllowReactApp");
 
 app.UseAuthentication();
@@ -131,23 +133,7 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-// ✅ INICIALIZAÇÃO DO BANCO DE DADOS
-try
-{
-    Console.WriteLine("🚀 Iniciando aplicação...");
-    using var scope = app.Services.CreateScope();
-    var seedService = scope.ServiceProvider.GetRequiredService<DataSeedService>();
-    
-    Console.WriteLine("🗑️  Limpando banco de dados...");
-    await seedService.ClearDatabaseAsync();
-    
-    Console.WriteLine("📥 Executando seed do banco de dados...");
-    await seedService.InitializeDatabaseAsync();
-    Console.WriteLine("✅ Seed concluído com sucesso!");
-}
-catch (Exception ex)
-{
-    Console.WriteLine($"❌ Erro durante o seed: {ex.Message}");
-}
+// ✅ COMENTAR COMPLETAMENTE O SEED AUTOMÁTICO
+// O banco já tem dados, não precisamos de seed automático
 
 app.Run();

@@ -19,6 +19,9 @@ namespace TvShowTracker.Application.DTOs
         public int? Duration { get; set; }
         public string? ImageUrl { get; set; }
         
+        // ✅ ADICIONAR ESTA LINHA - Episodes property
+        public List<EpisodeDto>? Episodes { get; set; }
+        
         // Navigation properties
         public List<ActorDto> FeaturedActors { get; set; } = new List<ActorDto>();
         
@@ -29,6 +32,6 @@ namespace TvShowTracker.Application.DTOs
     public class TvShowDetailDto : TvShowDto
     {
         public List<ActorDto> Actors { get; set; } = new List<ActorDto>();
-        public List<EpisodeDto>? Episodes { get; set; }
+        // Episodes já está no TvShowDto agora
     }
 }

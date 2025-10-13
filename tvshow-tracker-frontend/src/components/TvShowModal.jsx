@@ -26,6 +26,8 @@ const TvShowModal = ({ isOpen, data, onClose }) => {
   // Carregar episódios quando o modal abrir
   useEffect(() => {
     if (isOpen && data && data.id) {
+      console.log(`🎬 TvShowModal: Abrindo modal para:`, data);
+      console.log(`🎬 TvShow ID: ${data.id}, Title: ${data.title}, Type: ${data.type}`);
       loadEpisodes(data.id);
     } else {
       // Resetar estado quando o modal fechar
@@ -35,32 +37,42 @@ const TvShowModal = ({ isOpen, data, onClose }) => {
     }
   }, [isOpen, data]);
 
+  // ✅ NOVA FUNÇÃO COM DEBUG COMPLETO
   const loadEpisodes = async (tvShowId) => {
-    if (data.type !== 'Series') return; // Só carrega episódios para séries
+    console.log(`🎬 TvShowModal: Iniciando carregamento de episódios para TV Show ID: ${tvShowId}`);
+    console.log(`🎬 Dados do TV Show:`, data);
     
+    // ✅ REMOVER a verificação de tipo - SEMPRE tentar carregar
     setLoadingEpisodes(true);
     try {
-      console.log(`🎬 Carregando episódios para TV Show ID: ${tvShowId}`);
-      const response = await episodesAPI.getByTvShow(tvShowId);
-      const episodesData = response.data;
-      
-      setEpisodes(episodesData);
-      
-      // Extrair temporadas únicas
-      const uniqueSeasons = [...new Set(episodesData.map(ep => ep.seasonNumber))].sort((a, b) => a - b);
-      setSeasons(uniqueSeasons);
-      
-      if (uniqueSeasons.length > 0) {
-        setSelectedSeason(uniqueSeasons[0]);
-      }
-      
-      console.log(`✅ Carregados ${episodesData.length} episódios para ${uniqueSeasons.length} temporadas`);
+        console.log(`🎬 Fazendo requisição para: /api/episodes/tvshow/${tvShowId}`);
+        const response = await episodesAPI.getByTvShow(tvShowId);
+        const episodesData = response.data;
+        
+        console.log(`🎬 Resposta da API:`, episodesData);
+        console.log(`🎬 Carregados ${episodesData.length} episódios`);
+        
+        setEpisodes(episodesData);
+        
+        // Extrair temporadas únicas
+        const uniqueSeasons = [...new Set(episodesData.map(ep => ep.seasonNumber))].sort((a, b) => a - b);
+        setSeasons(uniqueSeasons);
+        
+        console.log(`🎬 Temporadas encontradas:`, uniqueSeasons);
+        
+        if (uniqueSeasons.length > 0) {
+            setSelectedSeason(uniqueSeasons[0]);
+            console.log(`🎬 Temporada selecionada: ${uniqueSeasons[0]}`);
+        }
+        
+        console.log(`✅ Carregamento de episódios concluído`);
     } catch (error) {
-      console.error('❌ Erro ao carregar episódios:', error);
-      setEpisodes([]);
-      setSeasons([]);
+        console.error('❌ Erro ao carregar episódios:', error);
+        console.error('❌ Detalhes do erro:', error.response?.data || error.message);
+        setEpisodes([]);
+        setSeasons([]);
     } finally {
-      setLoadingEpisodes(false);
+        setLoadingEpisodes(false);
     }
   };
 
@@ -306,6 +318,8 @@ const TvShowModal = ({ isOpen, data, onClose }) => {
     </div>
   );
 };
+
+// ... (os estilos permanecem exatamente iguais) ...
 
 const styles = {
   overlay: {
