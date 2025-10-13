@@ -23,18 +23,27 @@ namespace TvShowTracker.API.Controllers
         {
             try
             {
-                _logger.LogInformation("🎬 Buscando episódios para TV Show ID: {TvShowId}", tvShowId);
+                _logger.LogInformation("🎬 EpisodesController: Buscando episódios para TV Show ID: {TvShowId}", tvShowId);
                 
                 var episodes = await _episodeService.GetEpisodesByTvShowAsync(tvShowId);
                 
-                _logger.LogInformation("✅ Encontrados {Count} episódios para TV Show ID: {TvShowId}", 
-                    episodes.Count, tvShowId);
+                _logger.LogInformation("🎬 EpisodesController: Service retornou {Count} episódios", episodes.Count);
+                
+                if (episodes.Count == 0)
+                {
+                    _logger.LogWarning("🎬 EpisodesController: NENHUM episódio encontrado para TV Show ID: {TvShowId}", tvShowId);
+                }
+                else
+                {
+                    _logger.LogInformation("🎬 EpisodesController: Primeiro episódio - {Title} (S{Season}E{Episode})", 
+                        episodes[0].Title, episodes[0].SeasonNumber, episodes[0].EpisodeNumber);
+                }
                 
                 return Ok(episodes);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "❌ Erro ao buscar episódios para TV Show ID: {TvShowId}", tvShowId);
+                _logger.LogError(ex, "❌ EpisodesController: Erro ao buscar episódios para TV Show ID: {TvShowId}", tvShowId);
                 return StatusCode(500, new { message = "Erro ao buscar episódios" });
             }
         }
@@ -44,24 +53,24 @@ namespace TvShowTracker.API.Controllers
         {
             try
             {
-                _logger.LogInformation("🎬 Buscando episódio ID: {EpisodeId}", id);
+                _logger.LogInformation("🎬 EpisodesController: Buscando episódio ID: {EpisodeId}", id);
                 
                 var episode = await _episodeService.GetEpisodeByIdAsync(id);
                 
                 if (episode == null)
                 {
-                    _logger.LogWarning("⚠️ Episódio não encontrado ID: {EpisodeId}", id);
+                    _logger.LogWarning("⚠️ EpisodesController: Episódio não encontrado ID: {EpisodeId}", id);
                     return NotFound(new { message = "Episódio não encontrado" });
                 }
                 
-                _logger.LogInformation("✅ Episódio encontrado: {Title} (ID: {EpisodeId})", 
+                _logger.LogInformation("✅ EpisodesController: Episódio encontrado: {Title} (ID: {EpisodeId})", 
                     episode.Title, id);
                 
                 return Ok(episode);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "❌ Erro ao buscar episódio ID: {EpisodeId}", id);
+                _logger.LogError(ex, "❌ EpisodesController: Erro ao buscar episódio ID: {EpisodeId}", id);
                 return StatusCode(500, new { message = "Erro ao buscar episódio" });
             }
         }
@@ -71,20 +80,20 @@ namespace TvShowTracker.API.Controllers
         {
             try
             {
-                _logger.LogInformation("🎬 Buscando episódios da temporada {Season} para TV Show ID: {TvShowId}", 
+                _logger.LogInformation("🎬 EpisodesController: Buscando episódios da temporada {Season} para TV Show ID: {TvShowId}", 
                     seasonNumber, tvShowId);
                 
                 var episodes = await _episodeService.GetEpisodesByTvShowAsync(tvShowId);
                 var seasonEpisodes = episodes.Where(e => e.SeasonNumber == seasonNumber).ToList();
                 
-                _logger.LogInformation("✅ Encontrados {Count} episódios da temporada {Season} para TV Show ID: {TvShowId}", 
+                _logger.LogInformation("🎬 EpisodesController: Encontrados {Count} episódios da temporada {Season} para TV Show ID: {TvShowId}", 
                     seasonEpisodes.Count, seasonNumber, tvShowId);
                 
                 return Ok(seasonEpisodes);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "❌ Erro ao buscar episódios da temporada {Season} para TV Show ID: {TvShowId}", 
+                _logger.LogError(ex, "❌ EpisodesController: Erro ao buscar episódios da temporada {Season} para TV Show ID: {TvShowId}", 
                     seasonNumber, tvShowId);
                 return StatusCode(500, new { message = "Erro ao buscar episódios da temporada" });
             }
@@ -95,7 +104,7 @@ namespace TvShowTracker.API.Controllers
         {
             try
             {
-                _logger.LogInformation("🎬 Buscando episódio S{Season}E{Episode} para TV Show ID: {TvShowId}", 
+                _logger.LogInformation("🎬 EpisodesController: Buscando episódio S{Season}E{Episode} para TV Show ID: {TvShowId}", 
                     seasonNumber, episodeNumber, tvShowId);
                 
                 var episodes = await _episodeService.GetEpisodesByTvShowAsync(tvShowId);
@@ -104,19 +113,19 @@ namespace TvShowTracker.API.Controllers
                 
                 if (episode == null)
                 {
-                    _logger.LogWarning("⚠️ Episódio S{Season}E{Episode} não encontrado para TV Show ID: {TvShowId}", 
+                    _logger.LogWarning("⚠️ EpisodesController: Episódio S{Season}E{Episode} não encontrado para TV Show ID: {TvShowId}", 
                         seasonNumber, episodeNumber, tvShowId);
                     return NotFound(new { message = "Episódio não encontrado" });
                 }
                 
-                _logger.LogInformation("✅ Episódio encontrado: {Title} (S{Season}E{Episode})", 
+                _logger.LogInformation("✅ EpisodesController: Episódio encontrado: {Title} (S{Season}E{Episode})", 
                     episode.Title, seasonNumber, episodeNumber);
                 
                 return Ok(episode);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "❌ Erro ao buscar episódio S{Season}E{Episode} para TV Show ID: {TvShowId}", 
+                _logger.LogError(ex, "❌ EpisodesController: Erro ao buscar episódio S{Season}E{Episode} para TV Show ID: {TvShowId}", 
                     seasonNumber, episodeNumber, tvShowId);
                 return StatusCode(500, new { message = "Erro ao buscar episódio" });
             }

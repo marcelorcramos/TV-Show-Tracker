@@ -27,6 +27,11 @@ const TvShowModal = ({ isOpen, data, onClose }) => {
   useEffect(() => {
     if (isOpen && data && data.id) {
       loadEpisodes(data.id);
+    } else {
+      // Resetar estado quando o modal fechar
+      setEpisodes([]);
+      setSeasons([]);
+      setSelectedSeason(1);
     }
   }, [isOpen, data]);
 
@@ -35,6 +40,7 @@ const TvShowModal = ({ isOpen, data, onClose }) => {
     
     setLoadingEpisodes(true);
     try {
+      console.log(`🎬 Carregando episódios para TV Show ID: ${tvShowId}`);
       const response = await episodesAPI.getByTvShow(tvShowId);
       const episodesData = response.data;
       
@@ -158,12 +164,16 @@ const TvShowModal = ({ isOpen, data, onClose }) => {
                       </option>
                     ))}
                   </select>
+                  <span style={styles.episodeCount}>
+                    {seasonEpisodes.length} episódio{seasonEpisodes.length !== 1 ? 's' : ''}
+                  </span>
                 </div>
               )}
 
               {/* Lista de Episódios */}
               {loadingEpisodes ? (
                 <div style={styles.loading}>
+                  <div style={styles.spinner}></div>
                   <p>Carregando episódios...</p>
                 </div>
               ) : seasonEpisodes.length > 0 ? (
@@ -171,12 +181,13 @@ const TvShowModal = ({ isOpen, data, onClose }) => {
                   {seasonEpisodes.map((episode) => (
                     <div key={episode.id} style={styles.episodeCard}>
                       <div style={styles.episodeHeader}>
-                        <h4 style={styles.episodeTitle}>
-                          {episode.episodeCode} - {episode.title}
-                        </h4>
+                        <div style={styles.episodeTitleContainer}>
+                          <span style={styles.episodeCode}>{episode.episodeCode}</span>
+                          <h4 style={styles.episodeTitle}>{episode.title}</h4>
+                        </div>
                         <div style={styles.episodeMeta}>
                           {episode.rating && (
-                            <span style={styles.episodeRating}>⭐ {episode.rating}</span>
+                            <span style={styles.episodeRating}>⭐ {episode.rating.toFixed(1)}</span>
                           )}
                           <span style={{
                             ...styles.episodeStatus,
@@ -213,6 +224,46 @@ const TvShowModal = ({ isOpen, data, onClose }) => {
                   <p>Nenhum episódio encontrado para esta temporada.</p>
                 </div>
               )}
+            </div>
+          )}
+
+          {/* Para filmes, mostrar informações do "episódio único" */}
+          {data.type === 'Movie' && episodes.length > 0 && (
+            <div style={styles.episodesSection}>
+              <h3 style={styles.sectionTitle}>🎬 Detalhes do Filme</h3>
+              <div style={styles.movieEpisode}>
+                {episodes.map((episode) => (
+                  <div key={episode.id} style={styles.episodeCard}>
+                    <div style={styles.episodeHeader}>
+                      <h4 style={styles.episodeTitle}>{episode.title}</h4>
+                      <div style={styles.episodeMeta}>
+                        {episode.rating && (
+                          <span style={styles.episodeRating}>⭐ {episode.rating.toFixed(1)}</span>
+                        )}
+                      </div>
+                    </div>
+                    
+                    <div style={styles.episodeDetails}>
+                      {episode.description && (
+                        <p style={styles.episodeDescription}>{episode.description}</p>
+                      )}
+                      
+                      <div style={styles.episodeInfo}>
+                        {episode.releaseDate && (
+                          <span style={styles.episodeInfoItem}>
+                            📅 {episode.formattedReleaseDate}
+                          </span>
+                        )}
+                        {episode.duration && (
+                          <span style={styles.episodeInfoItem}>
+                            ⏱️ {episode.formattedDuration}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           )}
 
@@ -298,6 +349,7 @@ const styles = {
     padding: '4px 8px',
     borderRadius: '4px',
     color: '#6b7280',
+    transition: 'all 0.2s ease',
   },
   modalContent: {
     padding: '0 20px 20px 20px',
@@ -386,7 +438,7 @@ const styles = {
     lineHeight: '1.6',
     fontSize: '1rem',
   },
-  // NOVOS ESTILOS PARA EPISÓDIOS
+  // ESTILOS PARA EPISÓDIOS
   episodesSection: {
     marginBottom: '30px',
     padding: '20px',
@@ -397,12 +449,14 @@ const styles = {
   seasonSelector: {
     display: 'flex',
     alignItems: 'center',
-    gap: '10px',
+    gap: '15px',
     marginBottom: '20px',
+    flexWrap: 'wrap',
   },
   seasonLabel: {
     fontWeight: '600',
     color: '#374151',
+    fontSize: '0.9rem',
   },
   seasonSelect: {
     padding: '8px 12px',
@@ -410,6 +464,12 @@ const styles = {
     borderRadius: '6px',
     backgroundColor: 'white',
     cursor: 'pointer',
+    fontSize: '0.9rem',
+  },
+  episodeCount: {
+    fontSize: '0.8rem',
+    color: '#6b7280',
+    fontWeight: '500',
   },
   episodesList: {
     display: 'flex',
@@ -422,12 +482,30 @@ const styles = {
     borderRadius: '8px',
     border: '1px solid #e5e7eb',
     boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
+    transition: 'all 0.2s ease',
   },
   episodeHeader: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
     marginBottom: '8px',
+    gap: '15px',
+  },
+  episodeTitleContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '12px',
+    flex: 1,
+  },
+  episodeCode: {
+    backgroundColor: '#3b82f6',
+    color: 'white',
+    padding: '4px 8px',
+    borderRadius: '4px',
+    fontSize: '0.7rem',
+    fontWeight: '600',
+    minWidth: '50px',
+    textAlign: 'center',
   },
   episodeTitle: {
     fontSize: '1rem',
@@ -440,6 +518,7 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     gap: '10px',
+    flexShrink: 0,
   },
   episodeRating: {
     fontSize: '0.8rem',
@@ -473,14 +552,31 @@ const styles = {
     alignItems: 'center',
     gap: '4px',
   },
+  movieEpisode: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '12px',
+  },
   loading: {
     textAlign: 'center',
-    padding: '20px',
+    padding: '40px',
     color: '#6b7280',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    gap: '10px',
+  },
+  spinner: {
+    width: '30px',
+    height: '30px',
+    border: '3px solid #f3f4f6',
+    borderTop: '3px solid #3b82f6',
+    borderRadius: '50%',
+    animation: 'spin 1s linear infinite',
   },
   noEpisodes: {
     textAlign: 'center',
-    padding: '20px',
+    padding: '40px',
     color: '#6b7280',
     fontStyle: 'italic',
   },
@@ -511,5 +607,14 @@ const styles = {
     fontSize: '0.9rem',
   },
 };
+
+// Adicionar animação do spinner
+const styleSheet = document.styleSheets[0];
+styleSheet.insertRule(`
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+`, styleSheet.cssRules.length);
 
 export default TvShowModal;

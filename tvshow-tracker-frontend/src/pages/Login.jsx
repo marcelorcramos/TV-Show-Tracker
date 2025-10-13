@@ -130,8 +130,31 @@ const Login = () => {
       marginTop: '0.5rem',
       boxSizing: 'border-box'
     },
+    backButton: {
+      width: '100%',
+      padding: '0.875rem',
+      background: '#6b7280',
+      color: 'white',
+      border: 'none',
+      borderRadius: '8px',
+      fontSize: '0.9rem',
+      fontWeight: '500',
+      cursor: 'pointer',
+      transition: 'all 0.2s ease',
+      marginTop: '1rem',
+      boxSizing: 'border-box',
+      textDecoration: 'none',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: '0.5rem'
+    },
     buttonHover: {
       background: '#374151',
+      transform: 'translateY(-1px)'
+    },
+    backButtonHover: {
+      background: '#4b5563',
       transform: 'translateY(-1px)'
     },
     buttonDisabled: {
@@ -148,17 +171,6 @@ const Login = () => {
       fontSize: '0.8rem',
       width: '100%',
       boxSizing: 'border-box'
-    },
-    backLink: {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      color: '#64748b',
-      textDecoration: 'none',
-      fontSize: '0.8rem',
-      fontWeight: '500',
-      marginTop: '1.5rem',
-      transition: 'color 0.2s ease'
     },
     registerLink: {
       textAlign: 'center',
@@ -295,17 +307,23 @@ const Login = () => {
               </Link>
             </div>
 
-            {/* Back Link */}
+            {/* Back Button - MESMO TAMANHO DO LOG OUT */}
             <Link 
               to="/" 
-              style={styles.backLink}
-              onMouseOver={(e) => e.target.style.color = '#374151'}
-              onMouseOut={(e) => e.target.style.color = '#64748b'}
+              style={styles.backButton}
+              onMouseOver={(e) => {
+                e.target.style.background = styles.backButtonHover.background;
+                e.target.style.transform = styles.backButtonHover.transform;
+              }}
+              onMouseOut={(e) => {
+                e.target.style.background = styles.backButton.background;
+                e.target.style.transform = 'none';
+              }}
             >
-              <svg style={{width: '0.875rem', height: '0.875rem', marginRight: '0.5rem'}} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg style={{width: '0.875rem', height: '0.875rem'}} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
               </svg>
-              Back to Home
+              Back To Home
             </Link>
           </form>
 

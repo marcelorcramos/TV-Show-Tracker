@@ -28,39 +28,61 @@ namespace TvShowTracker.Infrastructure.Services
     await _semaphore.WaitAsync();
     try
     {
-        if (_hasSeeded) return;
-
-        Console.WriteLine("🔧 Inicializando banco de dados...");
-        await _context.Database.EnsureCreatedAsync();
-        
-        var hasData = await _context.TvShows.AnyAsync();
-        if (hasData)
+        if (_hasSeeded) 
         {
-            Console.WriteLine("✅ Banco de dados já populado.");
-            _hasSeeded = true;
+            Console.WriteLine("✅ Banco já foi seedado anteriormente.");
             return;
         }
 
-        Console.WriteLine("📥 Executando seed completo...");
+        Console.WriteLine("🔧 INICIANDO CRIAÇÃO COMPLETA DO BANCO...");
         
-        // 1. Primeiro criar atores
+        // ✅ FORÇAR criação do banco
+        await _context.Database.EnsureDeletedAsync();
+        await _context.Database.EnsureCreatedAsync();
+        
+        Console.WriteLine("✅ Estrutura do banco criada.");
+
+        // ✅ SEMPRE recriar todos os dados
+        Console.WriteLine("👥 Criando atores...");
         await SeedActorsAsync();
         
-        // 2. Depois criar TV shows
+        Console.WriteLine("🎬 Criando TV shows...");
         await SeedTvShowsAsync();
         
-        // 3. Criar episódios
+        Console.WriteLine("📺 Criando episódios...");
         await SeedEpisodesAsync();
         
-        // 4. Finalmente criar as relações
+        Console.WriteLine("🔗 Criando relações...");
         await SeedTvShowActorRelationsAsync();
 
+        // ✅ VERIFICAÇÃO FINAL
+        var tvShowsCount = await _context.TvShows.CountAsync();
+        var actorsCount = await _context.Actors.CountAsync();
+        var episodesCount = await _context.Episodes.CountAsync();
+        var relationsCount = await _context.TvShowActors.CountAsync();
+        
+        Console.WriteLine($"✅ VERIFICAÇÃO FINAL:");
+        Console.WriteLine($"   TV Shows: {tvShowsCount}");
+        Console.WriteLine($"   Atores: {actorsCount}");
+        Console.WriteLine($"   Episódios: {episodesCount}");
+        Console.WriteLine($"   Relações: {relationsCount}");
+
+        // ✅ VERIFICAÇÃO DETALHADA DOS EPISÓDIOS
+        var tvShows = await _context.TvShows.ToListAsync();
+        foreach (var tvShow in tvShows)
+        {
+            var episodeCount = await _context.Episodes.CountAsync(e => e.TvShowId == tvShow.Id);
+            Console.WriteLine($"   📺 {tvShow.Title} (ID: {tvShow.Id}): {episodeCount} episódios");
+        }
+
         _hasSeeded = true;
-        Console.WriteLine("✅ Seed completo finalizado!");
+        Console.WriteLine("🎉 BANCO CRIADO E POPULADO COM SUCESSO!");
     }
     catch (Exception ex)
     {
-        Console.WriteLine($"❌ Erro no seed: {ex.Message}");
+        Console.WriteLine($"❌ ERRO CRÍTICO NO SEED: {ex.Message}");
+        Console.WriteLine($"Stack trace: {ex.StackTrace}");
+        throw;
     }
     finally
     {
@@ -265,6 +287,132 @@ namespace TvShowTracker.Infrastructure.Services
             {
                 Console.WriteLine($"❌ Erro no seed de TV shows: {ex.Message}");
             }
+        }
+
+        // ✅ SEED DE EPISÓDIOS MELHORADO
+        private async Task SeedEpisodesAsync()
+{
+    try
+    {
+        // ✅ FORÇAR recarregamento dos TV Shows
+        _context.ChangeTracker.Clear();
+        var tvShows = await _context.TvShows.ToListAsync();
+        
+        Console.WriteLine($"🎬 SeedEpisodes: Encontrados {tvShows.Count} TV Shows");
+        
+        // ✅ DEBUG: Mostrar IDs reais
+        foreach (var tvShow in tvShows)
+        {
+            Console.WriteLine($"🎬 TV Show: {tvShow.Title} (ID: {tvShow.Id})");
+        }
+
+        var episodes = new List<Episode>();
+        var random = new Random();
+
+        foreach (var tvShow in tvShows)
+        {
+            Console.WriteLine($"🎬 Criando episódios para: {tvShow.Title} (ID: {tvShow.Id})");
+
+            if (tvShow.Type == "Series" && tvShow.Seasons.HasValue)
+            {
+                for (int season = 1; season <= tvShow.Seasons.Value; season++)
+                {
+                    int episodesPerSeason = season == 1 ? 6 : 8;
+                    
+                    for (int episodeNum = 1; episodeNum <= episodesPerSeason; episodeNum++)
+                    {
+                        var baseReleaseDate = tvShow.ReleaseDate ?? new DateTime(2020, 1, 1);
+                        var releaseDate = baseReleaseDate.AddDays((season - 1) * 180 + (episodeNum - 1) * 7);
+                        
+                        var episode = new Episode
+                        {
+                            Title = GetEpisodeTitle(season, episodeNum),
+                            Description = GetEpisodeDescription(tvShow.Title, season, episodeNum),
+                            SeasonNumber = season,
+                            EpisodeNumber = episodeNum,
+                            ReleaseDate = releaseDate,
+                            Duration = TimeSpan.FromMinutes(45 + random.Next(0, 15)),
+                            Rating = (decimal)(7.5 + (random.NextDouble() * 2.0)),
+                            TvShowId = tvShow.Id, // ✅ USAR ID CORRETO
+                            CreatedAt = DateTime.UtcNow
+                        };
+                        
+                        episodes.Add(episode);
+                        Console.WriteLine($"   ✅ Episódio: S{season}E{episodeNum} - TvShowId: {episode.TvShowId}");
+                    }
+                }
+            }
+            else if (tvShow.Type == "Movie")
+            {
+                var episode = new Episode
+                {
+                    Title = "Full Movie",
+                    Description = $"The complete {tvShow.Title} movie experience",
+                    SeasonNumber = 1,
+                    EpisodeNumber = 1,
+                    ReleaseDate = tvShow.ReleaseDate,
+                    Duration = TimeSpan.FromMinutes(tvShow.Duration ?? 120),
+                    Rating = tvShow.Rating,
+                    TvShowId = tvShow.Id, // ✅ USAR ID CORRETO
+                    CreatedAt = DateTime.UtcNow
+                };
+                
+                episodes.Add(episode);
+                Console.WriteLine($"   ✅ Episódio filme - TvShowId: {episode.TvShowId}");
+            }
+        }
+
+        Console.WriteLine($"🎬 Total episódios a criar: {episodes.Count}");
+        
+        await _context.Episodes.AddRangeAsync(episodes);
+        var saved = await _context.SaveChangesAsync();
+        
+        Console.WriteLine($"✅ Episodes seed: {saved} episódios salvos");
+
+        // ✅ VERIFICAÇÃO FINAL
+        var episodeCount = await _context.Episodes.CountAsync();
+        Console.WriteLine($"✅ Verificação: {episodeCount} episódios no banco");
+        
+        // ✅ VERIFICAÇÃO POR TV SHOW
+        foreach (var tvShow in tvShows)
+        {
+            var count = await _context.Episodes.CountAsync(e => e.TvShowId == tvShow.Id);
+            Console.WriteLine($"✅ {tvShow.Title} (ID: {tvShow.Id}): {count} episódios");
+        }
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"❌ Erro no seed de episódios: {ex.Message}");
+        throw;
+    }
+}
+
+        // ✅ MÉTODOS AUXILIARES PARA GERAR TÍTULOS E DESCRIÇÕES
+        private string GetEpisodeTitle(int season, int episode)
+        {
+            var titles = new[]
+            {
+                "The Beginning", "Secrets Revealed", "New Alliances", "The Turning Point",
+                "Echoes of the Past", "Crossroads", "The Final Stand", "A New Dawn",
+                "Shadows and Light", "The Price of Victory", "Unexpected Journey", "Legacy"
+            };
+            
+            return titles[(season + episode) % titles.Length];
+        }
+
+        private string GetEpisodeDescription(string showTitle, int season, int episode)
+        {
+            var descriptions = new[]
+            {
+                $"In this pivotal episode of {showTitle}, characters face their greatest challenges yet.",
+                $"Secrets from the past come to light in season {season}, changing everything.",
+                $"New alliances are formed as the story of {showTitle} takes an unexpected turn.",
+                $"The stakes have never been higher in this thrilling installment.",
+                $"Emotions run high as long-buried truths are finally revealed.",
+                $"A game-changing moment that will redefine the future of {showTitle}."
+            };
+            
+            return descriptions[(season + episode) % descriptions.Length];
         }
 
         // ✅ SEED DE RELAÇÕES (DO TVSHOWSERVICE)
@@ -539,67 +687,6 @@ namespace TvShowTracker.Infrastructure.Services
                 return new List<TvShowDto>();
             }
         }
-        
-        private async Task SeedEpisodesAsync()
-{
-    try
-    {
-        var tvShows = await _context.TvShows.ToListAsync();
-        var episodes = new List<Episode>();
-
-        foreach (var tvShow in tvShows)
-        {
-            if (tvShow.Type == "Series" && tvShow.Seasons.HasValue)
-            {
-                // Criar episódios para séries
-                for (int season = 1; season <= tvShow.Seasons.Value; season++)
-                {
-                    int episodesPerSeason = season == 1 ? 6 : 8; // Primeira temporada menor
-                    
-                    for (int episodeNum = 1; episodeNum <= episodesPerSeason; episodeNum++)
-                    {
-                        var releaseDate = tvShow.ReleaseDate?.AddDays((season - 1) * 30 + (episodeNum - 1) * 7);
-                        
-                        episodes.Add(new Episode
-                        {
-                            Title = $"Episode {episodeNum}",
-                            Description = $"Season {season}, Episode {episodeNum} of {tvShow.Title}",
-                            SeasonNumber = season,
-                            EpisodeNumber = episodeNum,
-                            ReleaseDate = releaseDate,
-                            Duration = TimeSpan.FromMinutes(45),
-                            Rating = (decimal)(8.0 + (new Random().NextDouble() * 1.5)), // Rating entre 8.0 e 9.5
-                            TvShowId = tvShow.Id
-                        });
-                    }
-                }
-            }
-            else if (tvShow.Type == "Movie")
-            {
-                // Para filmes, criar um único "episódio" que representa o filme
-                episodes.Add(new Episode
-                {
-                    Title = "Full Movie",
-                    Description = $"The complete {tvShow.Title} movie",
-                    SeasonNumber = 1,
-                    EpisodeNumber = 1,
-                    ReleaseDate = tvShow.ReleaseDate,
-                    Duration = TimeSpan.FromMinutes(tvShow.Duration ?? 120),
-                    Rating = tvShow.Rating,
-                    TvShowId = tvShow.Id
-                });
-            }
-        }
-
-        await _context.Episodes.AddRangeAsync(episodes);
-        await _context.SaveChangesAsync();
-        Console.WriteLine($"✅ Episodes seed completado! {episodes.Count} episódios criados.");
-    }
-    catch (Exception ex)
-    {
-        Console.WriteLine($"❌ Erro no seed de episódios: {ex.Message}");
-    }
-}
 
         public async Task<string> DebugDatabase()
         {
@@ -609,7 +696,7 @@ namespace TvShowTracker.Infrastructure.Services
                 var actorsCount = await _context.Actors.CountAsync();
                 var tvShowActorsCount = await _context.TvShowActors.CountAsync();
                 var types = await _context.TvShows.Select(t => t.Type).Distinct().ToListAsync();
-
+                
                 return $"Total TvShows: {tvShowsCount}, Actors: {actorsCount}, Relations: {tvShowActorsCount}, Types: {string.Join(", ", types)}";
             }
             catch (Exception ex)
