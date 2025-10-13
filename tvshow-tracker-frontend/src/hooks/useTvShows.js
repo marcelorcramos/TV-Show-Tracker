@@ -7,21 +7,30 @@ export const useTvShows = (filters = {}) => {
   const [error, setError] = useState(null);
   const [pagination, setPagination] = useState({
     page: 1,
-    pageSize: 9, // MUDADO DE 12 PARA 9
+    pageSize: 9,
     totalCount: 0,
     totalPages: 0
   });
 
   const fetchTvShows = async (page = 1) => {
+    setLoading(true);
+    setError(null);
+    
     try {
-      setLoading(true);
-      setError(null);
+      // ✅ CORREÇÃO: Definir sortDescending baseado no tipo de ordenação
+      const sortDescending = filters.sortBy === 'Rating' || filters.sortBy === 'ReleaseDate';
       
       const params = {
-        page,
-        pageSize: pagination.pageSize, // AGORA USA 9
-        ...filters
+        page: page,
+        pageSize: pagination.pageSize,
+        genre: filters.genre || '',
+        type: filters.type || '',
+        search: filters.search || '',
+        sortBy: filters.sortBy || 'Title',
+        sortDescending: sortDescending // ✅ Agora envia true para Rating e ReleaseDate
       };
+
+      console.log('🎬 Parâmetros da busca:', params);
 
       const response = await tvShowsAPI.getAll(params);
       const data = response.data;
@@ -34,7 +43,7 @@ export const useTvShows = (filters = {}) => {
         totalPages: data.totalPages
       }));
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to fetch TV shows');
+      setError(err.response?.data?.message || 'Falha ao carregar séries e filmes');
     } finally {
       setLoading(false);
     }
@@ -71,7 +80,7 @@ export const useTvShowGenres = () => {
         const response = await tvShowsAPI.getGenres();
         setGenres(response.data);
       } catch (error) {
-        console.error('Failed to fetch genres:', error);
+        console.error('Falha ao carregar gêneros:', error);
       } finally {
         setLoading(false);
       }
@@ -93,7 +102,7 @@ export const useTvShowTypes = () => {
         const response = await tvShowsAPI.getTypes();
         setTypes(response.data);
       } catch (error) {
-        console.error('Failed to fetch types:', error);
+        console.error('Falha ao carregar tipos:', error);
       } finally {
         setLoading(false);
       }
