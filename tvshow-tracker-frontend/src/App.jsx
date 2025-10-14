@@ -260,7 +260,7 @@ const Footer = () => {
       
       <div style={styles.footerBottom}>
         <p style={styles.footerCopyright}>
-          © 2024 TV Show Tracker
+          © 2025 TV Show Tracker
         </p>
       </div>
     </footer>
