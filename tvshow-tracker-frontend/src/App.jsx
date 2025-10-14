@@ -1,4 +1,4 @@
-// src/App.jsx - VERSÃO CORRIGIDA
+// src/App.jsx - UNIFIED COLOR SCHEME (Light Gray & White)
 import React, {useEffect} from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import Layout from './components/Layout';
@@ -17,7 +17,7 @@ import PrivacyPolicy from './pages/PrivacyPolicy';
 import { backgroundWorker } from './services/backgroundWorker';
 import UserProfile from './pages/auth/UserProfile';
 
-// Componente de Recomendações
+// Recommendations Component
 const RecommendationsSection = () => {
   const { recommendations, loading, hasFavorites, favoriteGenres } = useRecommendations(6);
   const { isAuthenticated } = useAuth();
@@ -28,7 +28,7 @@ const RecommendationsSection = () => {
       <div style={styles.recommendationsSection}>
         <h2 style={styles.sectionTitle}>🎯 Personalized Recommendations</h2>
         <p style={styles.recommendationsSubtitle}>
-        Log in and add movies/series to favorites to receive personalized recommendations!
+          Login and add movies/series to favorites to receive personalized recommendations!
         </p>
       </div>
     );
@@ -37,9 +37,9 @@ const RecommendationsSection = () => {
   if (!hasFavorites) {
     return (
       <div style={styles.recommendationsSection}>
-        <h2 style={styles.sectionTitle}>🎯 Suas Recomendações</h2>
+        <h2 style={styles.sectionTitle}>🎯 Your Recommendations</h2>
         <p style={styles.recommendationsSubtitle}>
-        Add some movies or series to your favorites to receive personalized recommendations!
+          Add some movies or series to your favorites to receive personalized recommendations!
         </p>
       </div>
     );
@@ -58,7 +58,7 @@ const RecommendationsSection = () => {
       <div style={styles.recommendationsSection}>
         <h2 style={styles.sectionTitle}>🎯 Your Recommendations</h2>
         <p style={styles.recommendationsSubtitle}>
-        We haven't found recommendations based on your favorites yet. Try to favorite more content!
+          We haven't found recommendations based on your favorites yet. Try favoriting more content!
         </p>
       </div>
     );
@@ -66,9 +66,9 @@ const RecommendationsSection = () => {
 
   return (
     <div style={styles.recommendationsSection}>
-      <h2 style={styles.sectionTitle}>🎯 Recommended for you</h2>
+      <h2 style={styles.sectionTitle}>🎯 Recommended for You</h2>
       <p style={styles.recommendationsSubtitle}>
-      Based on your favorite genres: <span style={{fontWeight: 'bold'}}>{favoriteGenres.join(', ')}</span>
+        Based on your favorite genres: <span style={{fontWeight: 'bold', color: '#374151'}}>{favoriteGenres.join(', ')}</span>
       </p>
       
       <div style={styles.recommendationsGrid}>
@@ -80,7 +80,7 @@ const RecommendationsSection = () => {
   );
 };
 
-// Componente de Navegação Rápida
+// Quick Navigation Component
 const QuickNavigation = () => {
   const { user, isAuthenticated } = useAuth();
 
@@ -89,7 +89,7 @@ const QuickNavigation = () => {
       <div style={styles.quickNavContainer}>
         <h2 style={styles.sectionTitle}>Explore Our Platform</h2>
         <p style={styles.quickNavSubtitle}>
-        Discover everything we have to offer
+          Discover everything we have to offer
         </p>
         
         <div style={styles.quickNavGrid}>
@@ -99,7 +99,7 @@ const QuickNavigation = () => {
             <div style={styles.quickNavContent}>
               <h3 style={styles.quickNavTitle}>Series & Movies</h3>
               <p style={styles.quickNavDescription}>
-              Explore our complete catalog with advanced filters
+                Explore our complete catalog with advanced filters
               </p>
               <div style={styles.quickNavStats}>
                 <div style={styles.quickNavStat}>15+ Contents</div>
@@ -109,13 +109,13 @@ const QuickNavigation = () => {
             <div style={styles.quickNavArrow}>→</div>
           </Link>
 
-          {/* Atores */}
+          {/* Actors */}
           <Link to="/actors" style={styles.quickNavCard}>
             <div style={styles.quickNavIcon}>🎭</div>
             <div style={styles.quickNavContent}>
-              <h3 style={styles.quickNavTitle}>Actors and Cast</h3>
+              <h3 style={styles.quickNavTitle}>Actors & Cast</h3>
               <p style={styles.quickNavDescription}>
-              Discover the talents behind the productions
+                Discover the talents behind the productions
               </p>
               <div style={styles.quickNavStats}>
                 <div style={styles.quickNavStat}>15+ Actors</div>
@@ -125,7 +125,7 @@ const QuickNavigation = () => {
             <div style={styles.quickNavArrow}>→</div>
           </Link>
 
-          {/* Autenticação */}
+          {/* Authentication */}
           {!isAuthenticated ? (
             <>
               <Link to="/login" style={styles.quickNavCard}>
@@ -133,7 +133,7 @@ const QuickNavigation = () => {
                 <div style={styles.quickNavContent}>
                   <h3 style={styles.quickNavTitle}>Login</h3>
                   <p style={styles.quickNavDescription}>
-                  Access your account to favorite content
+                    Access your account to favorite content
                   </p>
                   <div style={styles.quickNavStats}>
                     <div style={styles.quickNavStat}>💫 Customization</div>
@@ -148,7 +148,7 @@ const QuickNavigation = () => {
                 <div style={styles.quickNavContent}>
                   <h3 style={styles.quickNavTitle}>Create Account</h3>
                   <p style={styles.quickNavDescription}>
-                  Join our fan community
+                    Join our fan community
                   </p>
                   <div style={styles.quickNavStats}>
                     <div style={styles.quickNavStat}>🚀 Free</div>
@@ -162,9 +162,9 @@ const QuickNavigation = () => {
             <div style={styles.quickNavCard}>
               <div style={styles.quickNavIcon}>👋</div>
               <div style={styles.quickNavContent}>
-                <h3 style={styles.quickNavTitle}>Welcome back!</h3>
+                <h3 style={styles.quickNavTitle}>Welcome Back!</h3>
                 <p style={styles.quickNavDescription}>
-                Continue exploring our platform
+                  Continue exploring our platform
                 </p>
                 <div style={styles.quickNavStats}>
                   <div style={styles.quickNavStat}>✅ Logged in as</div>
@@ -179,7 +179,7 @@ const QuickNavigation = () => {
   );
 };
 
-// Componente para itens da lista do rodapé
+// Footer List Item Component
 const FooterListItem = ({ children, to }) => {
   if (to) {
     return (
@@ -199,7 +199,7 @@ const FooterListItem = ({ children, to }) => {
   );
 };
 
-// Componente Rodapé
+// Footer Component
 const Footer = () => {
   return (
     <footer style={styles.footer}>
@@ -207,8 +207,8 @@ const Footer = () => {
         <div style={styles.footerSection}>
           <h3 style={styles.footerTitle}>TV Show Tracker</h3>
           <p style={styles.footerDescription}>
-          Your definitive platform to discover, explore and follow series, 
-          Favorite movies and actors.
+            Your ultimate platform to discover, explore and track your favorite series, 
+            movies and actors.
           </p>
           <div style={styles.footerSocial}>
             <div style={styles.socialIcon}>🎬</div>
@@ -220,7 +220,7 @@ const Footer = () => {
         <div style={styles.footerSection}>
           <h4 style={styles.footerSubtitle}>Navigation</h4>
           <div style={styles.footerLinks}>
-            <FooterListItem to="/">Start</FooterListItem>
+            <FooterListItem to="/">Home</FooterListItem>
             <FooterListItem to="/tvshows">Series & Movies</FooterListItem>
             <FooterListItem to="/actors">Actors</FooterListItem>
             <FooterListItem to="/login">Login</FooterListItem>
@@ -234,7 +234,7 @@ const Footer = () => {
             <FooterListItem>🎯 Recommendations</FooterListItem>
             <FooterListItem>❤️ Favorites</FooterListItem>
             <FooterListItem>🔍 Advanced Search</FooterListItem>
-            <FooterListItem>⭐ Reviews</FooterListItem>
+            <FooterListItem>⭐ Ratings</FooterListItem>
             <FooterListItem>🎭 Cast</FooterListItem>
           </div>
         </div>
@@ -260,76 +260,167 @@ const Footer = () => {
       
       <div style={styles.footerBottom}>
         <p style={styles.footerCopyright}>
-        © 2024 TV Show Tracker.
+          © 2024 TV Show Tracker. Developed with ❤️ for movie and series lovers.
         </p>
       </div>
     </footer>
   );
 };
 
-// Componente Home atualizado
+// Modern Home Component
 const Home = () => {
   return (
     <div style={styles.container}>
-      {/* Hero Section */}
+      {/* Modern Hero Section */}
       <section style={styles.heroSection}>
+        <div style={styles.heroBackground}></div>
+        
         <div style={styles.heroContent}>
+          {/* Featured badge */}
+          <div style={styles.heroBadge}>
+            <span style={styles.badgeIcon}>🎬</span>
+            <span>Explore +15k TV Shows & Movies</span>
+          </div>
+
+          {/* Main title with effect */}
           <h1 style={styles.mainTitle}>
-            TV Show Tracker
+            <span style={styles.titleGradient}>TV Show</span>
+            <span style={styles.titleTrailer}>Tracker</span>
           </h1>
-          <p style={styles.mainSubtitle}>
-            Your definitive platform to discover, explore and follow series, films and actors
-          </p>
+
+          {/* Subtitle with highlight */}
+          <div style={styles.subtitleContainer}>
+            <p style={styles.mainSubtitle}>
+              Your <span style={styles.highlight}>ultimate platform</span> to discover, 
+              explore and track your favorite series, films and actors
+            </p>
+          </div>
+
+          {/* Modern CTA Buttons */}
           <div style={styles.ctaButtons}>
             <Link to="/tvshows" style={styles.ctaButtonPrimary}>
+              <span style={styles.buttonIcon}>🎭</span>
               Explore Catalog
+              <span style={styles.buttonArrow}>→</span>
             </Link>
+            
             <Link to="/register" style={styles.ctaButtonSecondary}>
-            Create Account
+              <span style={styles.buttonIcon}>⭐</span>
+              Start Free Trial
             </Link>
+          </div>
+
+          {/* Trust badges */}
+          <div style={styles.trustBadges}>
+            <div style={styles.trustItem}>
+              <span style={styles.trustIcon}>🔒</span>
+              Secure Platform
+            </div>
+            <div style={styles.trustItem}>
+              <span style={styles.trustIcon}>📱</span>
+              Multi-Device
+            </div>
+            <div style={styles.trustItem}>
+              <span style={styles.trustIcon}>🎯</span>
+              Smart Recommendations
+            </div>
           </div>
         </div>
+
+        {/* Floating elements for depth */}
+        <div style={styles.floatingElement1}>🎬</div>
+        <div style={styles.floatingElement2}>📺</div>
+        <div style={styles.floatingElement3}>⭐</div>
       </section>
 
-      {/* Seção de Recomendações */}
+      {/* Recommendations Section */}
       <RecommendationsSection />
 
-      {/* Seção de Navegação Rápida */}
+      {/* Quick Navigation */}
       <QuickNavigation />
 
-      {/* Quick Stats */}
+      {/* Enhanced Statistics Section */}
       <div style={styles.statsSection}>
-        <h2 style={styles.sectionTitle}>Our Library</h2>
-        <div style={styles.statsContainer}>
-          <div style={styles.statItem}>
-            <div style={styles.statNumber}>9</div>
-            <div style={styles.statLabel}>Movies</div>
-          </div>
-          <div style={styles.statItem}>
-            <div style={styles.statNumber}>6</div>
-            <div style={styles.statLabel}>Series</div>
-          </div>
-          <div style={styles.statItem}>
-            <div style={styles.statNumber}>15</div>
-            <div style={styles.statLabel}>Actors</div>
-          </div>
-          <div style={styles.statItem}>
-            <div style={styles.statNumber}>6</div>
-            <div style={styles.statLabel}>Genres</div>
+        <div style={styles.statsContent}>
+          <h2 style={styles.sectionTitle}>📊 Our Growing Library</h2>
+          <p style={styles.statsSubtitle}>
+            Join thousands of users exploring our extensive collection
+          </p>
+          
+          <div style={styles.statsContainer}>
+            <div style={styles.statCard}>
+              <div style={styles.statIcon}>🎬</div>
+              <div style={styles.statNumber}>9+</div>
+              <div style={styles.statLabel}>Blockbuster Movies</div>
+              <div style={styles.statTrend}>
+                <span style={styles.trendUp}>↑ 3 new this month</span>
+              </div>
+            </div>
+            
+            <div style={styles.statCard}>
+              <div style={styles.statIcon}>📺</div>
+              <div style={styles.statNumber}>6+</div>
+              <div style={styles.statLabel}>TV Series</div>
+              <div style={styles.statTrend}>
+                <span style={styles.trendUp}>↑ 2 ongoing</span>
+              </div>
+            </div>
+            
+            <div style={styles.statCard}>
+              <div style={styles.statIcon}>🎭</div>
+              <div style={styles.statNumber}>15+</div>
+              <div style={styles.statLabel}>Talented Actors</div>
+              <div style={styles.statTrend}>
+                <span style={styles.trendUp}>↑ 5 featured</span>
+              </div>
+            </div>
+            
+            <div style={styles.statCard}>
+              <div style={styles.statIcon}>🎪</div>
+              <div style={styles.statNumber}>6+</div>
+              <div style={styles.statLabel}>Diverse Genres</div>
+              <div style={styles.statTrend}>
+                <span style={styles.trendUp}>↑ Action, Drama, Sci-Fi</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Rodapé */}
+      {/* Footer */}
       <Footer />
+
+      {/* Add animation styles */}
+      <style>
+        {`
+          @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+          }
+          @keyframes fadeInUp {
+            from {
+              opacity: 0;
+              transform: translateY(30px);
+            }
+            to {
+              opacity: 1;
+              transform: translateY(0);
+            }
+          }
+          @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+          }
+        `}
+      </style>
     </div>
   );
 };
 
-// Componente App principal
+// Main App Component
 function App() {
   useEffect(() => {
-    // Iniciar trabalhador em segundo plano
+    // Start background worker
     backgroundWorker.start();
     
     return () => {
@@ -342,7 +433,7 @@ function App() {
       <FavoritesProvider>
         <Router>
           <Layout>
-            <GDPRBanner /> {/* Banner RGPD */}
+            <GDPRBanner />
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/tvshows" element={<TvShows />} />
@@ -359,59 +450,201 @@ function App() {
   );
 }
 
-// Estilos
+// Unified Color Scheme - Light Gray & White
 const styles = {
   container: {
     minHeight: '100vh',
+    position: 'relative',
+    backgroundColor: '#f8fafc',
   },
   heroSection: {
-    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-    padding: '80px 20px',
-    color: 'white',
-    textAlign: 'center',
+    position: 'relative',
+    minHeight: '70vh',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '60px 20px',
+    overflow: 'hidden',
+    background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)',
+  },
+  heroBackground: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    background: `
+      radial-gradient(circle at 20% 80%, rgba(148, 163, 184, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(100, 116, 139, 0.1) 0%, transparent 50%)
+    `,
   },
   heroContent: {
-    maxWidth: '800px',
-    margin: '0 auto',
+    position: 'relative',
+    zIndex: 2,
+    textAlign: 'center',
+    maxWidth: '1000px',
+    width: '100%',
+  },
+  heroBadge: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '8px',
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    border: '1px solid #e2e8f0',
+    padding: '10px 18px',
+    borderRadius: '50px',
+    marginBottom: '25px',
+    color: '#475569',
+    fontSize: '14px',
+    fontWeight: '500',
+    animation: 'fadeInUp 0.8s ease-out',
+    boxShadow: '0 2px 10px rgba(0, 0, 0, 0.05)',
+  },
+  badgeIcon: {
+    fontSize: '16px',
   },
   mainTitle: {
-    fontSize: '3.5rem',
+    fontSize: 'clamp(2.5rem, 6vw, 4rem)',
     fontWeight: '800',
-    marginBottom: '1rem',
+    marginBottom: '1.2rem',
+    lineHeight: '1.1',
+    color: '#1e293b',
+    animation: 'fadeInUp 0.8s ease-out 0.2s both',
+  },
+  titleGradient: {
+    background: 'linear-gradient(45deg, #475569, #64748b)',
+    WebkitBackgroundClip: 'text',
+    WebkitTextFillColor: 'transparent',
+    backgroundClip: 'text',
+  },
+  titleTrailer: {
+    background: 'linear-gradient(45deg, #94a3b8, #cbd5e1)',
+    WebkitBackgroundClip: 'text',
+    WebkitTextFillColor: 'transparent',
+    backgroundClip: 'text',
+  },
+  subtitleContainer: {
+    maxWidth: '500px',
+    margin: '0 auto 2.5rem',
+    animation: 'fadeInUp 0.8s ease-out 0.4s both',
   },
   mainSubtitle: {
-    fontSize: '1.3rem',
-    marginBottom: '2rem',
-    opacity: 0.9,
+    fontSize: 'clamp(1rem, 2vw, 1.2rem)',
+    color: '#475569',
+    lineHeight: '1.6',
+    marginBottom: '0',
+  },
+  highlight: {
+    color: '#475569',
+    fontWeight: '600',
+    backgroundColor: '#f1f5f9',
+    padding: '2px 6px',
+    borderRadius: '4px',
   },
   ctaButtons: {
     display: 'flex',
-    gap: '20px',
+    gap: '1.2rem',
     justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: '2.5rem',
+    animation: 'fadeInUp 0.8s ease-out 0.6s both',
     flexWrap: 'wrap',
   },
   ctaButtonPrimary: {
-    background: 'white',
-    color: '#667eea',
-    padding: '12px 24px',
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '10px',
+    background: '#475569',
+    color: 'white',
+    padding: '14px 28px',
     borderRadius: '8px',
     textDecoration: 'none',
     fontWeight: '600',
-    transition: 'transform 0.2s',
+    fontSize: '1rem',
+    transition: 'all 0.3s ease',
+    boxShadow: '0 4px 12px rgba(71, 85, 105, 0.2)',
+    border: 'none',
+    cursor: 'pointer',
+    ':hover': {
+      transform: 'translateY(-2px)',
+      boxShadow: '0 6px 20px rgba(71, 85, 105, 0.3)',
+      background: '#374151',
+    }
   },
   ctaButtonSecondary: {
-    background: 'transparent',
-    color: 'white',
-    padding: '12px 24px',
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '10px',
+    background: 'white',
+    color: '#475569',
+    padding: '14px 28px',
     borderRadius: '8px',
     textDecoration: 'none',
     fontWeight: '600',
-    border: '2px solid white',
-    transition: 'all 0.2s',
+    fontSize: '1rem',
+    transition: 'all 0.3s ease',
+    border: '1px solid #e2e8f0',
+    cursor: 'pointer',
+    ':hover': {
+      transform: 'translateY(-2px)',
+      background: '#f8fafc',
+      borderColor: '#cbd5e1',
+    }
+  },
+  buttonIcon: {
+    fontSize: '1.1rem',
+  },
+  buttonArrow: {
+    transition: 'transform 0.3s ease',
+  },
+  trustBadges: {
+    display: 'flex',
+    justifyContent: 'center',
+    gap: '1.5rem',
+    animation: 'fadeInUp 0.8s ease-out 0.8s both',
+    flexWrap: 'wrap',
+  },
+  trustItem: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '6px',
+    color: '#64748b',
+    fontSize: '0.85rem',
+    fontWeight: '500',
+  },
+  trustIcon: {
+    fontSize: '0.9rem',
+  },
+  floatingElement1: {
+    position: 'absolute',
+    top: '20%',
+    left: '10%',
+    fontSize: '2rem',
+    opacity: 0.1,
+    color: '#64748b',
+    animation: 'float 6s ease-in-out infinite',
+  },
+  floatingElement2: {
+    position: 'absolute',
+    top: '60%',
+    right: '10%',
+    fontSize: '1.8rem',
+    opacity: 0.1,
+    color: '#64748b',
+    animation: 'float 8s ease-in-out infinite 2s',
+  },
+  floatingElement3: {
+    position: 'absolute',
+    bottom: '20%',
+    left: '15%',
+    fontSize: '1.5rem',
+    opacity: 0.1,
+    color: '#64748b',
+    animation: 'float 7s ease-in-out infinite 1s',
   },
   recommendationsSection: {
     padding: '60px 20px',
-    background: 'white',
+    backgroundColor: 'white',
   },
   sectionTitle: {
     fontSize: '2rem',
@@ -422,197 +655,253 @@ const styles = {
   },
   recommendationsSubtitle: {
     textAlign: 'center',
-    color: '#6b7280',
-    fontSize: '1.1rem',
+    color: '#64748b',
+    fontSize: '1rem',
     marginBottom: '2rem',
-    maxWidth: '600px',
+    maxWidth: '500px',
     margin: '0 auto 2rem',
   },
   recommendationsGrid: {
-    maxWidth: '1200px',
+    maxWidth: '1000px',
     margin: '0 auto',
     display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+    gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
     gap: '25px',
   },
   quickNavSection: {
-    padding: '80px 20px',
-    background: '#f8fafc',
+    padding: '60px 20px',
+    backgroundColor: '#f8fafc',
   },
   quickNavContainer: {
-    maxWidth: '1200px',
+    maxWidth: '1000px',
     margin: '0 auto',
   },
   quickNavSubtitle: {
     textAlign: 'center',
-    color: '#6b7280',
-    fontSize: '1.1rem',
-    marginBottom: '3rem',
+    color: '#64748b',
+    fontSize: '1rem',
+    marginBottom: '2.5rem',
   },
   quickNavGrid: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
     gap: '25px',
   },
   quickNavCard: {
     display: 'flex',
     alignItems: 'center',
-    padding: '30px',
+    padding: '25px',
     background: 'white',
-    borderRadius: '16px',
+    borderRadius: '12px',
     textDecoration: 'none',
     color: 'inherit',
     transition: 'all 0.3s ease',
-    border: '1px solid #e5e7eb',
-    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.05)',
+    border: '1px solid #e2e8f0',
+    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.04)',
+    ':hover': {
+      transform: 'translateY(-3px)',
+      boxShadow: '0 4px 15px rgba(0, 0, 0, 0.08)',
+    }
   },
   quickNavIcon: {
-    fontSize: '2.5rem',
-    marginRight: '20px',
+    fontSize: '2.2rem',
+    marginRight: '18px',
     flexShrink: 0,
   },
   quickNavContent: {
     flex: '1',
   },
   quickNavTitle: {
-    fontSize: '1.3rem',
+    fontSize: '1.2rem',
     fontWeight: '600',
     marginBottom: '8px',
     color: '#1e293b',
   },
   quickNavDescription: {
-    color: '#6b7280',
+    color: '#64748b',
     fontSize: '0.9rem',
     marginBottom: '12px',
+    lineHeight: '1.4',
   },
   quickNavStats: {
     display: 'flex',
-    gap: '10px',
-    fontSize: '0.8rem',
+    gap: '8px',
+    fontSize: '0.75rem',
   },
   quickNavStat: {
-    background: '#f3f4f6',
+    background: '#f1f5f9',
     padding: '4px 8px',
     borderRadius: '12px',
-    color: '#6b7280',
+    color: '#475569',
+    fontWeight: '500',
   },
   quickNavArrow: {
-    fontSize: '1.5rem',
-    color: '#6b7280',
+    fontSize: '1.2rem',
+    color: '#94a3b8',
     transition: 'transform 0.2s ease',
   },
   statsSection: {
     padding: '60px 20px',
-    background: 'white',
+    backgroundColor: 'white',
+  },
+  statsContent: {
+    maxWidth: '1000px',
+    margin: '0 auto',
+    textAlign: 'center',
+  },
+  statsSubtitle: {
+    fontSize: '1rem',
+    color: '#64748b',
+    marginBottom: '40px',
+    maxWidth: '400px',
+    margin: '0 auto 40px',
+    lineHeight: '1.5',
   },
   statsContainer: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+    gap: '20px',
+    marginBottom: '40px',
+  },
+  statCard: {
+    background: '#f8fafc',
+    border: '1px solid #e2e8f0',
+    borderRadius: '12px',
+    padding: '20px 15px',
+    textAlign: 'center',
+    transition: 'all 0.3s ease',
+    position: 'relative',
+    overflow: 'hidden',
+    ':hover': {
+      transform: 'translateY(-2px)',
+      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)',
+    }
+  },
+  statIcon: {
+    fontSize: '2rem',
+    marginBottom: '12px',
+    opacity: '0.8',
+  },
+  statNumber: {
+    fontSize: '1.8rem',
+    fontWeight: '700',
+    color: '#1e293b',
+    marginBottom: '6px',
+  },
+  statLabel: {
+    fontSize: '0.9rem',
+    fontWeight: '600',
+    color: '#475569',
+    marginBottom: '8px',
+  },
+  statTrend: {
+    fontSize: '0.8rem',
+    fontWeight: '500',
+  },
+  trendUp: {
+    color: '#059669',
+    background: '#d1fae5',
+    padding: '3px 6px',
+    borderRadius: '8px',
+  },
+  footer: {
+    background: '#f1f5f9',
+    color: '#374151',
+    padding: '50px 20px 20px',
+    borderTop: '1px solid #e2e8f0',
+  },
+  footerContainer: {
     maxWidth: '1000px',
     margin: '0 auto',
     display: 'grid',
     gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
     gap: '30px',
-    textAlign: 'center',
-  },
-  statItem: {
-    padding: '20px',
-  },
-  statNumber: {
-    fontSize: '2.5rem',
-    fontWeight: '800',
-    color: '#1e40af',
-    marginBottom: '8px',
-  },
-  statLabel: {
-    fontSize: '1.1rem',
-    color: '#6b7280',
-    fontWeight: '600',
-  },
-  footer: {
-    background: '#1f2937',
-    color: 'white',
-    padding: '60px 20px 20px',
-  },
-  footerContainer: {
-    maxWidth: '1200px',
-    margin: '0 auto',
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-    gap: '40px',
-    marginBottom: '40px',
+    marginBottom: '30px',
   },
   footerSection: {
     display: 'flex',
     flexDirection: 'column',
   },
   footerTitle: {
-    fontSize: '1.5rem',
+    fontSize: '1.3rem',
     fontWeight: '700',
     marginBottom: '1rem',
-    color: '#fbbf24',
+    color: '#1e293b',
   },
   footerDescription: {
-    color: '#d1d5db',
-    lineHeight: '1.6',
+    color: '#64748b',
+    lineHeight: '1.5',
     marginBottom: '1rem',
+    fontSize: '0.9rem',
   },
   footerSocial: {
     display: 'flex',
-    gap: '10px',
+    gap: '12px',
   },
   socialIcon: {
-    fontSize: '1.5rem',
+    fontSize: '1.3rem',
     cursor: 'pointer',
     transition: 'transform 0.2s',
+    ':hover': {
+      transform: 'scale(1.1)',
+    }
   },
   footerSubtitle: {
-    fontSize: '1.1rem',
+    fontSize: '1rem',
     fontWeight: '600',
     marginBottom: '1rem',
-    color: '#fbbf24',
+    color: '#374151',
   },
   footerLinks: {
     display: 'flex',
     flexDirection: 'column',
-    gap: '0.5rem',
+    gap: '8px',
   },
   footerListItem: {
-    marginBottom: '0.5rem',
+    marginBottom: '6px',
   },
   footerLink: {
-    color: '#d1d5db',
+    color: '#64748b',
     textDecoration: 'none',
     transition: 'color 0.2s',
+    fontSize: '0.9rem',
+    ':hover': {
+      color: '#374151',
+    }
   },
   footerStats: {
     display: 'flex',
     flexDirection: 'column',
-    gap: '15px',
+    gap: '12px',
   },
   footerStat: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     padding: '15px',
-    background: 'rgba(255, 255, 255, 0.1)',
+    background: 'white',
     borderRadius: '8px',
+    border: '1px solid #e2e8f0',
   },
   footerStatNumber: {
-    fontSize: '1.5rem',
-    fontWeight: 'bold',
-    marginBottom: '5px',
+    fontSize: '1.3rem',
+    fontWeight: '700',
+    marginBottom: '4px',
+    color: '#1e293b',
   },
   footerStatLabel: {
-    fontSize: '0.9rem',
-    color: '#9ca3af',
+    fontSize: '0.8rem',
+    color: '#64748b',
+    fontWeight: '500',
   },
   footerBottom: {
-    borderTop: '1px solid #374151',
+    borderTop: '1px solid #e2e8f0',
     paddingTop: '20px',
     textAlign: 'center',
   },
   footerCopyright: {
-    color: '#9ca3af',
-    fontSize: '0.9rem',
+    color: '#94a3b8',
+    fontSize: '0.85rem',
   },
 };
 
