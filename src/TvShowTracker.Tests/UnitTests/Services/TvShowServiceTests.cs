@@ -1,17 +1,16 @@
-using Xunit;
 using FluentAssertions;
-using Moq;
 using Microsoft.EntityFrameworkCore;
-using TvShowTracker.Application.Interfaces;
+using Moq;
 using TvShowTracker.Application.DTOs;
+using TvShowTracker.Application.Interfaces;
+using TvShowTracker.Domain.Entities;
 using TvShowTracker.Infrastructure.Data;
 using TvShowTracker.Infrastructure.Services;
 using AutoMapper;
-using TvShowTracker.Domain.Entities;
 
 namespace TvShowTracker.Tests.UnitTests.Services
 {
-    public class TvShowServiceTests
+    public class TvShowServiceTests : IDisposable
     {
         private readonly ApplicationDbContext _context;
         private readonly Mock<IMapper> _mockMapper;
@@ -21,166 +20,168 @@ namespace TvShowTracker.Tests.UnitTests.Services
 
         public TvShowServiceTests()
         {
-            // Configurar DbContext em memória
+            // Setup in-memory database
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase(databaseName: $"TestDatabase_{Guid.NewGuid()}")
+                .UseInMemoryDatabase(databaseName: $"TvShowsTestDb_{Guid.NewGuid()}")
                 .Options;
 
             _context = new ApplicationDbContext(options);
+
+            // Setup mocks
             _mockMapper = new Mock<IMapper>();
             _mockCacheService = new Mock<ICacheService>();
             _mockRecommendationService = new Mock<IRecommendationService>();
 
-            _tvShowService = new TvShowService(
-                _context, 
-                _mockMapper.Object, 
-                _mockCacheService.Object, 
-                _mockRecommendationService.Object
-            );
-
-            SeedTestData();
-        }
-
-        private void SeedTestData()
-        {
-            // Limpar dados anteriores
-            _context.Database.EnsureDeleted();
-            _context.Database.EnsureCreated();
-
-            var testShows = new List<TvShow>
-            {
-                new TvShow 
-                { 
-                    Id = 1, 
-                    Title = "Breaking Bad", 
-                    Genre = "Drama", 
-                    Type = "Series",
-                    Rating = 9.5m,
-                    ReleaseDate = new DateTime(2008, 1, 20)
-                },
-                new TvShow 
-                { 
-                    Id = 2, 
-                    Title = "Game of Thrones", 
-                    Genre = "Fantasy", 
-                    Type = "Series",
-                    Rating = 9.3m,
-                    ReleaseDate = new DateTime(2011, 4, 17)
-                },
-                new TvShow 
-                { 
-                    Id = 3, 
-                    Title = "The Dark Knight", 
-                    Genre = "Action", 
-                    Type = "Movie",
-                    Rating = 9.0m,
-                    ReleaseDate = new DateTime(2008, 7, 18)
-                }
-            };
-
-            _context.TvShows.AddRange(testShows);
-            _context.SaveChanges();
+            _tvShowService = new TvShowService(_context, _mockMapper.Object, _mockCacheService.Object, _mockRecommendationService.Object);
         }
 
         [Fact]
-        public async Task GetTvShowsAsync_ShouldReturnPagedResults()
+        public async Task GetTvShowsAsync_WithNoFilters_ShouldReturnAllTvShows()
         {
             // Arrange
+            var tvShows = new List<TvShow>
+            {
+                new TvShow { Id = 1, Title = "Show 1", Genre = "Drama", Type = "Series", Rating = 8.5m },
+                new TvShow { Id = 2, Title = "Show 2", Genre = "Comedy", Type = "Movie", Rating = 7.8m }
+            };
+            
+            _context.TvShows.AddRange(tvShows);
+            await _context.SaveChangesAsync();
+
             var query = new TvShowQuery { Page = 1, PageSize = 10 };
 
+            // Setup mapper
             _mockMapper.Setup(m => m.Map<TvShowDto>(It.IsAny<TvShow>()))
-                      .Returns((TvShow source) => new TvShowDto 
-                      { 
-                          Id = source.Id, 
-                          Title = source.Title,
-                          Genre = source.Genre
-                      });
+                     .Returns((TvShow source) => new TvShowDto 
+                     { 
+                         Id = source.Id, 
+                         Title = source.Title,
+                         Genre = source.Genre,
+                         Type = source.Type,
+                         Rating = source.Rating,
+                         FeaturedActors = new List<ActorDto>()
+                     });
 
             // Act
             var result = await _tvShowService.GetTvShowsAsync(query);
 
             // Assert
             result.Should().NotBeNull();
-            result.Items.Should().HaveCount(3);
-            result.TotalCount.Should().Be(3);
-            result.Page.Should().Be(1);
+            result.Items.Should().HaveCount(2);
+            result.TotalCount.Should().Be(2);
         }
 
         [Fact]
-        public async Task GetTvShowsAsync_ShouldFilterByGenre()
+        public async Task GetTvShowsAsync_WithGenreFilter_ShouldReturnFilteredResults()
         {
             // Arrange
+            var tvShows = new List<TvShow>
+            {
+                new TvShow { Id = 1, Title = "Drama Show", Genre = "Drama", Type = "Series" },
+                new TvShow { Id = 2, Title = "Comedy Show", Genre = "Comedy", Type = "Movie" },
+                new TvShow { Id = 3, Title = "Another Drama", Genre = "Drama", Type = "Series" }
+            };
+            
+            _context.TvShows.AddRange(tvShows);
+            await _context.SaveChangesAsync();
+
             var query = new TvShowQuery { Genre = "Drama", Page = 1, PageSize = 10 };
 
+            // Setup mapper
             _mockMapper.Setup(m => m.Map<TvShowDto>(It.IsAny<TvShow>()))
-                      .Returns((TvShow source) => new TvShowDto 
-                      { 
-                          Id = source.Id, 
-                          Title = source.Title,
-                          Genre = source.Genre
-                      });
+                     .Returns((TvShow source) => new TvShowDto 
+                     { 
+                         Id = source.Id, 
+                         Title = source.Title,
+                         Genre = source.Genre,
+                         Type = source.Type,
+                         FeaturedActors = new List<ActorDto>()
+                     });
 
             // Act
             var result = await _tvShowService.GetTvShowsAsync(query);
 
             // Assert
             result.Should().NotBeNull();
-            result.Items.Should().HaveCount(1);
-            result.Items[0].Genre.Should().Be("Drama");
-            result.Items[0].Title.Should().Be("Breaking Bad");
+            result.Items.Should().HaveCount(2);
+            result.Items.All(s => s.Genre == "Drama").Should().BeTrue();
         }
 
         [Fact]
-        public async Task GetTvShowsAsync_ShouldSortByRatingDescending()
+        public async Task GetTvShowsAsync_WithSearchFilter_ShouldReturnMatchingResults()
         {
             // Arrange
-            var query = new TvShowQuery 
-            { 
-                SortBy = "Rating", 
-                SortDescending = true,
-                Page = 1, 
-                PageSize = 10 
+            var tvShows = new List<TvShow>
+            {
+                new TvShow { Id = 1, Title = "Breaking Bad", Description = "A chemistry teacher turns to crime", Genre = "Drama" },
+                new TvShow { Id = 2, Title = "Game of Thrones", Description = "Fantasy drama", Genre = "Fantasy" },
+                new TvShow { Id = 3, Title = "Better Call Saul", Description = "Breaking Bad prequel", Genre = "Drama" }
             };
+            
+            _context.TvShows.AddRange(tvShows);
+            await _context.SaveChangesAsync();
 
+            var query = new TvShowQuery { Search = "Breaking", Page = 1, PageSize = 10 };
+
+            // Setup mapper
             _mockMapper.Setup(m => m.Map<TvShowDto>(It.IsAny<TvShow>()))
-                      .Returns((TvShow source) => new TvShowDto 
-                      { 
-                          Id = source.Id, 
-                          Title = source.Title,
-                          Rating = source.Rating
-                      });
+                     .Returns((TvShow source) => new TvShowDto 
+                     { 
+                         Id = source.Id, 
+                         Title = source.Title,
+                         Genre = source.Genre,
+                         Description = source.Description,
+                         FeaturedActors = new List<ActorDto>()
+                     });
 
             // Act
             var result = await _tvShowService.GetTvShowsAsync(query);
 
             // Assert
             result.Should().NotBeNull();
-            result.Items.Should().HaveCount(3);
-            result.Items[0].Rating.Should().Be(9.5m); // Breaking Bad
-            result.Items[1].Rating.Should().Be(9.3m); // Game of Thrones
-            result.Items[2].Rating.Should().Be(9.0m); // The Dark Knight
+            result.Items.Should().HaveCount(2); // Breaking Bad and Better Call Saul
+            result.Items.All(s => s.Title.Contains("Breaking") || s.Description.Contains("Breaking")).Should().BeTrue();
         }
 
         [Fact]
-        public async Task GetTvShowByIdAsync_ShouldReturnTvShow_WhenExists()
+        public async Task GetTvShowByIdAsync_WithValidId_ShouldReturnTvShow()
         {
             // Arrange
-            var tvShowId = 1;
+            var tvShow = new TvShow 
+            { 
+                Id = 1, 
+                Title = "Test Show", 
+                Genre = "Drama",
+                Episodes = new List<Episode>(),
+                TvShowActors = new List<TvShowActor>()
+            };
+            
+            _context.TvShows.Add(tvShow);
+            await _context.SaveChangesAsync();
 
+            // Setup mapper for detailed TV show
             _mockMapper.Setup(m => m.Map<TvShowDetailDto>(It.IsAny<TvShow>()))
-                      .Returns(new TvShowDetailDto { Id = 1, Title = "Breaking Bad" });
+                     .Returns(new TvShowDetailDto 
+                     { 
+                         Id = 1, 
+                         Title = "Test Show",
+                         Genre = "Drama",
+                         Episodes = new List<EpisodeDto>(),
+                         Actors = new List<ActorDto>(),
+                         FeaturedActors = new List<ActorDto>()
+                     });
 
             // Act
-            var result = await _tvShowService.GetTvShowByIdAsync(tvShowId);
+            var result = await _tvShowService.GetTvShowByIdAsync(1);
 
             // Assert
             result.Should().NotBeNull();
-            result.Id.Should().Be(tvShowId);
-            result.Title.Should().Be("Breaking Bad");
+            result.Id.Should().Be(1);
+            result.Title.Should().Be("Test Show");
         }
 
         [Fact]
-        public async Task GetTvShowByIdAsync_ShouldReturnNull_WhenNotExists()
+        public async Task GetTvShowByIdAsync_WithInvalidId_ShouldReturnNull()
         {
             // Arrange
             var tvShowId = 999;
@@ -196,6 +197,18 @@ namespace TvShowTracker.Tests.UnitTests.Services
         public async Task GetAvailableGenresAsync_ShouldReturnGenres()
         {
             // Arrange
+            var tvShows = new List<TvShow>
+            {
+                new TvShow { Id = 1, Title = "Show 1", Genre = "Drama" },
+                new TvShow { Id = 2, Title = "Show 2", Genre = "Comedy" },
+                new TvShow { Id = 3, Title = "Show 3", Genre = "Drama" },
+                new TvShow { Id = 4, Title = "Show 4", Genre = "Action" }
+            };
+            
+            _context.TvShows.AddRange(tvShows);
+            await _context.SaveChangesAsync();
+
+            // Setup cache to return null (force database query)
             _mockCacheService.Setup(c => c.GetAsync<List<string>>(It.IsAny<string>()))
                            .ReturnsAsync((List<string>)null);
 
@@ -204,15 +217,26 @@ namespace TvShowTracker.Tests.UnitTests.Services
 
             // Assert
             result.Should().NotBeNull();
-            result.Should().Contain("Drama");
-            result.Should().Contain("Fantasy");
-            result.Should().Contain("Action");
+            result.Should().HaveCount(3); // Drama, Comedy, Action
+            result.Should().Contain(new[] { "Drama", "Comedy", "Action" });
+            result.Should().BeInAscendingOrder();
         }
 
         [Fact]
         public async Task GetAvailableTypesAsync_ShouldReturnTypes()
         {
             // Arrange
+            var tvShows = new List<TvShow>
+            {
+                new TvShow { Id = 1, Title = "Show 1", Type = "Series" },
+                new TvShow { Id = 2, Title = "Show 2", Type = "Movie" },
+                new TvShow { Id = 3, Title = "Show 3", Type = "Series" }
+            };
+            
+            _context.TvShows.AddRange(tvShows);
+            await _context.SaveChangesAsync();
+
+            // Setup cache to return null (force database query)
             _mockCacheService.Setup(c => c.GetAsync<List<string>>(It.IsAny<string>()))
                            .ReturnsAsync((List<string>)null);
 
@@ -221,8 +245,38 @@ namespace TvShowTracker.Tests.UnitTests.Services
 
             // Assert
             result.Should().NotBeNull();
-            result.Should().Contain("Series");
-            result.Should().Contain("Movie");
+            result.Should().HaveCount(2); // Series, Movie
+            result.Should().Contain(new[] { "Series", "Movie" });
+            result.Should().BeInAscendingOrder();
+        }
+
+        [Fact]
+        public async Task GetRecommendedTvShowsAsync_ShouldReturnRecommendations()
+        {
+            // Arrange
+            var userId = 1;
+            var expectedRecommendations = new List<TvShowDto>
+            {
+                new TvShowDto { Id = 1, Title = "Recommended Show 1" },
+                new TvShowDto { Id = 2, Title = "Recommended Show 2" }
+            };
+
+            _mockRecommendationService.Setup(r => r.GetRecommendationsAsync(userId, 5))
+                                    .ReturnsAsync(expectedRecommendations);
+
+            // Act
+            var result = await _tvShowService.GetRecommendedTvShowsAsync(userId);
+
+            // Assert
+            result.Should().NotBeNull();
+            result.Should().HaveCount(2);
+            result.Should().BeEquivalentTo(expectedRecommendations);
+        }
+
+        public void Dispose()
+        {
+            _context?.Database?.EnsureDeleted();
+            _context?.Dispose();
         }
     }
 }

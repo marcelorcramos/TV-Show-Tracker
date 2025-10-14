@@ -1,13 +1,18 @@
 import React from 'react';
 
-const LoadingSpinner = () => {
+const LoadingSpinner = ({ message = 'Loading...', className = '' }) => {
   return (
-    <div style={{ 
-      display: 'flex', 
-      justifyContent: 'center', 
-      alignItems: 'center',
-      padding: '40px'
-    }}>
+    <div 
+      data-testid="loading-spinner"
+      className={className}
+      style={{ 
+        display: 'flex', 
+        flexDirection: 'column',
+        justifyContent: 'center', 
+        alignItems: 'center',
+        padding: '40px'
+      }}
+    >
       <div style={{
         width: '50px',
         height: '50px',
@@ -16,6 +21,7 @@ const LoadingSpinner = () => {
         borderRadius: '50%',
         animation: 'spin 1s linear infinite'
       }}></div>
+      <p style={{ marginTop: '16px', color: '#6b7280' }}>{message}</p>
       <style>
         {`
           @keyframes spin {

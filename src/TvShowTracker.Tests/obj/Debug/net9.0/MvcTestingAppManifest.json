@@ -1,0 +1,6 @@
+{
+  "TvShowTracker.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "\/Users\/marceloramos\/Documents\/ProgramaçãoPessoal\/TekeverProject\/src\/TvShowTracker.API",
+  "TvShowTracker.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "\/Users\/marceloramos\/Documents\/ProgramaçãoPessoal\/TekeverProject\/src\/TvShowTracker.Application",
+  "TvShowTracker.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "\/Users\/marceloramos\/Documents\/ProgramaçãoPessoal\/TekeverProject\/src\/TvShowTracker.Domain",
+  "TvShowTracker.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "\/Users\/marceloramos\/Documents\/ProgramaçãoPessoal\/TekeverProject\/src\/TvShowTracker.Infrastructure"
+}
