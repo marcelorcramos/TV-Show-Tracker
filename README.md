@@ -45,7 +45,6 @@ A complete full-stack application for discovering and tracking TV shows, movies,
 - SQLite (included)
 
 ### Backend Setup
-```bash
 # Clone repository
 git clone <your-repo-url>
 cd TvShowTracker.API
