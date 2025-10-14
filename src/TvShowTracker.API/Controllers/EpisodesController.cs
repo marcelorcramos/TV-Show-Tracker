@@ -1,7 +1,6 @@
-// Controllers/EpisodesController.cs
 using Microsoft.AspNetCore.Mvc;
 using TvShowTracker.Application.Interfaces;
-using TvShowTracker.Application.DTOs; // ✅ USING ADICIONADO
+using TvShowTracker.Application.DTOs;
 
 namespace TvShowTracker.API.Controllers
 {

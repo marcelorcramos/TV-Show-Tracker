@@ -12,14 +12,14 @@ public class UserService : IUserService
 {
     private readonly ApplicationDbContext _context;
     private readonly IMapper _mapper;
-    private readonly IJwtService _jwtService; // ✅ MUDAR DE JwtService PARA IJwtService
+    private readonly IJwtService _jwtService;
     private readonly IConfiguration _configuration;
 
     public UserService(ApplicationDbContext context, IMapper mapper, IJwtService jwtService, IConfiguration configuration)
     {
         _context = context;
         _mapper = mapper;
-        _jwtService = jwtService; // ✅ AGORA COMPATÍVEL
+        _jwtService = jwtService;
         _configuration = configuration;
     }
 

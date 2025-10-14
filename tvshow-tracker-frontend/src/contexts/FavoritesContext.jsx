@@ -1,4 +1,3 @@
-// src/contexts/FavoritesContext.jsx - VERSÃO CORRIGIDA
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useAuth } from './AuthContext';
 import { favoritesAPI } from '../services/api';
@@ -34,9 +33,7 @@ export const FavoritesProvider = ({ children }) => {
     try {
       console.log('📥 Carregando favoritos...');
       
-      // Mock temporário - em produção, usar: await favoritesAPI.getAll();
       const mockFavorites = [
-        // Estes dados serão preenchidos quando o usuário favoritar algo
       ];
       
       console.log('✅ Favoritos carregados (mock):', mockFavorites);
@@ -97,9 +94,7 @@ export const FavoritesProvider = ({ children }) => {
     return favorites.some(fav => fav.id === tvShowId);
   };
 
-  // No FavoritesContext.jsx - ATUALIZE a função getFavoriteGenres:
 const getFavoriteGenres = () => {
-    // Extrair gêneros dos favoritos que já têm o genre incluído
     const genresFromFavorites = favorites
       .map(fav => fav.genre)
       .filter(genre => genre && genre.trim() !== '');

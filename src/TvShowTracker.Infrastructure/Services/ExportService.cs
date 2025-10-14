@@ -24,7 +24,7 @@ namespace TvShowTracker.Infrastructure.Services
             _mapper = mapper;
             _tvShowService = tvShowService;
             
-            // Set QuestPDF license (free for open source)
+            // Set QuestPDF license
             QuestPDF.Settings.License = LicenseType.Community;
         }
 

@@ -1,4 +1,3 @@
-// src/components/ActorCard.jsx
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import useModal from '../hooks/useModal';
@@ -33,15 +32,15 @@ const ActorCard = ({ actor, onFavoriteUpdate }) => {
   }, [actor.id]);
 
   // Mapeamento de fallback images melhorado
-  // NOVA FUNÇÃO getActorFallbackImage - SUBSTITUA A ATUAL
+  // NOVA FUNÇÃO getActorFallbackImage 
 const getActorFallbackImage = (actorName) => {
   const fallbackImages = {
     'Bryan Cranston': '/images/actors/bryan-cranston.jpg',
-    'Aaron Paul': '/images/actors/aaron-paul.jpg.webp', // ✅ CORRIGIDO
+    'Aaron Paul': '/images/actors/aaron-paul.jpg.webp', 
     'Pedro Pascal': 'https://image.tmdb.org/t/p/w500/dBOrm29cr7NUrjiDQMTtrTyDpfy.jpg',
     'Emilia Clarke': '/images/actors/emilia-clarke.jpg',
     'Henry Cavill': '/images/actors/Henry-Cavill.jpg',
-    'Anya Chalotra': '/images/actors/anya-chalotra2.jpeg', // ✅ CORRIGIDO
+    'Anya Chalotra': '/images/actors/anya-chalotra2.jpeg', 
     'Kit Harington': '/images/actors/kit-harington.jpg',
     'Jennifer Aniston': '/images/actors/jennifer-aniston.jpg',
     'Leonardo DiCaprio': 'https://image.tmdb.org/t/p/w500/5Brc5dLifH3UInk3wUaCuGXpCqy.jpg',
@@ -65,7 +64,7 @@ const getActorFallbackImage = (actorName) => {
   const isValidImageUrl = (url) => {
     if (!url) return false;
     if (!url.startsWith('http')) return false;
-    if (url.includes('encrypted-tbn0.gstatic.com')) return false; // Remove imagens do Google
+    if (url.includes('encrypted-tbn0.gstatic.com')) return false;
     if (url.includes('placeholder.com')) return false;
     return true;
   };
@@ -191,8 +190,6 @@ const getActorFallbackImage = (actorName) => {
             {isFavorite ? '❤️' : '🤍'}
           </button>
         )}
-
-        {/* Actor Image com tratamento melhorado */}
         <div style={{ 
           width: '100%', 
           height: '200px', 

@@ -62,11 +62,11 @@ namespace TvShowTracker.Infrastructure.Services
                     Console.WriteLine($"🎬 Aplicado filtro de busca: {query.Search}");
                 }
 
-                // ✅ CORREÇÃO: Obter todos os dados primeiro
+                // CORREÇÃO: Obter todos os dados primeiro
                 var allTvShows = await tvShowsQuery.ToListAsync();
                 Console.WriteLine($"🎬 Total de TV shows encontrados: {allTvShows.Count}");
                 
-                // ✅ CORREÇÃO: Usar var para evitar problemas de namespace
+                // CORREÇÃO: Usar var para evitar problemas de namespace
                 var sortedTvShows = allTvShows.AsEnumerable();
 
                 // Aplicar ordenação no lado do cliente
@@ -110,15 +110,15 @@ namespace TvShowTracker.Infrastructure.Services
 
                 Console.WriteLine($"🎬 Paginação: {pagedTvShows.Count} itens da página {query.Page}");
 
-                // ✅ CORREÇÃO CRÍTICA: Mapeamento MANUAL para garantir DESCRIPTION
+                // CORREÇÃO CRÍTICA: Mapeamento MANUAL para garantir DESCRIPTION
                 var tvShowDtos = pagedTvShows.Select(tvShow =>
                 {
-                    // ✅ MAPEAMENTO MANUAL - GARANTE TODOS OS CAMPOS
+                    // MAPEAMENTO MANUAL - GARANTE TODOS OS CAMPOS
                     var dto = new TvShowDto
                     {
                         Id = tvShow.Id,
                         Title = tvShow.Title,
-                        Description = tvShow.Description, // ✅ AGORA INCLUI DESCRIPTION!
+                        Description = tvShow.Description, 
                         Genre = tvShow.Genre,
                         Type = tvShow.Type,
                         Rating = tvShow.Rating,

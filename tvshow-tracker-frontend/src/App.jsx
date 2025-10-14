@@ -1,4 +1,4 @@
-// src/App.jsx - UNIFIED COLOR SCHEME (Light Gray & White)
+
 import React, {useEffect} from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import Layout from './components/Layout';
@@ -260,7 +260,7 @@ const Footer = () => {
       
       <div style={styles.footerBottom}>
         <p style={styles.footerCopyright}>
-          © 2024 TV Show Tracker. Developed with ❤️ for movie and series lovers.
+          © 2024 TV Show Tracker
         </p>
       </div>
     </footer>
@@ -489,7 +489,7 @@ const styles = {
     display: 'inline-flex',
     alignItems: 'center',
     gap: '8px',
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    backgroundColor: '#fff',
     border: '1px solid #e2e8f0',
     padding: '10px 18px',
     borderRadius: '50px',

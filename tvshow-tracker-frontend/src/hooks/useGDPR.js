@@ -1,13 +1,10 @@
-// src/hooks/useGDPR.js
 import { useState, useEffect } from 'react';
 
 export const useGDPR = () => {
   const [gdprConsent, setGdprConsent] = useState(false);
   const [cookiesAccepted, setCookiesAccepted] = useState(false);
 
-  // ✅ MOVER a função para dentro do hook, antes de ser usada
   const clearNonEssentialCookies = () => {
-    // Limpar cookies de analytics, marketing, etc.
     localStorage.removeItem('analyticsData');
     localStorage.removeItem('marketingPreferences');
   };
@@ -39,7 +36,7 @@ export const useGDPR = () => {
     localStorage.setItem('gdprConsent', 'true');
     localStorage.setItem('cookiesAccepted', 'false');
     // Limpar cookies não essenciais
-    clearNonEssentialCookies(); // ✅ CORRIGIDO - sem "this"
+    clearNonEssentialCookies();
   };
 
   const exportUserData = () => {

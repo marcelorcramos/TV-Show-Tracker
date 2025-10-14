@@ -9,7 +9,6 @@ using TvShowTracker.Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
@@ -115,7 +114,6 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -124,7 +122,6 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-// CORS deve vir primeiro
 app.UseCors("AllowReactApp");
 
 app.UseAuthentication();
@@ -132,7 +129,5 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-// ✅ COMENTAR COMPLETAMENTE O SEED AUTOMÁTICO
-// O banco já tem dados, não precisamos de seed automático
 
 app.Run();

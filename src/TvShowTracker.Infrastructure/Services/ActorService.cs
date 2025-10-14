@@ -195,7 +195,6 @@ namespace TvShowTracker.Infrastructure.Services
                 ImageUrl = "https://image.tmdb.org/t/p/w500/1cT13dS2Swif6o8Q6Qd1JSKOGUc.jpg",
                 CreatedAt = DateTime.UtcNow
             },
-            // Novos atores adicionados para mais variedade
             new Actor
             {
                 Name = "Robert Downey Jr.",
@@ -269,7 +268,7 @@ namespace TvShowTracker.Infrastructure.Services
                     Console.WriteLine($"🎭 ActorService: Aplicando filtro search: '{query.Search}'");
                 }
 
-                // ✅ FILTRO POR NACIONALIDADE CORRIGIDO
+                // FILTRO POR NACIONALIDADE
                 if (!string.IsNullOrEmpty(query.Nationality))
                 {
                     actorsQuery = actorsQuery.Where(a => a.Nationality == query.Nationality);
@@ -305,11 +304,11 @@ namespace TvShowTracker.Infrastructure.Services
                 {
                     Id = actor.Id,
                     Name = actor.Name,
-                    BirthDate = actor.BirthDate,           // ✅ FORÇAR MAPEAMENTO
-                    Nationality = actor.Nationality,       // ✅ FORÇAR MAPEAMENTO  
-                    Bio = actor.Bio,                       // ✅ FORÇAR MAPEAMENTO
-                    ImageUrl = actor.ImageUrl,             // ✅ FORÇAR MAPEAMENTO
-                    CharacterName = null // Será preenchido das relações se necessário
+                    BirthDate = actor.BirthDate,           // FORÇAR MAPEAMENTO
+                    Nationality = actor.Nationality,       // FORÇAR MAPEAMENTO  
+                    Bio = actor.Bio,                       // FORÇAR MAPEAMENTO
+                    ImageUrl = actor.ImageUrl,             // FORÇAR MAPEAMENTO
+                    CharacterName = null 
                 }).ToList();
 
                 return new PagedResult<ActorDto>
@@ -327,7 +326,6 @@ namespace TvShowTracker.Infrastructure.Services
             }
         }
 
-        // TvShowTracker.Infrastructure/Services/ActorService.cs
 public async Task<ActorDetailDto?> GetActorByIdAsync(int id)
 {
     try
@@ -343,10 +341,10 @@ public async Task<ActorDetailDto?> GetActorByIdAsync(int id)
         {
             Id = actor.Id,
             Name = actor.Name,
-            BirthDate = actor.BirthDate,           // ✅ FORÇAR MAPEAMENTO
-            Nationality = actor.Nationality,       // ✅ FORÇAR MAPEAMENTO
-            Bio = actor.Bio,                       // ✅ FORÇAR MAPEAMENTO
-            ImageUrl = actor.ImageUrl,             // ✅ FORÇAR MAPEAMENTO
+            BirthDate = actor.BirthDate,           // FORÇAR MAPEAMENTO
+            Nationality = actor.Nationality,       // FORÇAR MAPEAMENTO
+            Bio = actor.Bio,                       // FORÇAR MAPEAMENTO
+            ImageUrl = actor.ImageUrl,             // FORÇAR MAPEAMENTO
             CharacterName = null,
             TvShows = actor.TvShowActors
                 .Select(ta => _mapper.Map<TvShowDto>(ta.TvShow))

@@ -37,12 +37,10 @@ const TvShowModal = ({ isOpen, data, onClose }) => {
     }
   }, [isOpen, data]);
 
-  // ✅ NOVA FUNÇÃO COM DEBUG COMPLETO
   const loadEpisodes = async (tvShowId) => {
     console.log(`🎬 TvShowModal: Iniciando carregamento de episódios para TV Show ID: ${tvShowId}`);
     console.log(`🎬 Dados do TV Show:`, data);
-    
-    // ✅ REMOVER a verificação de tipo - SEMPRE tentar carregar
+  
     setLoadingEpisodes(true);
     try {
         console.log(`🎬 Fazendo requisição para: /api/episodes/tvshow/${tvShowId}`);
@@ -318,8 +316,6 @@ const TvShowModal = ({ isOpen, data, onClose }) => {
     </div>
   );
 };
-
-// ... (os estilos permanecem exatamente iguais) ...
 
 const styles = {
   overlay: {

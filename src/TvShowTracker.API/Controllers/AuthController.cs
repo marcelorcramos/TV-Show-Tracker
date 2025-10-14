@@ -95,7 +95,7 @@ namespace TvShowTracker.API.Controllers
         }
 
         [HttpGet("debug-token")]
-        [Authorize] // Requer autenticação
+        [Authorize]
         public ActionResult DebugToken()
         {
             try
@@ -136,7 +136,7 @@ namespace TvShowTracker.API.Controllers
         }
 
         [HttpGet("me")]
-        [Authorize] // Requer autenticação
+        [Authorize]
         public async Task<ActionResult<UserDto>> GetCurrentUser()
         {
             try
@@ -156,7 +156,7 @@ namespace TvShowTracker.API.Controllers
                     _logger.LogInformation("  {Type} = {Value}", claim.Type, claim.Value);
                 }
 
-                // Busca o user ID
+                
                 var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
                 _logger.LogInformation("UserId from NameIdentifier: {UserId}", userIdClaim);
 

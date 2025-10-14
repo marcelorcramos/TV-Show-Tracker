@@ -1,4 +1,3 @@
-// src/hooks/useRecommendations.js
 import { useState, useEffect } from 'react';
 import { useFavorites } from '../contexts/FavoritesContext';
 
@@ -139,7 +138,7 @@ export const useRecommendations = (limit = 6) => {
             return;
           }
 
-          // Filtrar shows que NÃO estão nos favoritos
+          // Filtrar shows que nao estão nos favoritos
           const nonFavoriteShows = MOCK_TV_SHOWS.filter(
             show => !favorites.some(fav => fav.id === show.id)
           );
@@ -167,7 +166,6 @@ export const useRecommendations = (limit = 6) => {
 
           console.log('⭐ Recomendações por gênero:', recommendedByGenre.length);
 
-          // Se não encontrou recomendações por gênero, pegar shows aleatórios com boa avaliação
           let finalRecommendations = [];
           
           if (recommendedByGenre.length === 0) {

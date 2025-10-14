@@ -55,8 +55,7 @@ namespace TvShowTracker.Infrastructure.Services
         }
 
         // 3. Buscar recomendações baseadas nos gêneros
-       // No RecommendationService.cs, modifique a query:
-// ✅ CORRIGIR A QUERY - LINHA ~47
+       // No RecommendationService.cs
 var recommendedTvShows = await _context.TvShows
     .Where(t => !userFavorites.Contains(t.Id) && 
                t.Genre != null && 
@@ -64,7 +63,7 @@ var recommendedTvShows = await _context.TvShows
                t.Episodes.Any())
     .Include(t => t.TvShowActors)
         .ThenInclude(ta => ta.Actor)
-    .Include(t => t.Episodes) // ✅ ADICIONAR ESTA LINHA
+    .Include(t => t.Episodes)
     .ToListAsync();
 
         Console.WriteLine($"🎯 Encontrados {recommendedTvShows.Count} TV shows compatíveis");
@@ -79,7 +78,7 @@ var recommendedTvShows = await _context.TvShows
             }
         }
 
-        // 4. Ordenar por rating (no CLIENT-SIDE) ✅ CORREÇÃO DO SQLite
+        // 4. Ordenar por rating (no CLIENT-SIDE) CORREÇÃO DO SQLite
         var sortedRecommendations = recommendedTvShows
             .OrderByDescending(t => t.Rating)
             .ThenBy(t => t.Title)
@@ -129,7 +128,7 @@ var recommendedTvShows = await _context.TvShows
     }
 }
 
-        // ✅ IMPLEMENTAR MÉTODO DA INTERFACE
+        // IMPLEMENTAR MÉTODO DA INTERFACE
         public async Task TrainRecommendationModelAsync()
         {
             try

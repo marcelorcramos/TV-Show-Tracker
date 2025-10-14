@@ -7,14 +7,12 @@ const useModal = () => {
   const openModal = (data) => {
     setModalData(data);
     setIsOpen(true);
-    // Prevenir scroll do body quando modal estiver aberto
     document.body.style.overflow = 'hidden';
   };
 
   const closeModal = () => {
     setIsOpen(false);
     setModalData(null);
-    // Restaurar scroll do body
     document.body.style.overflow = 'unset';
   };
 
@@ -26,5 +24,4 @@ const useModal = () => {
   };
 };
 
-// ⚠️ IMPORTANTE: Exportação como default
 export default useModal;

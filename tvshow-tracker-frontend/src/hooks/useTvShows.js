@@ -17,7 +17,7 @@ export const useTvShows = (filters = {}) => {
     setError(null);
     
     try {
-      // ✅ CORREÇÃO: Definir sortDescending baseado no tipo de ordenação
+      //Definir sortDescending baseado no tipo de ordenação
       const sortDescending = filters.sortBy === 'Rating' || filters.sortBy === 'ReleaseDate';
       
       const params = {
@@ -27,7 +27,7 @@ export const useTvShows = (filters = {}) => {
         type: filters.type || '',
         search: filters.search || '',
         sortBy: filters.sortBy || 'Title',
-        sortDescending: sortDescending // ✅ Agora envia true para Rating e ReleaseDate
+        sortDescending: sortDescending
       };
 
       console.log('🎬 Parâmetros da busca:', params);
@@ -69,7 +69,6 @@ export const useTvShows = (filters = {}) => {
   };
 };
 
-// Os outros hooks (useTvShowGenres e useTvShowTypes) permanecem iguais
 export const useTvShowGenres = () => {
   const [genres, setGenres] = useState([]);
   const [loading, setLoading] = useState(true);

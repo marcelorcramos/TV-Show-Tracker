@@ -1,4 +1,3 @@
-// TvShowTracker.Application/Interfaces/IEpisodeService.cs
 using TvShowTracker.Application.DTOs;
 
 namespace TvShowTracker.Application.Interfaces

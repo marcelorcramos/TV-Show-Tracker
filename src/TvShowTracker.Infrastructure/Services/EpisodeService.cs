@@ -1,4 +1,3 @@
-// TvShowTracker.Infrastructure/Services/EpisodeService.cs
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using TvShowTracker.Application.DTOs;
@@ -55,7 +54,7 @@ namespace TvShowTracker.Infrastructure.Services
                 if (episodes.Count > 0)
                 {
                     Console.WriteLine($"🎬 EpisodeService: DETALHES DOS EPISÓDIOS:");
-                    foreach (var episode in episodes.Take(5)) // Mostrar apenas os 5 primeiros
+                    foreach (var episode in episodes.Take(5)) // 5 primeiros
                     {
                         Console.WriteLine($"   📺 ID: {episode.Id}, Title: {episode.Title}, S{episode.SeasonNumber}E{episode.EpisodeNumber}, TvShowId: {episode.TvShowId}");
                     }

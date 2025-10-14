@@ -1,4 +1,4 @@
-// TvShowTracker.Application/DTOs/EpisodeDto.cs
+
 using System.ComponentModel.DataAnnotations;
 
 namespace TvShowTracker.Application.DTOs
@@ -17,8 +17,7 @@ namespace TvShowTracker.Application.DTOs
         public DateTime? ReleaseDate { get; set; }
         public TimeSpan? Duration { get; set; }
         public decimal? Rating { get; set; }
-        
-        // Propriedades calculadas para facilitar o frontend
+       
         public string EpisodeCode => $"S{SeasonNumber:00}E{EpisodeNumber:00}";
         
         public string FormattedDuration 

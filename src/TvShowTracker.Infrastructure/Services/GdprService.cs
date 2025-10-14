@@ -52,14 +52,14 @@ namespace TvShowTracker.Infrastructure.Services
                 return false;
             }
 
-            // Remove user favorites (cascade should handle this, but being explicit)
+            // Remove user favorites
             var favorites = await _context.UserFavorites
                 .Where(uf => uf.UserId == userId)
                 .ToListAsync();
             
             _context.UserFavorites.RemoveRange(favorites);
 
-            // Anonymize user data instead of complete deletion (GDPR right to be forgotten)
+            // Anonymize user data instead of complete deletion
             user.Name = "Deleted User";
             user.Email = $"deleted{userId}@example.com";
             user.PasswordHash = "DELETED";

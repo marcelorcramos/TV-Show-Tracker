@@ -1,4 +1,3 @@
-// src/contexts/AuthContext.jsx - VERSÃO CORRIGIDA
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { authAPI } from '../services/api';
 
@@ -17,7 +16,6 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [emailNotifications, setEmailNotifications] = useState(false);
 
-  // DEBUG: Estado do contexto
   console.log('🔐 AuthContext State:', {
     user,
     loading,
@@ -48,12 +46,11 @@ export const AuthProvider = ({ children }) => {
       }
     } else {
       console.log('ℹ️ AuthContext - Nenhum usuário encontrado no localStorage');
-      setUser(null); // ✅ GARANTIR que o estado fica null
+      setUser(null); //Garantir nulo
     }
     setLoading(false);
   }, []);
 
-  // ✅ LOGIN REAL COM API
   const login = async (email, password) => {
     console.log('🔐 AuthContext.login chamado:', { email });
     
@@ -82,7 +79,6 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // ✅ REGISTER REAL COM API
   const register = async (name, email, password) => {
     console.log('👤 AuthContext.register chamado:', { name, email });
     
@@ -110,7 +106,6 @@ export const AuthProvider = ({ children }) => {
   };
 
   
-  // ✅ LOGOUT COMPLETO
   const logout = () => {
     console.log('🚪 AuthContext.logout - Removendo dados do localStorage e estado');
     
@@ -129,7 +124,6 @@ export const AuthProvider = ({ children }) => {
     }, 100);
   };
 
-  // ✅ VALUE DEFINIDO DENTRO DO COMPONENTE
   const value = {
     user,
     login,

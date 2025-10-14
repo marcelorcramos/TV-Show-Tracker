@@ -46,7 +46,7 @@ namespace TvShowTracker.Infrastructure.Services
             return tokenHandler.WriteToken(token);
         }
 
-        // ✅ IMPLEMENTAR ValidateToken SE PRECISAR
+        // MPLEMENTAR ValidateToken
         public bool ValidateToken(string token)
         {
             try

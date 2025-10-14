@@ -6,14 +6,14 @@ using AutoMapper;
 
 namespace TvShowTracker.Infrastructure.Services
 {
-    public class DataSeedService : IDataSeedService // ✅ IMPLEMENTA APENAS IDataSeedService
+    public class DataSeedService : IDataSeedService // IMPLEMENTA APENAS IDataSeedService
     {
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
         private static bool _hasSeeded = false;
         private static readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
 
-        // ✅ CONSTRUTOR SIMPLIFICADO (sem cache service)
+        // CONSTRUTOR SIMPLIFICADO (sem cache service)
         public DataSeedService(ApplicationDbContext context, IMapper mapper)
         {
             _context = context;
@@ -29,11 +29,7 @@ namespace TvShowTracker.Infrastructure.Services
 
                 Console.WriteLine("🔧 Inicializando banco de dados...");
                 await _context.Database.EnsureCreatedAsync();
-                
-                // ✅ PRIMEIRO criar usuários
                 await SeedUsersAsync();
-                
-                // Depois o resto...
                 await SeedActorsAsync();
                 await SeedTvShowsAsync();
                 await SeedEpisodesAsync();
@@ -52,7 +48,7 @@ namespace TvShowTracker.Infrastructure.Services
             }
         }
 
-        // ✅ MÉTODO PARA LIMPAR BANCO
+        // MÉTODO PARA LIMPAR BANCO
         public async Task ClearDatabaseAsync()
         {
             await _semaphore.WaitAsync();
@@ -80,7 +76,7 @@ namespace TvShowTracker.Infrastructure.Services
             }
         }
 
-        // ✅ SEED DE ATORES COMPLETO (COM BirthDate, Bio, ImageUrl)
+        // SEED DE ATORES COMPLETO (COM BirthDate, Bio, ImageUrl)
         private async Task SeedActorsAsync()
         {
             try
@@ -295,18 +291,18 @@ namespace TvShowTracker.Infrastructure.Services
             }
         }
 
-        // ✅ SEED DE EPISÓDIOS MELHORADO
+        // SEED DE EPISÓDIOS MELHORADO
         private async Task SeedEpisodesAsync()
         {
             try
             {
-                // ✅ FORÇAR recarregamento dos TV Shows
+                // FORÇAR recarregamento dos TV Shows
                 _context.ChangeTracker.Clear();
                 var tvShows = await _context.TvShows.ToListAsync();
                 
                 Console.WriteLine($"🎬 SeedEpisodes: Encontrados {tvShows.Count} TV Shows");
                 
-                // ✅ DEBUG: Mostrar IDs reais
+                // DEBUG: Mostrar IDs reais
                 foreach (var tvShow in tvShows)
                 {
                     Console.WriteLine($"🎬 TV Show: {tvShow.Title} (ID: {tvShow.Id})");
@@ -339,7 +335,7 @@ namespace TvShowTracker.Infrastructure.Services
                                     ReleaseDate = releaseDate,
                                     Duration = TimeSpan.FromMinutes(45 + random.Next(0, 15)),
                                     Rating = (decimal)(7.5 + (random.NextDouble() * 2.0)),
-                                    TvShowId = tvShow.Id, // ✅ USAR ID CORRETO
+                                    TvShowId = tvShow.Id,
                                     CreatedAt = DateTime.UtcNow
                                 };
                                 
@@ -359,7 +355,7 @@ namespace TvShowTracker.Infrastructure.Services
                             ReleaseDate = tvShow.ReleaseDate,
                             Duration = TimeSpan.FromMinutes(tvShow.Duration ?? 120),
                             Rating = tvShow.Rating,
-                            TvShowId = tvShow.Id, // ✅ USAR ID CORRETO
+                            TvShowId = tvShow.Id,
                             CreatedAt = DateTime.UtcNow
                         };
                         
@@ -393,7 +389,7 @@ namespace TvShowTracker.Infrastructure.Services
             }
         }
 
-        // ✅ MÉTODOS AUXILIARES PARA GERAR TÍTULOS E DESCRIÇÕES
+        // MÉTODOS AUXILIARES PARA GERAR TÍTULOS E DESCRIÇÕES
         private string GetEpisodeTitle(int season, int episode)
         {
             var titles = new[]
@@ -421,7 +417,7 @@ namespace TvShowTracker.Infrastructure.Services
             return descriptions[(season + episode) % descriptions.Length];
         }
 
-        // ✅ SEED DE RELAÇÕES
+        // SEED DE RELAÇÕES
         private async Task SeedTvShowActorRelationsAsync()
         {
             try

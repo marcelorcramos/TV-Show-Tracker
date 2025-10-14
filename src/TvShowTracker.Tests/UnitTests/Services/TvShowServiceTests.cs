@@ -139,7 +139,7 @@ namespace TvShowTracker.Tests.UnitTests.Services
 
             // Assert
             result.Should().NotBeNull();
-            result.Items.Should().HaveCount(2); // Breaking Bad and Better Call Saul
+            result.Items.Should().HaveCount(2);
             result.Items.All(s => s.Title.Contains("Breaking") || s.Description.Contains("Breaking")).Should().BeTrue();
         }
 
@@ -208,7 +208,7 @@ namespace TvShowTracker.Tests.UnitTests.Services
             _context.TvShows.AddRange(tvShows);
             await _context.SaveChangesAsync();
 
-            // Setup cache to return null (force database query)
+            // Setup cache to return null
             _mockCacheService.Setup(c => c.GetAsync<List<string>>(It.IsAny<string>()))
                            .ReturnsAsync((List<string>)null);
 

@@ -6,7 +6,6 @@ export const useSearch = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [showResults, setShowResults] = useState(false);
   
-  // Usar os teus hooks existentes com pageSize reduzido para search
   const { 
     tvShows: tvShowResults, 
     loading: tvShowsLoading,
@@ -14,7 +13,7 @@ export const useSearch = () => {
   } = useTvShows({
     search: searchTerm,
     page: 1,
-    pageSize: 5 // Apenas 5 resultados para search
+    pageSize: 5
   });
 
   const { 
@@ -24,7 +23,7 @@ export const useSearch = () => {
   } = useActors({
     search: searchTerm,
     page: 1,
-    pageSize: 5 // Apenas 5 resultados para search
+    pageSize: 5
   });
 
   const isLoading = tvShowsLoading || actorsLoading;
@@ -36,7 +35,6 @@ export const useSearch = () => {
 
   const hasResults = filteredTvShows.length > 0 || filteredActors.length > 0;
 
-  // Mostrar resultados apenas quando há search term e não está loading
   useEffect(() => {
     if (searchTerm.trim() && !isLoading) {
       setShowResults(true);

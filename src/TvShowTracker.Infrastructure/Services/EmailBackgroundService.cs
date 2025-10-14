@@ -12,7 +12,7 @@ namespace TvShowTracker.Infrastructure.Services
     {
         private readonly ILogger<EmailBackgroundService> _logger;
         private readonly IServiceProvider _serviceProvider;
-        private readonly TimeSpan _interval = TimeSpan.FromDays(7); // Run weekly
+        private readonly TimeSpan _interval = TimeSpan.FromDays(7);
 
         public EmailBackgroundService(ILogger<EmailBackgroundService> logger, IServiceProvider serviceProvider)
         {
@@ -45,16 +45,7 @@ namespace TvShowTracker.Infrastructure.Services
             using var scope = _serviceProvider.CreateScope();
             var userService = scope.ServiceProvider.GetRequiredService<IUserService>();
             var recommendationService = scope.ServiceProvider.GetRequiredService<IRecommendationService>();
-            
-            // In a real application, you would get active users from database
-            // For now, this is a placeholder implementation
             _logger.LogInformation("Sending weekly recommendation emails...");
-            
-            // Implementation would include:
-            // 1. Get all active users
-            // 2. For each user, get recommendations
-            // 3. Send personalized email with recommendations
-            // 4. Log sent emails
             
             await Task.CompletedTask;
         }

@@ -1,4 +1,3 @@
-// src/hooks/useActors.js
 import { useState, useEffect } from 'react';
 
 export const useActors = (filters = {}) => {

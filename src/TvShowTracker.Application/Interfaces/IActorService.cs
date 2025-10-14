@@ -1,4 +1,3 @@
-// TvShowTracker.Application/Interfaces/IActorService.cs
 using TvShowTracker.Application.DTOs;
 
 namespace TvShowTracker.Application.Interfaces
@@ -19,10 +18,4 @@ namespace TvShowTracker.Application.Interfaces
         public string? SortBy { get; set; } = "Name";
         public bool SortDescending { get; set; } = false;
     }
-
-    // REMOVER ESTA CLASSE DAQUI - Ela agora está em ActorDto.cs
-    // public class ActorDetailDto : ActorDto
-    // {
-    //     public List<TvShowDto> TvShows { get; set; } = new();
-    // }
 }

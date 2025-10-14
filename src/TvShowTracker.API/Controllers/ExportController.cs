@@ -18,7 +18,7 @@ namespace TvShowTracker.API.Controllers
         [HttpGet("tvshows/csv")]
         public async Task<IActionResult> ExportTvShowsToCsv(
             [FromQuery] int page = 1,
-            [FromQuery] int pageSize = 1000, // Large page size for exports
+            [FromQuery] int pageSize = 1000, 
             [FromQuery] string? genre = null,
             [FromQuery] string? type = null,
             [FromQuery] string? search = null)

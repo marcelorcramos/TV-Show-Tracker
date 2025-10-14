@@ -13,18 +13,15 @@ const TvShowCard = ({ tvShow, onFavoriteUpdate }) => {
   // Hook do modal
   const { isOpen, modalData, openModal, closeModal } = useModal();
 
-  // No TvShowCard.jsx - ADICIONE este debug no handleFavoriteClick:
 const handleFavoriteClick = async (e) => {
   e.stopPropagation();
   
   console.log('❤️ Clicou no favorito:', {
     tvShowId: tvShow.id,
     tvShowTitle: tvShow.title,
-    tvShowGenre: tvShow.genre, // ← ADICIONE ESTA LINHA
+    tvShowGenre: tvShow.genre,
     currentlyFavorite: isFavorite(tvShow.id)
   });
-
-  // ... resto do código
     
     console.log('❤️ Clicou no favorito:', {
       tvShowId: tvShow.id,
@@ -57,7 +54,7 @@ const handleFavoriteClick = async (e) => {
     }
   };
 
-  // Função para formatar a duração (minutos para horas e minutos)
+  // Função para formatar a duração 
   const formatDuration = (minutes) => {
     if (!minutes) return null;
     const hours = Math.floor(minutes / 60);
@@ -109,7 +106,7 @@ const handleFavoriteClick = async (e) => {
       }}
       onClick={handleCardClick}
       >
-        {/* Botão de Favorito - CORAÇÃO SIMPLES */}
+        {/* Botão de Favorito */}
         {isAuthenticated && (
           <button
             onClick={handleFavoriteClick}

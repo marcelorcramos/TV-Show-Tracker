@@ -1,4 +1,3 @@
-// src/components/ExportData.jsx - VERSÃO COMPLETA E INTEGRADA
 import React, { useState } from 'react';
 import { useFavorites } from '../contexts/FavoritesContext';
 import { exportService } from '../services/exportService';
@@ -10,7 +9,6 @@ const ExportData = () => {
   const [exporting, setExporting] = useState(false);
   const [exportType, setExportType] = useState('');
 
-  // ✅ Exportação via API - CSV
   const handleExportCSV = async (type = 'favorites') => {
     setExporting(true);
     setExportType('csv');
@@ -55,8 +53,7 @@ const ExportData = () => {
       
     } catch (error) {
       console.error(`❌ Erro ao exportar ${type} CSV:`, error);
-      
-      // ✅ Fallback para exportação local
+    
       console.log('🔄 Usando fallback local...');
       const data = prepareLocalData(type);
       exportService.exportToCSV(data, `meus-favoritos-${new Date().getTime()}.csv`);
@@ -67,7 +64,6 @@ const ExportData = () => {
     }
   };
 
-  // ✅ Exportação via API - PDF
   const handleExportPDF = async (type = 'favorites') => {
     setExporting(true);
     setExportType('pdf');
@@ -113,7 +109,6 @@ const ExportData = () => {
     } catch (error) {
       console.error(`❌ Erro ao exportar ${type} PDF:`, error);
       
-      // ✅ Fallback para exportação local
       console.log('🔄 Usando fallback local...');
       const data = prepareLocalData(type);
       exportService.exportToPDF(data, `meus-favoritos-${new Date().getTime()}.pdf`);
@@ -124,7 +119,6 @@ const ExportData = () => {
     }
   };
 
-  // ✅ Preparar dados locais para fallback
   const prepareLocalData = (type = 'favorites') => {
     if (type === 'favorites') {
       return favorites.map(fav => ({
@@ -139,7 +133,7 @@ const ExportData = () => {
       }));
     }
     
-    // Para TV Shows (dados mock para demonstração)
+    // Para TV Shows
     return [
       {
         'ID': 1,
@@ -162,7 +156,7 @@ const ExportData = () => {
     ];
   };
 
-  // ✅ Exportar dados do usuário (GDPR)
+  // Exportar dados do usuário (GDPR)
   const handleExportUserData = async () => {
     setExporting(true);
     setExportType('user');

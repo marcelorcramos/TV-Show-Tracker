@@ -1,4 +1,3 @@
-// TvShowTracker.Application/DTOs/ActorDto.cs
 namespace TvShowTracker.Application.DTOs
 {
     public class ActorDto
@@ -12,7 +11,6 @@ namespace TvShowTracker.Application.DTOs
         public string? ImageUrl { get; set; }
     }
 
-    // MOVER ESTA CLASSE PARA AQUI
     public class ActorDetailDto : ActorDto
     {
         public List<TvShowDto> TvShows { get; set; } = new();
