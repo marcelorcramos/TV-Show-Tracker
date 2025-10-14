@@ -6,22 +6,19 @@ class BackgroundWorker {
   constructor() {
     this.isRunning = false;
     this.interval = null;
-    this.checkInterval = 5 * 60 * 1000; // ✅ Verificar a cada 5 minutos (para teste)
+    this.checkInterval = 5 * 60 * 1000; //5 min teste
   }
 
- // No backgroundWorker.js, modifique o método start():
     start() {
     if (this.isRunning) return;
     
     this.isRunning = true;
     console.log('🔄 Trabalhador em segundo plano iniciado');
     
-    // ✅ Aguardar um pouco para garantir que o usuário esteja carregado
     setTimeout(() => {
       this.checkAndSendRecommendations();
     }, 2000);
-    
-    // ✅ Verificar a cada 5 minutos (em produção seria 24 horas)
+  
     this.interval = setInterval(() => {
       this.checkAndSendRecommendations();
     }, this.checkInterval);
@@ -39,14 +36,14 @@ class BackgroundWorker {
     try {
       console.log('🔍 Verificando recomendações para e-mail...');
       
-      // ✅ Verificar se usuário está autenticado
+      // Verificação se usuário está autenticado
       const token = localStorage.getItem('authToken');
       if (!token) {
         console.log('ℹ️ Usuário não autenticado, pulando verificação de e-mails');
         return;
       }
 
-      // ✅ Obter preferências do usuário atual
+      // Obter preferências do usuário atual
       const userEmail = localStorage.getItem('userEmail');
       const emailPreference = localStorage.getItem('emailNotifications') === 'true';
       
@@ -57,7 +54,7 @@ class BackgroundWorker {
 
       console.log('📧 Preparando para enviar recomendações para:', userEmail);
       
-      // ✅ Buscar recomendações reais da API
+      // Buscar recomendações reais da API
       const recommendations = await this.getUserRecommendations();
       
       if (recommendations.length > 0) {
@@ -84,7 +81,7 @@ class BackgroundWorker {
     try {
       console.log('🎯 Buscando recomendações da API...');
       
-      // ✅ Buscar recomendações reais da API
+      // Buscar recomendações reais da API
       const response = await tvShowsAPI.getRecommendations();
       const recommendations = response.data;
       
@@ -103,13 +100,12 @@ class BackgroundWorker {
     } catch (error) {
       console.error('❌ Erro ao buscar recomendações:', error);
       
-      // ✅ Fallback: buscar dos favoritos locais
+      // Buscar dos favoritos locais
       return this.getFallbackRecommendations();
     }
   }
 
   getFallbackRecommendations() {
-    // ✅ Fallback baseado nos favoritos locais
     const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
     
     if (favorites.length === 0) {
@@ -135,7 +131,7 @@ class BackgroundWorker {
     console.log('📅 Último e-mail registrado em:', new Date().toISOString());
   }
 
-  // ✅ NOVO: Método para verificar status
+  // Método para verificar status
   getStatus() {
     return {
       isRunning: this.isRunning,

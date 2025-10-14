@@ -240,7 +240,7 @@ const Actors = () => {
         </h3>
         
         <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap', alignItems: 'end' }}>
-          {/* Search - DIMINUÍDA COM PADDING */}
+          {/* Search */}
           <div style={{ flex: '1', minWidth: '200px', paddingRight: '20px' }}>
             <label style={{ 
               display: 'block', 

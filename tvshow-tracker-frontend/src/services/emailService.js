@@ -1,17 +1,12 @@
-// src/services/emailService.js - VERSÃO MELHORADA
 export const emailService = {
     async sendRecommendationEmail(userEmail, recommendations) {
       console.log('📧 Preparando e-mail de recomendações para:', userEmail);
       console.log('🎬 Recomendações:', recommendations.map(r => r.title));
       
       try {
-        // ✅ Em desenvolvimento, simular envio bem-sucedido
-        // ✅ Em produção, integrar com: SendGrid, Mailgun, AWS SES, etc.
-        
         // Simular delay de envio
         await new Promise(resolve => setTimeout(resolve, 1000));
-        
-        // ✅ Log detalhado do que seria enviado
+      
         const emailContent = this.generateEmailContent(userEmail, recommendations);
         console.log('📝 Conteúdo do e-mail:', emailContent);
         
@@ -60,7 +55,6 @@ export const emailService = {
       };
     },
   
-    // ✅ NOVO: Método para teste manual
     async testEmail() {
       const testRecommendations = [
         {

@@ -50,7 +50,7 @@ const Register = () => {
       
       console.log('Registration successful:', data);
       
-      // Redireciona para login após registo bem-sucedido
+      // Redireciona para login 
       navigate('/login', { 
         state: { message: 'Registration successful! Please login.' }
       });

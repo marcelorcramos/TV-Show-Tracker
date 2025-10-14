@@ -1,9 +1,8 @@
-// src/services/api.js
 import axios from 'axios';
 
 const API_BASE_URL = 'http://localhost:5023/api';
 
-// Criar instância do axios
+// Instância do axios
 const api = axios.create({
   baseURL: API_BASE_URL,
   timeout: 10000,
@@ -33,7 +32,7 @@ api.interceptors.request.use(
 // Interceptor para tratar erros globalmente
 api.interceptors.response.use(
   (response) => {
-    // DEBUG: Log das respostas bem-sucedidas
+    // DEBUG: Log das respostas boas
     console.log(`✅ API Response: ${response.status} ${response.config.url}`, {
       data: response.data,
       count: response.data?.items?.length || response.data?.length || 'N/A'

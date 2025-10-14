@@ -450,7 +450,7 @@ function App() {
   );
 }
 
-// Unified Color Scheme - Light Gray & White
+// Unified Color Scheme
 const styles = {
   container: {
     minHeight: '100vh',

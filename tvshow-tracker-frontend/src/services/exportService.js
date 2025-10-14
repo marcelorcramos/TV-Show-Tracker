@@ -1,4 +1,3 @@
-// src/services/exportService.js - VERSÃO MELHORADA
 import { jsPDF } from 'jspdf';
 
 export const exportService = {

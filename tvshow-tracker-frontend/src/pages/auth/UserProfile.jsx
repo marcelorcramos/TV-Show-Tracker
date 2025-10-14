@@ -1,4 +1,3 @@
-// src/pages/auth/UserProfile.jsx - VERSÃO COMPLETA COM EXPORTAÇÃO
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
@@ -394,7 +393,7 @@ const UserProfile = () => {
           </div>
         </div>
 
-        {/* Export Data Section - NOVA SEÇÃO ADICIONADA */}
+        {/* Export Data Section */}
         <div style={styles.exportSection}>
           <h3 style={styles.exportTitle}>
             📤 Export My Data

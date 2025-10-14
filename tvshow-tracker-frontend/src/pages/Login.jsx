@@ -1,4 +1,3 @@
-// src/pages/Login.jsx - VERSÃO COMPLETA E CORRIGIDA
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
@@ -11,7 +10,6 @@ const Login = () => {
   const navigate = useNavigate();
   const { login, isAuthenticated } = useAuth();
 
-  // ✅ REDIRECIONAR SE JÁ ESTIVER AUTENTICADO
   useEffect(() => {
     if (isAuthenticated) {
       navigate('/profile');
@@ -26,7 +24,6 @@ const Login = () => {
     try {
       console.log('🔐 Tentando login com:', { email });
       
-      // ✅ USAR A FUNÇÃO DO AUTHCONTEXT
       const result = await login(email, password);
       
       if (result.success) {
@@ -44,7 +41,6 @@ const Login = () => {
     }
   };
 
-  // Estilos com inputs alinhados à esquerda
   const styles = {
     container: {
       minHeight: '100vh',
@@ -293,7 +289,7 @@ const Login = () => {
             {/* Link para Registro */}
             
 
-            {/* Back Button - MESMO TAMANHO DO LOG OUT */}
+            {/* Back Button */}
             <Link 
               to="/" 
               style={styles.backButton}

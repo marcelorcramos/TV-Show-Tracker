@@ -11,12 +11,12 @@ const TvShows = () => {
     sortBy: 'Title'
   });
 
-  // ✅ ADICIONE VERIFICAÇÃO DE NULL
+  // VERIFICAÇÃO DE NULL
   const { tvShows = [], loading = false, error = null, pagination = {}, changePage = () => {} } = useTvShows(filters) || {};
   const { genres = [] } = useTvShowGenres() || {};
   const { types = [] } = useTvShowTypes() || {};
 
-  // ✅ ADICIONE VERIFICAÇÃO PARA PAGINAÇÃO
+  // VERIFICAÇÃO PARA PAGINAÇÃO
   const safePagination = {
     page: pagination?.page || 1,
     totalPages: pagination?.totalPages || 1,
@@ -25,7 +25,7 @@ const TvShows = () => {
     hasPrevious: pagination?.hasPrevious || false
   };
 
-  // DEBUG - Adicione este log para verificar
+  // DEBUG 
   React.useEffect(() => {
     console.log('🔍 TvShows Component State:', {
       tvShowsCount: tvShows.length,
@@ -36,9 +36,6 @@ const TvShows = () => {
     });
   }, [tvShows, loading, error, safePagination, filters]);
 
-
-  // No TvShows.jsx, adicione este useEffect:
-// Substitua o debug atual por este MAIS DETALHADO:
 React.useEffect(() => {
   if (tvShows.length > 0 && !loading) {
     console.log('🔍🆕 DEBUG SINOPSE DETALHADO:');
@@ -48,7 +45,6 @@ React.useEffect(() => {
         hasDescription: !!show.description,
         description: show.description,
         descriptionLength: show.description?.length,
-        // Verifique TODOS os campos para comparar
         genre: show.genre,
         type: show.type,
         rating: show.rating,
@@ -60,7 +56,6 @@ React.useEffect(() => {
       });
     });
     
-    // Verifique também a resposta RAW da API
     console.log('📡 RESPOSTA COMPLETA DA API (primeiro item):', tvShows[0]);
   }
 }, [tvShows, loading]);
@@ -87,7 +82,7 @@ React.useEffect(() => {
       genre: '',
       type: type,
       search: '',
-      sortBy: 'Title' // Mantém 'Title' em vez de 'Rating' para evitar erros
+      sortBy: 'Title' 
     });
   };
 
@@ -168,7 +163,7 @@ React.useEffect(() => {
           Discover {pagination.totalCount} amazing shows and movies
         </p>
         
-        {/* Quick Filter Buttons CORRIGIDOS */}
+        {/* Quick Filter */}
         <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginBottom: '20px' }}>
           <button
             onClick={() => setFilters({ genre: '', type: '', search: '', sortBy: 'Title' })}
@@ -240,7 +235,7 @@ React.useEffect(() => {
         </h3>
         
         <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap', alignItems: 'end' }}>
-          {/* Search - DIMINUÍDA COM PADDING */}
+          {/* Search */}
           <div style={{ flex: '1', minWidth: '200px', paddingRight: '20px' }}>
             <label style={{ 
               display: 'block', 
