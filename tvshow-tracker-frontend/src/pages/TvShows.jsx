@@ -11,37 +11,59 @@ const TvShows = () => {
     sortBy: 'Title'
   });
 
-  const { tvShows, loading, error, pagination, changePage } = useTvShows(filters);
-  const { genres } = useTvShowGenres();
-  const { types } = useTvShowTypes();
+  // ✅ ADICIONE VERIFICAÇÃO DE NULL
+  const { tvShows = [], loading = false, error = null, pagination = {}, changePage = () => {} } = useTvShows(filters) || {};
+  const { genres = [] } = useTvShowGenres() || {};
+  const { types = [] } = useTvShowTypes() || {};
 
-  // DEBUG DETALHADO: Verificar se os atores estão chegando
+  // ✅ ADICIONE VERIFICAÇÃO PARA PAGINAÇÃO
+  const safePagination = {
+    page: pagination?.page || 1,
+    totalPages: pagination?.totalPages || 1,
+    totalCount: pagination?.totalCount || 0,
+    hasNext: pagination?.hasNext || false,
+    hasPrevious: pagination?.hasPrevious || false
+  };
+
+  // DEBUG - Adicione este log para verificar
   React.useEffect(() => {
-    console.log('🎬 TV SHOWS CARREGADAS:', tvShows.length);
-    
-    if (tvShows.length > 0) {
-      console.log('🔍 DETALHES DAS TV SHOWS:');
-      
-      tvShows.forEach((show, index) => {
-        console.log(`📺 ${index + 1}. ${show.title}`, {
-          id: show.id,
-          hasActors: !!show.featuredActors,
-          actorsCount: show.featuredActors?.length || 0,
-          actors: show.featuredActors?.map(a => ({
-            id: a.id,
-            name: a.name,
-            characterName: a.characterName
-          })) || []
-        });
-      });
+    console.log('🔍 TvShows Component State:', {
+      tvShowsCount: tvShows.length,
+      loading,
+      error,
+      pagination: safePagination,
+      filters
+    });
+  }, [tvShows, loading, error, safePagination, filters]);
 
-      // Verificar a primeira TV show em detalhe
-      const firstShow = tvShows[0];
-      if (firstShow) {
-        console.log('🔬 PRIMEIRA TV SHOW EM DETALHE:', firstShow);
-      }
-    }
-  }, [tvShows]);
+
+  // No TvShows.jsx, adicione este useEffect:
+// Substitua o debug atual por este MAIS DETALHADO:
+React.useEffect(() => {
+  if (tvShows.length > 0 && !loading) {
+    console.log('🔍🆕 DEBUG SINOPSE DETALHADO:');
+    tvShows.slice(0, 3).forEach((show, index) => {
+      console.log(`📺 ${index + 1}. ${show.title}`, {
+        id: show.id,
+        hasDescription: !!show.description,
+        description: show.description,
+        descriptionLength: show.description?.length,
+        // Verifique TODOS os campos para comparar
+        genre: show.genre,
+        type: show.type,
+        rating: show.rating,
+        seasons: show.seasons,
+        duration: show.duration,
+        imageUrl: show.imageUrl,
+        featuredActors: show.featuredActors?.length || 0,
+        episodes: show.episodes?.length || 0
+      });
+    });
+    
+    // Verifique também a resposta RAW da API
+    console.log('📡 RESPOSTA COMPLETA DA API (primeiro item):', tvShows[0]);
+  }
+}, [tvShows, loading]);
 
   // Debug dos filtros
   React.useEffect(() => {

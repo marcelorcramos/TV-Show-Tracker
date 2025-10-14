@@ -23,148 +23,166 @@ namespace TvShowTracker.Infrastructure.Services
         }
 
         public async Task<PagedResult<TvShowDto>> GetTvShowsAsync(TvShowQuery query)
-{
-    try
-    {
-        Console.WriteLine($"🎬 TvShowService - Parâmetros recebidos:");
-        Console.WriteLine($"   SortBy: {query.SortBy}");
-        Console.WriteLine($"   SortDescending: {query.SortDescending}");
-        Console.WriteLine($"   Genre: {query.Genre}");
-        Console.WriteLine($"   Type: {query.Type}");
-        Console.WriteLine($"   Search: {query.Search}");
-        Console.WriteLine($"   Page: {query.Page}");
-        Console.WriteLine($"   PageSize: {query.PageSize}");
-
-        var tvShowsQuery = _context.TvShows
-            .Include(t => t.TvShowActors)
-                .ThenInclude(ta => ta.Actor)
-            .Include(t => t.Episodes) // ✅ CORREÇÃO: Include separado para Episodes
-            .AsQueryable();
-
-        // Aplicar filtros
-        if (!string.IsNullOrEmpty(query.Genre))
         {
-            tvShowsQuery = tvShowsQuery.Where(t => t.Genre == query.Genre);
-            Console.WriteLine($"🎬 Aplicado filtro de gênero: {query.Genre}");
-        }
-
-        if (!string.IsNullOrEmpty(query.Type))
-        {
-            tvShowsQuery = tvShowsQuery.Where(t => t.Type == query.Type);
-            Console.WriteLine($"🎬 Aplicado filtro de tipo: {query.Type}");
-        }
-
-        if (!string.IsNullOrEmpty(query.Search))
-        {
-            tvShowsQuery = tvShowsQuery.Where(t =>
-                t.Title.Contains(query.Search) ||
-                (t.Description != null && t.Description.Contains(query.Search)));
-            Console.WriteLine($"🎬 Aplicado filtro de busca: {query.Search}");
-        }
-
-        // ✅ CORREÇÃO: Obter todos os dados primeiro
-        var allTvShows = await tvShowsQuery.ToListAsync();
-        Console.WriteLine($"🎬 Total de TV shows encontrados: {allTvShows.Count}");
-        
-        // ✅ CORREÇÃO: Usar var para evitar problemas de namespace
-        var sortedTvShows = allTvShows.AsEnumerable();
-
-        // Aplicar ordenação no lado do cliente
-        switch (query.SortBy?.ToLower())
-        {
-            case "title":
-                sortedTvShows = query.SortDescending
-                    ? sortedTvShows.OrderByDescending(t => t.Title)
-                    : sortedTvShows.OrderBy(t => t.Title);
-                Console.WriteLine($"🎬 Ordenação aplicada: Title (Descending: {query.SortDescending})");
-                break;
-            case "releasedate":
-                sortedTvShows = query.SortDescending
-                    ? sortedTvShows.OrderByDescending(t => t.ReleaseDate)
-                    : sortedTvShows.OrderBy(t => t.ReleaseDate);
-                Console.WriteLine($"🎬 Ordenação aplicada: ReleaseDate (Descending: {query.SortDescending})");
-                break;
-            case "rating":
-                sortedTvShows = query.SortDescending
-                    ? sortedTvShows.OrderByDescending(t => t.Rating)
-                    : sortedTvShows.OrderBy(t => t.Rating);
-                Console.WriteLine($"🎬 Ordenação aplicada: Rating (Descending: {query.SortDescending})");
-                break;
-            case "seasons":
-                sortedTvShows = query.SortDescending
-                    ? sortedTvShows.OrderByDescending(t => t.Seasons)
-                    : sortedTvShows.OrderBy(t => t.Seasons);
-                Console.WriteLine($"🎬 Ordenação aplicada: Seasons (Descending: {query.SortDescending})");
-                break;
-            default:
-                sortedTvShows = sortedTvShows.OrderBy(t => t.Title);
-                Console.WriteLine($"🎬 Ordenação padrão aplicada: Title");
-                break;
-        }
-
-        var totalCount = sortedTvShows.Count();
-        var pagedTvShows = sortedTvShows
-            .Skip((query.Page - 1) * query.PageSize)
-            .Take(query.PageSize)
-            .ToList();
-
-        Console.WriteLine($"🎬 Paginação: {pagedTvShows.Count} itens da página {query.Page}");
-
-        // Mapear para DTO
-        var tvShowDtos = pagedTvShows.Select(tvShow =>
-        {
-            var dto = _mapper.Map<TvShowDto>(tvShow);
-            
-            // Mapear atores destacados
-            dto.FeaturedActors = tvShow.TvShowActors?
-                .Where(ta => ta.IsFeatured && ta.Actor != null)
-                .Take(3)
-                .Select(ta => new ActorDto 
-                { 
-                    Id = ta.Actor.Id,
-                    Name = ta.Actor.Name,
-                    CharacterName = ta.CharacterName,
-                    ImageUrl = ta.Actor.ImageUrl
-                })
-                .ToList() ?? new List<ActorDto>();
-
-            // ✅ CORREÇÃO: Mapear episódios se existirem
-            if (tvShow.Episodes != null && tvShow.Episodes.Any())
+            try
             {
-                dto.Episodes = tvShow.Episodes
-                    .OrderBy(e => e.SeasonNumber)
-                    .ThenBy(e => e.EpisodeNumber)
-                    .Select(e => _mapper.Map<EpisodeDto>(e))
+                Console.WriteLine($"🎬 TvShowService - Parâmetros recebidos:");
+                Console.WriteLine($"   SortBy: {query.SortBy}");
+                Console.WriteLine($"   SortDescending: {query.SortDescending}");
+                Console.WriteLine($"   Genre: {query.Genre}");
+                Console.WriteLine($"   Type: {query.Type}");
+                Console.WriteLine($"   Search: {query.Search}");
+                Console.WriteLine($"   Page: {query.Page}");
+                Console.WriteLine($"   PageSize: {query.PageSize}");
+
+                var tvShowsQuery = _context.TvShows
+                    .Include(t => t.TvShowActors)
+                        .ThenInclude(ta => ta.Actor)
+                    .Include(t => t.Episodes) 
+                    .AsQueryable();
+
+                // Aplicar filtros
+                if (!string.IsNullOrEmpty(query.Genre))
+                {
+                    tvShowsQuery = tvShowsQuery.Where(t => t.Genre == query.Genre);
+                    Console.WriteLine($"🎬 Aplicado filtro de gênero: {query.Genre}");
+                }
+
+                if (!string.IsNullOrEmpty(query.Type))
+                {
+                    tvShowsQuery = tvShowsQuery.Where(t => t.Type == query.Type);
+                    Console.WriteLine($"🎬 Aplicado filtro de tipo: {query.Type}");
+                }
+
+                if (!string.IsNullOrEmpty(query.Search))
+                {
+                    tvShowsQuery = tvShowsQuery.Where(t =>
+                        t.Title.Contains(query.Search) ||
+                        (t.Description != null && t.Description.Contains(query.Search)));
+                    Console.WriteLine($"🎬 Aplicado filtro de busca: {query.Search}");
+                }
+
+                // ✅ CORREÇÃO: Obter todos os dados primeiro
+                var allTvShows = await tvShowsQuery.ToListAsync();
+                Console.WriteLine($"🎬 Total de TV shows encontrados: {allTvShows.Count}");
+                
+                // ✅ CORREÇÃO: Usar var para evitar problemas de namespace
+                var sortedTvShows = allTvShows.AsEnumerable();
+
+                // Aplicar ordenação no lado do cliente
+                switch (query.SortBy?.ToLower())
+                {
+                    case "title":
+                        sortedTvShows = query.SortDescending
+                            ? sortedTvShows.OrderByDescending(t => t.Title)
+                            : sortedTvShows.OrderBy(t => t.Title);
+                        Console.WriteLine($"🎬 Ordenação aplicada: Title (Descending: {query.SortDescending})");
+                        break;
+                    case "releasedate":
+                        sortedTvShows = query.SortDescending
+                            ? sortedTvShows.OrderByDescending(t => t.ReleaseDate)
+                            : sortedTvShows.OrderBy(t => t.ReleaseDate);
+                        Console.WriteLine($"🎬 Ordenação aplicada: ReleaseDate (Descending: {query.SortDescending})");
+                        break;
+                    case "rating":
+                        sortedTvShows = query.SortDescending
+                            ? sortedTvShows.OrderByDescending(t => t.Rating)
+                            : sortedTvShows.OrderBy(t => t.Rating);
+                        Console.WriteLine($"🎬 Ordenação aplicada: Rating (Descending: {query.SortDescending})");
+                        break;
+                    case "seasons":
+                        sortedTvShows = query.SortDescending
+                            ? sortedTvShows.OrderByDescending(t => t.Seasons)
+                            : sortedTvShows.OrderBy(t => t.Seasons);
+                        Console.WriteLine($"🎬 Ordenação aplicada: Seasons (Descending: {query.SortDescending})");
+                        break;
+                    default:
+                        sortedTvShows = sortedTvShows.OrderBy(t => t.Title);
+                        Console.WriteLine($"🎬 Ordenação padrão aplicada: Title");
+                        break;
+                }
+
+                var totalCount = sortedTvShows.Count();
+                var pagedTvShows = sortedTvShows
+                    .Skip((query.Page - 1) * query.PageSize)
+                    .Take(query.PageSize)
                     .ToList();
-                
-                Console.WriteLine($"📺 TV Show '{tvShow.Title}' tem {tvShow.Episodes.Count} episódios");
+
+                Console.WriteLine($"🎬 Paginação: {pagedTvShows.Count} itens da página {query.Page}");
+
+                // ✅ CORREÇÃO CRÍTICA: Mapeamento MANUAL para garantir DESCRIPTION
+                var tvShowDtos = pagedTvShows.Select(tvShow =>
+                {
+                    // ✅ MAPEAMENTO MANUAL - GARANTE TODOS OS CAMPOS
+                    var dto = new TvShowDto
+                    {
+                        Id = tvShow.Id,
+                        Title = tvShow.Title,
+                        Description = tvShow.Description, // ✅ AGORA INCLUI DESCRIPTION!
+                        Genre = tvShow.Genre,
+                        Type = tvShow.Type,
+                        Rating = tvShow.Rating,
+                        ReleaseDate = tvShow.ReleaseDate,
+                        Seasons = tvShow.Seasons,
+                        Duration = tvShow.Duration,
+                        ImageUrl = tvShow.ImageUrl,
+                        Episodes = new List<EpisodeDto>(),
+                        FeaturedActors = new List<ActorDto>(),
+                        IsFavorite = false
+                    };
+
+                    Console.WriteLine($"📝 TV Show '{tvShow.Title}': Description = '{tvShow.Description?.Substring(0, Math.Min(50, tvShow.Description?.Length ?? 0))}...'");
+
+                    // Mapear atores destacados
+                    dto.FeaturedActors = tvShow.TvShowActors?
+                        .Where(ta => ta.IsFeatured && ta.Actor != null)
+                        .Take(3)
+                        .Select(ta => new ActorDto 
+                        { 
+                            Id = ta.Actor.Id,
+                            Name = ta.Actor.Name,
+                            CharacterName = ta.CharacterName,
+                            ImageUrl = ta.Actor.ImageUrl
+                        })
+                        .ToList() ?? new List<ActorDto>();
+
+                    // Mapear episódios se existirem
+                    if (tvShow.Episodes != null && tvShow.Episodes.Any())
+                    {
+                        dto.Episodes = tvShow.Episodes
+                            .OrderBy(e => e.SeasonNumber)
+                            .ThenBy(e => e.EpisodeNumber)
+                            .Select(e => _mapper.Map<EpisodeDto>(e))
+                            .ToList();
+                        
+                        Console.WriteLine($"📺 TV Show '{tvShow.Title}' tem {tvShow.Episodes.Count} episódios");
+                    }
+                    else
+                    {
+                        dto.Episodes = new List<EpisodeDto>();
+                        Console.WriteLine($"📺 TV Show '{tvShow.Title}' não tem episódios");
+                    }
+                        
+                    return dto;
+                }).ToList();
+
+                Console.WriteLine($"🎬 Retornando {tvShowDtos.Count} TV shows mapeados COM DESCRIPTION");
+
+                return new PagedResult<TvShowDto>
+                {
+                    Items = tvShowDtos,
+                    TotalCount = totalCount,
+                    Page = query.Page,
+                    PageSize = query.PageSize
+                };
             }
-            else
+            catch (Exception ex)
             {
-                dto.Episodes = new List<EpisodeDto>();
-                Console.WriteLine($"📺 TV Show '{tvShow.Title}' não tem episódios");
+                Console.WriteLine($"❌ Erro em GetTvShowsAsync: {ex.Message}");
+                Console.WriteLine($"Stack Trace: {ex.StackTrace}");
+                throw;
             }
-                
-            return dto;
-        }).ToList();
-
-        Console.WriteLine($"🎬 Retornando {tvShowDtos.Count} TV shows mapeados");
-
-        return new PagedResult<TvShowDto>
-        {
-            Items = tvShowDtos,
-            TotalCount = totalCount,
-            Page = query.Page,
-            PageSize = query.PageSize
-        };
-    }
-    catch (Exception ex)
-    {
-        Console.WriteLine($"❌ Erro em GetTvShowsAsync: {ex.Message}");
-        Console.WriteLine($"Stack Trace: {ex.StackTrace}");
-        throw;
-    }
-}
+        }
 
         public async Task<List<string>> GetAvailableGenresAsync()
         {
