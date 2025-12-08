@@ -35,7 +35,7 @@ A complete full-stack application for discovering and tracking TV shows, movies,
 - **React Router** - Navigation
 - **Axios** - HTTP client
 - **Context API** - State management
-- **Inline Styles** - Stylin
+- **Inline Styles** - Styling
 
 ## 📦 Installation & Setup
 
