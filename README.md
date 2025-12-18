@@ -1,4 +1,4 @@
-# 🎬 TV Show Tracker
+# 🎬 TV Show Tracke
 
 A complete full-stack application for discovering and tracking TV shows, movies, and actors. Built with .NET 8 backend and React frontend.
 
