@@ -6275,11 +6275,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.API/TvShowTracker.API.csproj",
+      "projectUniqueName": "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.API/TvShowTracker.API.csproj",
       "projectName": "TvShowTracker.API",
-      "projectPath": "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.API/TvShowTracker.API.csproj",
+      "projectPath": "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.API/TvShowTracker.API.csproj",
       "packagesPath": "/Users/marceloramos/.nuget/packages/",
-      "outputPath": "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.API/obj/",
+      "outputPath": "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.API/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/Users/marceloramos/.nuget/NuGet/NuGet.Config"
@@ -6294,11 +6294,11 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Application/TvShowTracker.Application.csproj": {
-              "projectPath": "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Application/TvShowTracker.Application.csproj"
+            "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Application/TvShowTracker.Application.csproj": {
+              "projectPath": "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Application/TvShowTracker.Application.csproj"
             },
-            "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Infrastructure/TvShowTracker.Infrastructure.csproj": {
-              "projectPath": "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Infrastructure/TvShowTracker.Infrastructure.csproj"
+            "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Infrastructure/TvShowTracker.Infrastructure.csproj": {
+              "projectPath": "/Users/marceloramos/Documents/ProgramaçãoPessoal/TekeverProject/src/TvShowTracker.Infrastructure/TvShowTracker.Infrastructure.csproj"
             }
           }
         }
