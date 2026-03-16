@@ -22,19 +22,19 @@ const Login = () => {
     setError('');
 
     try {
-      console.log('🔐 Tentando login com:', { email });
+      console.log('Tentando login com:', { email });
       
       const result = await login(email, password);
       
       if (result.success) {
-        console.log('✅ Login bem-sucedido, redirecionando...');
+        console.log('Login bem-sucedido, redirecionando...');
         navigate('/profile');
       } else {
         throw new Error(result.error || 'Login failed');
       }
       
     } catch (err) {
-      console.error('❌ Erro no login:', err);
+      console.error('Erro no login:', err);
       setError(err.message);
     } finally {
       setLoading(false);

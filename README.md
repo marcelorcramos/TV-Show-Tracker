@@ -1,24 +1,24 @@
-# 🎬 TV Show Tracker
+# TV Show Tracker
 
 A complete full-stack application for discovering and tracking TV shows, movies, and actors. Built with .NET 8 backend and React frontend.
 
-## 🚀 Features
+## Features
 
 ### Core Functionality
-- ✅ **User Authentication** - JWT-based registration and login
-- ✅ **TV Shows & Movies Catalog** - Browse with advanced filtering
-- ✅ **Actor Database** - Explore actors and their filmography  
-- ✅ **Favorites System** - Save and manage favorite content
-- ✅ **Smart Recommendations** - Personalized suggestions based on your favorites
-- ✅ **Advanced Search** - Filter by genre, type, and search terms
+- **User Authentication** - JWT-based registration and login
+- **TV Shows & Movies Catalog** - Browse with advanced filtering
+- **Actor Database** - Explore actors and their filmography  
+- **Favorites System** - Save and manage favorite content
+- **Smart Recommendations** - Personalized suggestions based on your favorites
+- **Advanced Search** - Filter by genre, type, and search terms
 
 ### Technical Features
-- ✅ **REST API** - Complete backend with 15+ endpoints
-- ✅ **Responsive Design** - Mobile-first responsive UI
-- ✅ **Export Data** - CSV and PDF export capabilities
-- ✅ **GDPR Compliant** - Data export and account deletion
-- ✅ **Caching System** - Performance optimization with TTL
-- ✅ **Background Services** - Email notifications and data processing
+- **REST API** - Complete backend with 15+ endpoints
+- **Responsive Design** - Mobile-first responsive UI
+- **Export Data** - CSV and PDF export capabilities
+- **GDPR Compliant** - Data export and account deletion
+- **Caching System** - Performance optimization with TTL
+- **Background Services** - Email notifications and data processing
 
 ## 🛠️ Tech Stack
 
@@ -70,7 +70,7 @@ npm install
 npm run dev
 Frontend will be available at: http://localhost:5173
 
-🔐 API Usage
+API Usage
 
 Authentication
 
@@ -89,7 +89,7 @@ Example Request
 bash
 # Get TV shows with filters
 curl -X GET "http://localhost:5023/api/tvshows?page=1&pageSize=10&genre=Drama&type=Series"
-🎯 Project Structure
+Project Structure
 
 text
 TvShowTracker/
@@ -115,7 +115,7 @@ Run tests with:
 bash
 cd tvshow-tracker-frontend
 npm test
-📱 Screenshots
+Screenshots
 
 (Add your screenshots here)
 
@@ -123,7 +123,7 @@ Homepage with recommendations
 TV Shows catalog with filters
 Actor details with filmography
 User profile with favorites
-🔄 Development
+Development
 
 Adding New Features
 

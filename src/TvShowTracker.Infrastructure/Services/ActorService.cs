@@ -34,19 +34,19 @@ namespace TvShowTracker.Infrastructure.Services
                 var hasData = await _context.Actors.AnyAsync();
                 if (hasData)
                 {
-                    Console.WriteLine("✅ Banco de dados de Actors já populado.");
+                    Console.WriteLine("Banco de dados de Actors já populado.");
                     _hasSeeded = true;
                     return;
                 }
 
-                Console.WriteLine("📥 Populando banco de dados com atores...");
+                Console.WriteLine("Populando banco de dados com atores...");
                 await SeedSampleDataAsync();
                 
                 _hasSeeded = true;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"❌ Erro na inicialização do banco de Actors: {ex.Message}");
+                Console.WriteLine($"Erro na inicialização do banco de Actors: {ex.Message}");
             }
             finally
             {
@@ -245,11 +245,11 @@ namespace TvShowTracker.Infrastructure.Services
         await _context.Actors.AddRangeAsync(actors);
         await _context.SaveChangesAsync();
 
-        Console.WriteLine($"✅ Actors seed completado! Adicionados {actors.Count} atores com fotos.");
+        Console.WriteLine($"Actors seed completado! Adicionados {actors.Count} atores com fotos.");
     }
     catch (Exception ex)
     {
-        Console.WriteLine($"❌ Erro no seed de atores: {ex.Message}");
+        Console.WriteLine($"Erro no seed de atores: {ex.Message}");
     }
 }
 
@@ -257,7 +257,7 @@ namespace TvShowTracker.Infrastructure.Services
         {
             try
             {
-                Console.WriteLine($"🎭 ActorService: GetActorsAsync chamado - Search: '{query.Search}', Nationality: '{query.Nationality}', SortBy: '{query.SortBy}'");
+                Console.WriteLine($"ActorService: GetActorsAsync chamado - Search: '{query.Search}', Nationality: '{query.Nationality}', SortBy: '{query.SortBy}'");
 
                 var actorsQuery = _context.Actors.AsQueryable();
 
@@ -265,14 +265,14 @@ namespace TvShowTracker.Infrastructure.Services
                 if (!string.IsNullOrEmpty(query.Search))
                 {
                     actorsQuery = actorsQuery.Where(a => a.Name.Contains(query.Search));
-                    Console.WriteLine($"🎭 ActorService: Aplicando filtro search: '{query.Search}'");
+                    Console.WriteLine($"ActorService: Aplicando filtro search: '{query.Search}'");
                 }
 
                 // FILTRO POR NACIONALIDADE
                 if (!string.IsNullOrEmpty(query.Nationality))
                 {
                     actorsQuery = actorsQuery.Where(a => a.Nationality == query.Nationality);
-                    Console.WriteLine($"🎭 ActorService: Aplicando filtro nationality: '{query.Nationality}'");
+                    Console.WriteLine($"ActorService: Aplicando filtro nationality: '{query.Nationality}'");
                 }
 
                 // Ordenação
@@ -290,7 +290,7 @@ namespace TvShowTracker.Infrastructure.Services
                     _ => actorsQuery.OrderBy(a => a.Name)
                 };
 
-                Console.WriteLine($"🎭 ActorService: Ordenação aplicada: {query.SortBy} (Descending: {query.SortDescending})");
+                Console.WriteLine($"ActorService: Ordenação aplicada: {query.SortBy} (Descending: {query.SortDescending})");
 
                 var totalCount = await actorsQuery.CountAsync();
                 var actors = await actorsQuery
@@ -298,7 +298,7 @@ namespace TvShowTracker.Infrastructure.Services
                     .Take(query.PageSize)
                     .ToListAsync();
 
-                Console.WriteLine($"🎭 ActorService: Encontrados {totalCount} atores no total, retornando {actors.Count} para a página {query.Page}");
+                Console.WriteLine($"ActorService: Encontrados {totalCount} atores no total, retornando {actors.Count} para a página {query.Page}");
 
                 var actorDtos = actors.Select(actor => new ActorDto
                 {
@@ -321,7 +321,7 @@ namespace TvShowTracker.Infrastructure.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"❌ Error in GetActorsAsync: {ex.Message}");
+                Console.WriteLine($"Error in GetActorsAsync: {ex.Message}");
                 throw;
             }
         }
@@ -360,7 +360,7 @@ public async Task<ActorDetailDto?> GetActorByIdAsync(int id)
     }
     catch (Exception ex)
     {
-        Console.WriteLine($"❌ Error in GetActorByIdAsync: {ex.Message}");
+        Console.WriteLine($"Error in GetActorByIdAsync: {ex.Message}");
         throw;
     }
 }
@@ -382,7 +382,7 @@ public async Task<ActorDetailDto?> GetActorByIdAsync(int id)
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"❌ Error in GetActorTvShowsAsync: {ex.Message}");
+                Console.WriteLine($"Error in GetActorTvShowsAsync: {ex.Message}");
                 return Enumerable.Empty<TvShowDto>();
             }
         }

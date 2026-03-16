@@ -18,13 +18,13 @@ const Actors = () => {
 
   // DEBUG: Verificar se os atores estão chegando
   React.useEffect(() => {
-    console.log('🎭 ACTORS CARREGADOS:', actors.length);
+    console.log('ACTORS CARREGADOS:', actors.length);
     
     if (actors.length > 0) {
       console.log('🔍 DETALHES DOS ACTORES:');
       
       actors.forEach((actor, index) => {
-        console.log(`👤 ${index + 1}. ${actor.name}`, {
+        console.log(`${index + 1}. ${actor.name}`, {
           id: actor.id,
           nationality: actor.nationality,
           birthDate: actor.birthDate,
@@ -37,28 +37,28 @@ const Actors = () => {
 
   // DEBUG: Verificar filtros
   React.useEffect(() => {
-    console.log('🎭 Filtros ativos:', filters);
+    console.log('Filtros ativos:', filters);
   }, [filters]);
 
   // Carrega todas as nacionalidades
   useEffect(() => {
     const fetchAllNationalities = async () => {
       try {
-        console.log('🔄 Carregando nacionalidades...');
+        console.log('Carregando nacionalidades...');
         setLoadingNationalities(true);
         
         const { actorsAPI } = await import('../../services/api');
         const response = await actorsAPI.getAll({ pageSize: 100 });
         const allActors = response.data.items || [];
         
-        console.log('📊 Total de atores carregados para nacionalidades:', allActors.length);
+        console.log('Total de atores carregados para nacionalidades:', allActors.length);
         
         const nationalities = [...new Set(allActors.map(actor => actor.nationality).filter(Boolean))].sort();
         console.log('🌍 Nacionalidades encontradas:', nationalities);
         
         setAllNationalities(nationalities);
       } catch (err) {
-        console.error('❌ Erro ao cargar nacionalidades:', err);
+        console.error('Erro ao cargar nacionalidades:', err);
       } finally {
         setLoadingNationalities(false);
       }
@@ -115,7 +115,7 @@ const Actors = () => {
           fontSize: '2.5rem',
           fontWeight: '700'
         }}>
-          🎭 Actors
+          Actors
         </h1>
         <div style={{ 
           backgroundColor: '#fef2f2', 
@@ -124,7 +124,7 @@ const Actors = () => {
           borderRadius: '8px',
           border: '1px solid #fecaca'
         }}>
-          <p>❌ Error: {error}</p>
+          <p>Error: {error}</p>
           <button 
             onClick={() => window.location.reload()}
             style={{
@@ -154,7 +154,7 @@ const Actors = () => {
           fontSize: '2.5rem',
           fontWeight: '700'
         }}>
-          🎭 Actors
+          Actors
         </h1>
         <p style={{ 
           color: '#6b7280', 
@@ -429,7 +429,7 @@ const Actors = () => {
                 fontSize: '4rem',
                 marginBottom: '20px'
               }}>
-                🎭
+                
               </div>
               <h3 style={{ 
                 color: '#374151', 

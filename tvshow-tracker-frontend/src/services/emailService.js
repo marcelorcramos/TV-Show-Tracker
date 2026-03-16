@@ -1,20 +1,20 @@
 export const emailService = {
     async sendRecommendationEmail(userEmail, recommendations) {
-      console.log('📧 Preparando e-mail de recomendações para:', userEmail);
-      console.log('🎬 Recomendações:', recommendations.map(r => r.title));
+      console.log('Preparando e-mail de recomendações para:', userEmail);
+      console.log('Recomendações:', recommendations.map(r => r.title));
       
       try {
         // Simular delay de envio
         await new Promise(resolve => setTimeout(resolve, 1000));
       
         const emailContent = this.generateEmailContent(userEmail, recommendations);
-        console.log('📝 Conteúdo do e-mail:', emailContent);
+        console.log('Conteúdo do e-mail:', emailContent);
         
-        console.log('✅ E-mail simulado enviado com sucesso para:', userEmail);
+        console.log('E-mail simulado enviado com sucesso para:', userEmail);
         return true;
         
       } catch (error) {
-        console.error('❌ Erro ao enviar e-mail:', error);
+        console.error('Erro ao enviar e-mail:', error);
         return false;
       }
     },
@@ -22,7 +22,7 @@ export const emailService = {
     generateEmailContent(userEmail, recommendations) {
       return {
         to: userEmail,
-        subject: '🎬 Suas Recomendações Personalizadas de TV Shows',
+        subject: 'Suas Recomendações Personalizadas de TV Shows',
         html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
             <h2 style="color: #2563eb;">Olá!</h2>

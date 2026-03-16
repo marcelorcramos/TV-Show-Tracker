@@ -17,7 +17,7 @@ api.interceptors.request.use(
     }
     
     // DEBUG: Log das requisições
-    console.log(`📡 API Request: ${config.method?.toUpperCase()} ${config.url}`, {
+    console.log(`API Request: ${config.method?.toUpperCase()} ${config.url}`, {
       params: config.params,
       data: config.data
     });
@@ -33,7 +33,7 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => {
     // DEBUG: Log das respostas boas
-    console.log(`✅ API Response: ${response.status} ${response.config.url}`, {
+    console.log(`API Response: ${response.status} ${response.config.url}`, {
       data: response.data,
       count: response.data?.items?.length || response.data?.length || 'N/A'
     });
@@ -41,7 +41,7 @@ api.interceptors.response.use(
   },
   (error) => {
     // DEBUG: Log dos erros
-    console.error(`❌ API Error: ${error.response?.status} ${error.config?.url}`, {
+    console.error(`API Error: ${error.response?.status} ${error.config?.url}`, {
       error: error.message,
       response: error.response?.data
     });
@@ -64,30 +64,30 @@ export const authAPI = {
 
 export const tvShowsAPI = {
   getAll: (params = {}) => {
-    console.log('🎬 TVShowsAPI.getAll chamado com params:', params);
+    console.log('TVShowsAPI.getAll chamado com params:', params);
     return api.get('/tvshows', { params });
   },
   getById: (id) => {
-    console.log(`🎬 TVShowsAPI.getById chamado para ID: ${id}`);
+    console.log(`TVShowsAPI.getById chamado para ID: ${id}`);
     return api.get(`/tvshows/${id}`);
   },
   getGenres: () => {
-    console.log('🎬 TVShowsAPI.getGenres chamado');
+    console.log('TVShowsAPI.getGenres chamado');
     return api.get('/tvshows/genres');
   },
   getTypes: () => {
-    console.log('🎬 TVShowsAPI.getTypes chamado');
+    console.log('TVShowsAPI.getTypes chamado');
     return api.get('/tvshows/types');
   },
   getRecommendations: () => {
-    console.log('🎬 TVShowsAPI.getRecommendations chamado');
+    console.log('TVShowsAPI.getRecommendations chamado');
     return api.get('/tvshows/recommendations');
   },
 };
 
 export const actorsAPI = {
   getAll: (params = {}) => {
-    console.log('🎭 ActorsAPI.getAll chamado com params:', params);
+    console.log('ActorsAPI.getAll chamado com params:', params);
     return api.get('/actors', { 
       params: {
         page: params.page || 1,
@@ -99,52 +99,52 @@ export const actorsAPI = {
     });
   },
   getById: (id) => {
-    console.log(`🎭 ActorsAPI.getById chamado para ID: ${id}`);
+    console.log(`ActorsAPI.getById chamado para ID: ${id}`);
     return api.get(`/actors/${id}`);
   },
   getTvShows: (actorId) => {
-    console.log(`🎭 ActorsAPI.getTvShows chamado para actorId: ${actorId}`);
+    console.log(`ActorsAPI.getTvShows chamado para actorId: ${actorId}`);
     return api.get(`/actors/${actorId}/tvshows`);
   },
   getNationalities: () => {
-    console.log('🎭 ActorsAPI.getNationalities chamado');
+    console.log('ActorsAPI.getNationalities chamado');
     return api.get('/actors/nationalities');
   }
 };
 
 export const favoritesAPI = {
   getAll: () => {
-    console.log('❤️ FavoritesAPI.getAll chamado');
+    console.log('FavoritesAPI.getAll chamado');
     return api.get('/favorites');
   },
   add: (tvShowId) => {
-    console.log(`❤️ FavoritesAPI.add chamado para tvShowId: ${tvShowId}`);
+    console.log(`FavoritesAPI.add chamado para tvShowId: ${tvShowId}`);
     return api.post(`/favorites/${tvShowId}`);
   },
   remove: (tvShowId) => {
-    console.log(`❤️ FavoritesAPI.remove chamado para tvShowId: ${tvShowId}`);
+    console.log(`FavoritesAPI.remove chamado para tvShowId: ${tvShowId}`);
     return api.delete(`/favorites/${tvShowId}`);
   },
 };
 
 export const episodesAPI = {
   getByTvShow: (tvShowId) => {
-    console.log(`🎬 EpisodesAPI.getByTvShow chamado para tvShowId: ${tvShowId}`);
+    console.log(`EpisodesAPI.getByTvShow chamado para tvShowId: ${tvShowId}`);
     return api.get(`/episodes/tvshow/${tvShowId}`);
   },
   getById: (id) => {
-    console.log(`🎬 EpisodesAPI.getById chamado para ID: ${id}`);
+    console.log(`EpisodesAPI.getById chamado para ID: ${id}`);
     return api.get(`/episodes/${id}`);
   },
   getBySeason: (tvShowId, seasonNumber) => {
-    console.log(`🎬 EpisodesAPI.getBySeason chamado para tvShowId: ${tvShowId}, season: ${seasonNumber}`);
+    console.log(`EpisodesAPI.getBySeason chamado para tvShowId: ${tvShowId}, season: ${seasonNumber}`);
     return api.get(`/episodes/tvshow/${tvShowId}/season/${seasonNumber}`);
   }
 };
 // Função de teste para verificar se a API está respondendo
 export const testAPI = {
   health: () => {
-    console.log('🏥 TestAPI.health chamado');
+    console.log('TestAPI.health chamado');
     return api.get('/health');
   },
   testActors: () => {

@@ -112,13 +112,13 @@ export const useRecommendations = (limit = 6) => {
 
   useEffect(() => {
     const fetchRecommendations = async () => {
-      console.log('🎯 useRecommendations - Iniciando...', {
+      console.log('useRecommendations - Iniciando...', {
         favoritesCount: favorites.length,
         favoriteGenres: getFavoriteGenres()
       });
 
       if (favorites.length === 0) {
-        console.log('ℹ️ Nenhum favorito, limpando recomendações');
+        console.log('Nenhum favorito, limpando recomendações');
         setRecommendations([]);
         return;
       }

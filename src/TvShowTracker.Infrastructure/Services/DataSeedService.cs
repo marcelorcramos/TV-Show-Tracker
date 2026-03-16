@@ -36,11 +36,11 @@ namespace TvShowTracker.Infrastructure.Services
                 await SeedTvShowActorRelationsAsync();
 
                 _hasSeeded = true;
-                Console.WriteLine("✅ Seed completo finalizado!");
+                Console.WriteLine("Seed completo finalizado!");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"❌ Erro no seed: {ex.Message}");
+                Console.WriteLine($"Erro no seed: {ex.Message}");
             }
             finally
             {
@@ -54,7 +54,7 @@ namespace TvShowTracker.Infrastructure.Services
             await _semaphore.WaitAsync();
             try
             {
-                Console.WriteLine("🗑️  Limpando banco de dados...");
+                Console.WriteLine("Limpando banco de dados...");
 
                 _context.TvShowActors.RemoveRange(_context.TvShowActors);
                 _context.TvShows.RemoveRange(_context.TvShows);
@@ -64,11 +64,11 @@ namespace TvShowTracker.Infrastructure.Services
 
                 _hasSeeded = false;
 
-                Console.WriteLine("✅ Banco de dados limpo com sucesso!");
+                Console.WriteLine("Banco de dados limpo com sucesso!");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"❌ Erro ao limpar banco de dados: {ex.Message}");
+                Console.WriteLine($"Erro ao limpar banco de dados: {ex.Message}");
             }
             finally
             {
@@ -207,15 +207,15 @@ namespace TvShowTracker.Infrastructure.Services
 
                 await _context.Actors.AddRangeAsync(actors);
                 await _context.SaveChangesAsync();
-                Console.WriteLine($"✅ Atores seed completado! {actors.Count} atores criados.");
+                Console.WriteLine($"Atores seed completado! {actors.Count} atores criados.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"❌ Erro no seed de atores: {ex.Message}");
+                Console.WriteLine($"Erro no seed de atores: {ex.Message}");
             }
         }
 
-        // ✅ SEED DE USUÁRIOS
+        // SEED DE USUÁRIOS
         private async Task SeedUsersAsync()
         {
             try
@@ -223,7 +223,7 @@ namespace TvShowTracker.Infrastructure.Services
                 var usersExist = await _context.Users.AnyAsync();
                 if (usersExist)
                 {
-                    Console.WriteLine("✅ Usuários já existem no banco.");
+                    Console.WriteLine("Usuários já existem no banco.");
                     return;
                 }
 
@@ -251,15 +251,15 @@ namespace TvShowTracker.Infrastructure.Services
 
                 await _context.Users.AddRangeAsync(users);
                 await _context.SaveChangesAsync();
-                Console.WriteLine($"✅ Users seed completado! {users.Count} usuários criados.");
+                Console.WriteLine($"Users seed completado! {users.Count} usuários criados.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"❌ Erro no seed de usuários: {ex.Message}");
+                Console.WriteLine($"Erro no seed de usuários: {ex.Message}");
             }
         }
 
-        // ✅ SEED DE TV SHOWS
+        // SEED DE TV SHOWS
         private async Task SeedTvShowsAsync()
         {
             try
@@ -283,11 +283,11 @@ namespace TvShowTracker.Infrastructure.Services
 
                 await _context.TvShows.AddRangeAsync(tvShows);
                 await _context.SaveChangesAsync();
-                Console.WriteLine($"✅ TV Shows seed completado! {tvShows.Count} itens criados.");
+                Console.WriteLine($"TV Shows seed completado! {tvShows.Count} itens criados.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"❌ Erro no seed de TV shows: {ex.Message}");
+                Console.WriteLine($"Erro no seed de TV shows: {ex.Message}");
             }
         }
 
@@ -300,12 +300,12 @@ namespace TvShowTracker.Infrastructure.Services
                 _context.ChangeTracker.Clear();
                 var tvShows = await _context.TvShows.ToListAsync();
                 
-                Console.WriteLine($"🎬 SeedEpisodes: Encontrados {tvShows.Count} TV Shows");
+                Console.WriteLine($"SeedEpisodes: Encontrados {tvShows.Count} TV Shows");
                 
                 // DEBUG: Mostrar IDs reais
                 foreach (var tvShow in tvShows)
                 {
-                    Console.WriteLine($"🎬 TV Show: {tvShow.Title} (ID: {tvShow.Id})");
+                    Console.WriteLine($"TV Show: {tvShow.Title} (ID: {tvShow.Id})");
                 }
 
                 var episodes = new List<Episode>();
@@ -313,7 +313,7 @@ namespace TvShowTracker.Infrastructure.Services
 
                 foreach (var tvShow in tvShows)
                 {
-                    Console.WriteLine($"🎬 Criando episódios para: {tvShow.Title} (ID: {tvShow.Id})");
+                    Console.WriteLine($"Criando episódios para: {tvShow.Title} (ID: {tvShow.Id})");
 
                     if (tvShow.Type == "Series" && tvShow.Seasons.HasValue)
                     {
@@ -340,7 +340,7 @@ namespace TvShowTracker.Infrastructure.Services
                                 };
                                 
                                 episodes.Add(episode);
-                                Console.WriteLine($"   ✅ Episódio: S{season}E{episodeNum} - TvShowId: {episode.TvShowId}");
+                                Console.WriteLine($"   Episódio: S{season}E{episodeNum} - TvShowId: {episode.TvShowId}");
                             }
                         }
                     }
@@ -360,31 +360,31 @@ namespace TvShowTracker.Infrastructure.Services
                         };
                         
                         episodes.Add(episode);
-                        Console.WriteLine($"   ✅ Episódio filme - TvShowId: {episode.TvShowId}");
+                        Console.WriteLine($"   Episódio filme - TvShowId: {episode.TvShowId}");
                     }
                 }
 
-                Console.WriteLine($"🎬 Total episódios a criar: {episodes.Count}");
+                Console.WriteLine($"Total episódios a criar: {episodes.Count}");
                 
                 await _context.Episodes.AddRangeAsync(episodes);
                 var saved = await _context.SaveChangesAsync();
                 
-                Console.WriteLine($"✅ Episodes seed: {saved} episódios salvos");
+                Console.WriteLine($"Episodes seed: {saved} episódios salvos");
 
-                // ✅ VERIFICAÇÃO FINAL
+                // VERIFICAÇÃO FINAL
                 var episodeCount = await _context.Episodes.CountAsync();
-                Console.WriteLine($"✅ Verificação: {episodeCount} episódios no banco");
+                Console.WriteLine($"Verificação: {episodeCount} episódios no banco");
                 
-                // ✅ VERIFICAÇÃO POR TV SHOW
+                // VERIFICAÇÃO POR TV SHOW
                 foreach (var tvShow in tvShows)
                 {
                     var count = await _context.Episodes.CountAsync(e => e.TvShowId == tvShow.Id);
-                    Console.WriteLine($"✅ {tvShow.Title} (ID: {tvShow.Id}): {count} episódios");
+                    Console.WriteLine($"{tvShow.Title} (ID: {tvShow.Id}): {count} episódios");
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"❌ Erro no seed de episódios: {ex.Message}");
+                Console.WriteLine($"Erro no seed de episódios: {ex.Message}");
                 throw;
             }
         }
@@ -425,7 +425,7 @@ namespace TvShowTracker.Infrastructure.Services
                 var tvShows = await _context.TvShows.ToListAsync();
                 var actors = await _context.Actors.ToListAsync();
 
-                Console.WriteLine($"📊 Criando relações: {tvShows.Count} TV Shows e {actors.Count} Atores");
+                Console.WriteLine($"Criando relações: {tvShows.Count} TV Shows e {actors.Count} Atores");
 
                 var tvShowActors = new List<TvShowActor>();
 
@@ -480,7 +480,7 @@ namespace TvShowTracker.Infrastructure.Services
                                     CharacterName = characterName
                                 });
 
-                                Console.WriteLine($"🎬 Relação: {tvShow.Title} - {actors[actorIndex].Name} como {characterName}");
+                                Console.WriteLine($"Relação: {tvShow.Title} - {actors[actorIndex].Name} como {characterName}");
                             }
                         }
                     }
@@ -488,11 +488,11 @@ namespace TvShowTracker.Infrastructure.Services
 
                 await _context.TvShowActors.AddRangeAsync(tvShowActors);
                 await _context.SaveChangesAsync();
-                Console.WriteLine($"✅ Relações criadas! {tvShowActors.Count} relações adicionadas.");
+                Console.WriteLine($"Relações criadas! {tvShowActors.Count} relações adicionadas.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"❌ Erro ao criar relações: {ex.Message}");
+                Console.WriteLine($"Erro ao criar relações: {ex.Message}");
             }
         }
     }

@@ -22,7 +22,7 @@ namespace TvShowTracker.Infrastructure.Services
 {
     try
     {
-        Console.WriteLine($"🎯 RecommendationService: Gerando recomendações para usuário {userId}");
+        Console.WriteLine($"RecommendationService: Gerando recomendações para usuário {userId}");
 
         // 1. Obter favoritos do usuário
         var userFavorites = await _context.UserFavorites
@@ -30,12 +30,12 @@ namespace TvShowTracker.Infrastructure.Services
             .Select(uf => uf.TvShowId)
             .ToListAsync();
 
-        Console.WriteLine($"🎯 Usuário tem {userFavorites.Count} favoritos: {string.Join(", ", userFavorites)}");
+        Console.WriteLine($"Usuário tem {userFavorites.Count} favoritos: {string.Join(", ", userFavorites)}");
 
         if (userFavorites.Count == 0)
         {
             // Se não tem favoritos, retornar TV shows populares
-            Console.WriteLine($"🎯 Nenhum favorito encontrado, retornando TV shows populares");
+            Console.WriteLine($"Nenhum favorito encontrado, retornando TV shows populares");
             return await GetPopularTvShowsAsync(count);
         }
 
@@ -46,11 +46,11 @@ namespace TvShowTracker.Infrastructure.Services
             .Distinct()
             .ToListAsync();
 
-        Console.WriteLine($"🎯 Gêneros preferidos: {string.Join(", ", favoriteGenres)}");
+        Console.WriteLine($"Gêneros preferidos: {string.Join(", ", favoriteGenres)}");
 
         if (favoriteGenres.Count == 0)
         {
-            Console.WriteLine($"🎯 Nenhum gênero encontrado nos favoritos, retornando TV shows populares");
+            Console.WriteLine($"Nenhum gênero encontrado nos favoritos, retornando TV shows populares");
             return await GetPopularTvShowsAsync(count);
         }
 
@@ -66,15 +66,15 @@ var recommendedTvShows = await _context.TvShows
     .Include(t => t.Episodes)
     .ToListAsync();
 
-        Console.WriteLine($"🎯 Encontrados {recommendedTvShows.Count} TV shows compatíveis");
+        Console.WriteLine($"Encontrados {recommendedTvShows.Count} TV shows compatíveis");
 
         // DEBUG: Mostrar detalhes dos TV shows encontrados
         if (recommendedTvShows.Count > 0)
         {
-            Console.WriteLine($"🎯 Detalhes dos TV shows recomendados:");
+            Console.WriteLine($"Detalhes dos TV shows recomendados:");
             foreach (var tvShow in recommendedTvShows)
             {
-                Console.WriteLine($"   📺 ID: {tvShow.Id}, Title: {tvShow.Title}, Genre: {tvShow.Genre}, Type: {tvShow.Type}");
+                Console.WriteLine($"   ID: {tvShow.Id}, Title: {tvShow.Title}, Genre: {tvShow.Genre}, Type: {tvShow.Type}");
             }
         }
 
@@ -85,13 +85,13 @@ var recommendedTvShows = await _context.TvShows
             .Take(count)
             .ToList();
 
-        Console.WriteLine($"🎯 Selecionadas {sortedRecommendations.Count} recomendações finais");
+        Console.WriteLine($"Selecionadas {sortedRecommendations.Count} recomendações finais");
 
         // DEBUG: Mostrar recomendações finais
-        Console.WriteLine($"🎯 Recomendações finais:");
+        Console.WriteLine($"Recomendações finais:");
         foreach (var tvShow in sortedRecommendations)
         {
-            Console.WriteLine($"   ✅ ID: {tvShow.Id}, Title: {tvShow.Title}, Rating: {tvShow.Rating}");
+            Console.WriteLine($"   ID: {tvShow.Id}, Title: {tvShow.Title}, Rating: {tvShow.Rating}");
         }
 
         // 5. Mapear para DTO
@@ -114,16 +114,16 @@ var recommendedTvShows = await _context.TvShows
             return dto;
         }).ToList();
 
-        Console.WriteLine($"🎯 RecommendationService: Retornando {result.Count} recomendações");
+        Console.WriteLine($"RecommendationService: Retornando {result.Count} recomendações");
         return result;
     }
     catch (Exception ex)
     {
-        Console.WriteLine($"❌ Erro no RecommendationService: {ex.Message}");
+        Console.WriteLine($"Erro no RecommendationService: {ex.Message}");
         Console.WriteLine($"Stack trace: {ex.StackTrace}");
         
         // Fallback: retornar TV shows populares em caso de erro
-        Console.WriteLine($"🎯 Usando fallback devido a erro");
+        Console.WriteLine($"Usando fallback devido a erro");
         return await GetPopularTvShowsAsync(count);
     }
 }
@@ -133,16 +133,16 @@ var recommendedTvShows = await _context.TvShows
         {
             try
             {
-                Console.WriteLine("🎯 RecommendationService: Iniciando treinamento do modelo...");
+                Console.WriteLine("RecommendationService: Iniciando treinamento do modelo...");
                 
                 // Simular treinamento do modelo (para uma implementação futura com ML)
                 await Task.Delay(100); // Simular processamento
                 
-                Console.WriteLine("✅ RecommendationService: Modelo 'treinado' (simulado)");
+                Console.WriteLine("RecommendationService: Modelo 'treinado' (simulado)");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"❌ Erro no treinamento do modelo: {ex.Message}");
+                Console.WriteLine($"Erro no treinamento do modelo: {ex.Message}");
                 throw;
             }
         }
@@ -152,7 +152,7 @@ var recommendedTvShows = await _context.TvShows
         {
             try
             {
-                Console.WriteLine($"🎯 Usando fallback: TV shows populares");
+                Console.WriteLine($"Usando fallback: TV shows populares");
                 
                 var popularTvShows = await _context.TvShows
                     .Include(t => t.TvShowActors)
@@ -186,7 +186,7 @@ var recommendedTvShows = await _context.TvShows
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"❌ Erro no fallback: {ex.Message}");
+                Console.WriteLine($"Erro no fallback: {ex.Message}");
                 return new List<TvShowDto>();
             }
         }

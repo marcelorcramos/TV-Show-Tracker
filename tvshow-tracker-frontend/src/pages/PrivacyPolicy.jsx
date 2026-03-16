@@ -19,7 +19,7 @@ const PrivacyPolicy = () => {
       <h1>Privacy Policy - TV Show Tracker</h1>
       
       <div style={{ marginTop: '30px' }}>
-        <h2>📊 Your Data</h2>
+        <h2>Your Data</h2>
         <p>You have full control over your personal data.</p>
         
         <div style={{ 
@@ -53,7 +53,7 @@ const PrivacyPolicy = () => {
               cursor: 'pointer'
             }}
           >
-            🗑️ Delete All My Data
+            Delete All My Data
           </button>
         </div>
       </div>

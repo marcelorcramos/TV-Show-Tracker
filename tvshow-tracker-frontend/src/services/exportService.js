@@ -3,7 +3,7 @@ import { jsPDF } from 'jspdf';
 export const exportService = {
   exportToCSV(data, filename = 'data.csv') {
     if (!data || data.length === 0) {
-      console.warn('⚠️ Nenhum dado para exportar');
+      console.warn('Nenhum dado para exportar');
       return;
     }
     
@@ -20,16 +20,16 @@ export const exportService = {
       
       const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
       this.downloadFile(blob, filename);
-      console.log(`✅ CSV exportado: ${filename}`);
+      console.log(`CSV exportado: ${filename}`);
     } catch (error) {
-      console.error('❌ Erro ao exportar CSV:', error);
+      console.error('Erro ao exportar CSV:', error);
       throw error;
     }
   },
 
   exportToPDF(data, filename = 'data.pdf') {
     if (!data || data.length === 0) {
-      console.warn('⚠️ Nenhum dado para exportar');
+      console.warn('Nenhum dado para exportar');
       return;
     }
     
@@ -79,9 +79,9 @@ export const exportService = {
       });
       
       doc.save(filename);
-      console.log(`✅ PDF exportado: ${filename}`);
+      console.log(`PDF exportado: ${filename}`);
     } catch (error) {
-      console.error('❌ Erro ao exportar PDF:', error);
+      console.error('Erro ao exportar PDF:', error);
       throw error;
     }
   },

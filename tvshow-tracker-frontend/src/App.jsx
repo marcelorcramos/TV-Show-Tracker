@@ -26,7 +26,7 @@ const RecommendationsSection = () => {
   if (!isAuthenticated) {
     return (
       <div style={styles.recommendationsSection}>
-        <h2 style={styles.sectionTitle}>🎯 Personalized Recommendations</h2>
+        <h2 style={styles.sectionTitle}>Personalized Recommendations</h2>
         <p style={styles.recommendationsSubtitle}>
           Login and add movies/series to favorites to receive personalized recommendations!
         </p>
@@ -37,7 +37,7 @@ const RecommendationsSection = () => {
   if (!hasFavorites) {
     return (
       <div style={styles.recommendationsSection}>
-        <h2 style={styles.sectionTitle}>🎯 Your Recommendations</h2>
+        <h2 style={styles.sectionTitle}>Your Recommendations</h2>
         <p style={styles.recommendationsSubtitle}>
           Add some movies or series to your favorites to receive personalized recommendations!
         </p>
@@ -48,7 +48,7 @@ const RecommendationsSection = () => {
   if (loading) {
     return (
       <div style={styles.recommendationsSection}>
-        <h2 style={styles.sectionTitle}>🎯 Loading recommendations...</h2>
+        <h2 style={styles.sectionTitle}>Loading recommendations...</h2>
       </div>
     );
   }
@@ -56,7 +56,7 @@ const RecommendationsSection = () => {
   if (recommendations.length === 0) {
     return (
       <div style={styles.recommendationsSection}>
-        <h2 style={styles.sectionTitle}>🎯 Your Recommendations</h2>
+        <h2 style={styles.sectionTitle}>Your Recommendations</h2>
         <p style={styles.recommendationsSubtitle}>
           We haven't found recommendations based on your favorites yet. Try favoriting more content!
         </p>
@@ -66,7 +66,7 @@ const RecommendationsSection = () => {
 
   return (
     <div style={styles.recommendationsSection}>
-      <h2 style={styles.sectionTitle}>🎯 Recommended for You</h2>
+      <h2 style={styles.sectionTitle}>Recommended for You</h2>
       <p style={styles.recommendationsSubtitle}>
         Based on your favorite genres: <span style={{fontWeight: 'bold', color: '#374151'}}>{favoriteGenres.join(', ')}</span>
       </p>
@@ -95,7 +95,7 @@ const QuickNavigation = () => {
         <div style={styles.quickNavGrid}>
           {/* TV Shows */}
           <Link to="/tvshows" style={styles.quickNavCard}>
-            <div style={styles.quickNavIcon}>🎬</div>
+            <div style={styles.quickNavIcon}></div>
             <div style={styles.quickNavContent}>
               <h3 style={styles.quickNavTitle}>Series & Movies</h3>
               <p style={styles.quickNavDescription}>
@@ -103,7 +103,7 @@ const QuickNavigation = () => {
               </p>
               <div style={styles.quickNavStats}>
                 <div style={styles.quickNavStat}>15+ Contents</div>
-                <div style={styles.quickNavStat}>⭐ 8.0+ Rating</div>
+                <div style={styles.quickNavStat}>8.0+ Rating</div>
               </div>
             </div>
             <div style={styles.quickNavArrow}>→</div>
@@ -111,7 +111,7 @@ const QuickNavigation = () => {
 
           {/* Actors */}
           <Link to="/actors" style={styles.quickNavCard}>
-            <div style={styles.quickNavIcon}>🎭</div>
+            <div style={styles.quickNavIcon}></div>
             <div style={styles.quickNavContent}>
               <h3 style={styles.quickNavTitle}>Actors & Cast</h3>
               <p style={styles.quickNavDescription}>
@@ -119,7 +119,7 @@ const QuickNavigation = () => {
               </p>
               <div style={styles.quickNavStats}>
                 <div style={styles.quickNavStat}>15+ Actors</div>
-                <div style={styles.quickNavStat}>🎬 Multi-genres</div>
+                <div style={styles.quickNavStat}>Multi-genres</div>
               </div>
             </div>
             <div style={styles.quickNavArrow}>→</div>
@@ -129,30 +129,30 @@ const QuickNavigation = () => {
           {!isAuthenticated ? (
             <>
               <Link to="/login" style={styles.quickNavCard}>
-                <div style={styles.quickNavIcon}>🔐</div>
+                <div style={styles.quickNavIcon}></div>
                 <div style={styles.quickNavContent}>
                   <h3 style={styles.quickNavTitle}>Login</h3>
                   <p style={styles.quickNavDescription}>
                     Access your account to favorite content
                   </p>
                   <div style={styles.quickNavStats}>
-                    <div style={styles.quickNavStat}>💫 Customization</div>
-                    <div style={styles.quickNavStat}>❤️ Favorites</div>
+                    <div style={styles.quickNavStat}>Customization</div>
+                    <div style={styles.quickNavStat}>Favorites</div>
                   </div>
                 </div>
                 <div style={styles.quickNavArrow}>→</div>
               </Link>
 
               <Link to="/register" style={styles.quickNavCard}>
-                <div style={styles.quickNavIcon}>👤</div>
+                <div style={styles.quickNavIcon}></div>
                 <div style={styles.quickNavContent}>
                   <h3 style={styles.quickNavTitle}>Create Account</h3>
                   <p style={styles.quickNavDescription}>
                     Join our fan community
                   </p>
                   <div style={styles.quickNavStats}>
-                    <div style={styles.quickNavStat}>🚀 Free</div>
-                    <div style={styles.quickNavStat}>🎯 Recommendations</div>
+                    <div style={styles.quickNavStat}>Free</div>
+                    <div style={styles.quickNavStat}>Recommendations</div>
                   </div>
                 </div>
                 <div style={styles.quickNavArrow}>→</div>
@@ -160,14 +160,14 @@ const QuickNavigation = () => {
             </>
           ) : (
             <div style={styles.quickNavCard}>
-              <div style={styles.quickNavIcon}>👋</div>
+              <div style={styles.quickNavIcon}></div>
               <div style={styles.quickNavContent}>
                 <h3 style={styles.quickNavTitle}>Welcome Back!</h3>
                 <p style={styles.quickNavDescription}>
                   Continue exploring our platform
                 </p>
                 <div style={styles.quickNavStats}>
-                  <div style={styles.quickNavStat}>✅ Logged in as</div>
+                  <div style={styles.quickNavStat}>Logged in as</div>
                   <div style={styles.quickNavStat}>{user?.email}</div>
                 </div>
               </div>
@@ -211,9 +211,9 @@ const Footer = () => {
             movies and actors.
           </p>
           <div style={styles.footerSocial}>
-            <div style={styles.socialIcon}>🎬</div>
-            <div style={styles.socialIcon}>📺</div>
-            <div style={styles.socialIcon}>⭐</div>
+            <div style={styles.socialIcon}></div>
+            <div style={styles.socialIcon}></div>
+            <div style={styles.socialIcon}></div>
           </div>
         </div>
         
@@ -231,11 +231,11 @@ const Footer = () => {
         <div style={styles.footerSection}>
           <h4 style={styles.footerSubtitle}>Features</h4>
           <div style={styles.footerLinks}>
-            <FooterListItem>🎯 Recommendations</FooterListItem>
-            <FooterListItem>❤️ Favorites</FooterListItem>
-            <FooterListItem>🔍 Advanced Search</FooterListItem>
-            <FooterListItem>⭐ Ratings</FooterListItem>
-            <FooterListItem>🎭 Cast</FooterListItem>
+            <FooterListItem>Recommendations</FooterListItem>
+            <FooterListItem>Favorites</FooterListItem>
+            <FooterListItem>Advanced Search</FooterListItem>
+            <FooterListItem>Ratings</FooterListItem>
+            <FooterListItem>Cast</FooterListItem>
           </div>
         </div>
         
@@ -278,7 +278,7 @@ const Home = () => {
         <div style={styles.heroContent}>
           {/* Featured badge */}
           <div style={styles.heroBadge}>
-            <span style={styles.badgeIcon}>🎬</span>
+            <span style={styles.badgeIcon}></span>
             <span>Explore +15k TV Shows & Movies</span>
           </div>
 
@@ -299,13 +299,13 @@ const Home = () => {
           {/* Modern CTA Buttons */}
           <div style={styles.ctaButtons}>
             <Link to="/tvshows" style={styles.ctaButtonPrimary}>
-              <span style={styles.buttonIcon}>🎭</span>
+              <span style={styles.buttonIcon}></span>
               Explore Catalog
               <span style={styles.buttonArrow}>→</span>
             </Link>
             
             <Link to="/register" style={styles.ctaButtonSecondary}>
-              <span style={styles.buttonIcon}>⭐</span>
+              <span style={styles.buttonIcon}></span>
               Start Free Trial
             </Link>
           </div>
@@ -313,24 +313,24 @@ const Home = () => {
           {/* Trust badges */}
           <div style={styles.trustBadges}>
             <div style={styles.trustItem}>
-              <span style={styles.trustIcon}>🔒</span>
+              <span style={styles.trustIcon}></span>
               Secure Platform
             </div>
             <div style={styles.trustItem}>
-              <span style={styles.trustIcon}>📱</span>
+              <span style={styles.trustIcon}></span>
               Multi-Device
             </div>
             <div style={styles.trustItem}>
-              <span style={styles.trustIcon}>🎯</span>
+              <span style={styles.trustIcon}></span>
               Smart Recommendations
             </div>
           </div>
         </div>
 
         {/* Floating elements for depth */}
-        <div style={styles.floatingElement1}>🎬</div>
-        <div style={styles.floatingElement2}>📺</div>
-        <div style={styles.floatingElement3}>⭐</div>
+        <div style={styles.floatingElement1}></div>
+        <div style={styles.floatingElement2}></div>
+        <div style={styles.floatingElement3}></div>
       </section>
 
       {/* Recommendations Section */}
@@ -342,14 +342,14 @@ const Home = () => {
       {/* Enhanced Statistics Section */}
       <div style={styles.statsSection}>
         <div style={styles.statsContent}>
-          <h2 style={styles.sectionTitle}>📊 Our Growing Library</h2>
+          <h2 style={styles.sectionTitle}>Our Growing Library</h2>
           <p style={styles.statsSubtitle}>
             Join thousands of users exploring our extensive collection
           </p>
           
           <div style={styles.statsContainer}>
             <div style={styles.statCard}>
-              <div style={styles.statIcon}>🎬</div>
+              <div style={styles.statIcon}></div>
               <div style={styles.statNumber}>9+</div>
               <div style={styles.statLabel}>Blockbuster Movies</div>
               <div style={styles.statTrend}>
@@ -358,7 +358,7 @@ const Home = () => {
             </div>
             
             <div style={styles.statCard}>
-              <div style={styles.statIcon}>📺</div>
+              <div style={styles.statIcon}></div>
               <div style={styles.statNumber}>6+</div>
               <div style={styles.statLabel}>TV Series</div>
               <div style={styles.statTrend}>
@@ -367,7 +367,7 @@ const Home = () => {
             </div>
             
             <div style={styles.statCard}>
-              <div style={styles.statIcon}>🎭</div>
+              <div style={styles.statIcon}></div>
               <div style={styles.statNumber}>15+</div>
               <div style={styles.statLabel}>Talented Actors</div>
               <div style={styles.statTrend}>
@@ -376,7 +376,7 @@ const Home = () => {
             </div>
             
             <div style={styles.statCard}>
-              <div style={styles.statIcon}>🎪</div>
+              <div style={styles.statIcon}></div>
               <div style={styles.statNumber}>6+</div>
               <div style={styles.statLabel}>Diverse Genres</div>
               <div style={styles.statTrend}>

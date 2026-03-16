@@ -13,7 +13,7 @@ class BackgroundWorker {
     if (this.isRunning) return;
     
     this.isRunning = true;
-    console.log('🔄 Trabalhador em segundo plano iniciado');
+    console.log('Trabalhador em segundo plano iniciado');
     
     setTimeout(() => {
       this.checkAndSendRecommendations();
@@ -39,7 +39,7 @@ class BackgroundWorker {
       // Verificação se usuário está autenticado
       const token = localStorage.getItem('authToken');
       if (!token) {
-        console.log('ℹ️ Usuário não autenticado, pulando verificação de e-mails');
+        console.log('Usuário não autenticado, pulando verificação de e-mails');
         return;
       }
 
@@ -48,11 +48,11 @@ class BackgroundWorker {
       const emailPreference = localStorage.getItem('emailNotifications') === 'true';
       
       if (!userEmail || !emailPreference) {
-        console.log('ℹ️ Usuário não optou por receber e-mails ou e-mail não encontrado');
+        console.log('Usuário não optou por receber e-mails ou e-mail não encontrado');
         return;
       }
 
-      console.log('📧 Preparando para enviar recomendações para:', userEmail);
+      console.log('Preparando para enviar recomendações para:', userEmail);
       
       // Buscar recomendações reais da API
       const recommendations = await this.getUserRecommendations();
@@ -64,28 +64,28 @@ class BackgroundWorker {
         );
         
         if (success) {
-          console.log('✅ E-mail enviado para:', userEmail);
+          console.log('E-mail enviado para:', userEmail);
           this.updateLastEmailSent();
         } else {
-          console.log('❌ Falha ao enviar e-mail para:', userEmail);
+          console.log('Falha ao enviar e-mail para:', userEmail);
         }
       } else {
-        console.log('ℹ️ Nenhuma recomendação encontrada para:', userEmail);
+        console.log('Nenhuma recomendação encontrada para:', userEmail);
       }
     } catch (error) {
-      console.error('❌ Erro no trabalhador em segundo plano:', error);
+      console.error('Erro no trabalhador em segundo plano:', error);
     }
   }
 
   async getUserRecommendations() {
     try {
-      console.log('🎯 Buscando recomendações da API...');
+      console.log('Buscando recomendações da API...');
       
       // Buscar recomendações reais da API
       const response = await tvShowsAPI.getRecommendations();
       const recommendations = response.data;
       
-      console.log(`✅ ${recommendations.length} recomendações encontradas`);
+      console.log(`${recommendations.length} recomendações encontradas`);
       
       return recommendations.map(show => ({
         id: show.id,
@@ -98,7 +98,7 @@ class BackgroundWorker {
       }));
       
     } catch (error) {
-      console.error('❌ Erro ao buscar recomendações:', error);
+      console.error('Erro ao buscar recomendações:', error);
       
       // Buscar dos favoritos locais
       return this.getFallbackRecommendations();
@@ -109,11 +109,11 @@ class BackgroundWorker {
     const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
     
     if (favorites.length === 0) {
-      console.log('ℹ️ Nenhum favorito encontrado para fallback');
+      console.log('Nenhum favorito encontrado para fallback');
       return [];
     }
     
-    console.log(`🔄 Usando ${favorites.length} favoritos para fallback`);
+    console.log(`Usando ${favorites.length} favoritos para fallback`);
     
     return favorites.slice(0, 3).map(fav => ({
       id: fav.id,

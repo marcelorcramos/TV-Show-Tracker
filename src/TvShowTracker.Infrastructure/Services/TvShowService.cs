@@ -26,7 +26,7 @@ namespace TvShowTracker.Infrastructure.Services
         {
             try
             {
-                Console.WriteLine($"🎬 TvShowService - Parâmetros recebidos:");
+                Console.WriteLine($"TvShowService - Parâmetros recebidos:");
                 Console.WriteLine($"   SortBy: {query.SortBy}");
                 Console.WriteLine($"   SortDescending: {query.SortDescending}");
                 Console.WriteLine($"   Genre: {query.Genre}");
@@ -45,13 +45,13 @@ namespace TvShowTracker.Infrastructure.Services
                 if (!string.IsNullOrEmpty(query.Genre))
                 {
                     tvShowsQuery = tvShowsQuery.Where(t => t.Genre == query.Genre);
-                    Console.WriteLine($"🎬 Aplicado filtro de gênero: {query.Genre}");
+                    Console.WriteLine($"Aplicado filtro de gênero: {query.Genre}");
                 }
 
                 if (!string.IsNullOrEmpty(query.Type))
                 {
                     tvShowsQuery = tvShowsQuery.Where(t => t.Type == query.Type);
-                    Console.WriteLine($"🎬 Aplicado filtro de tipo: {query.Type}");
+                    Console.WriteLine($"Aplicado filtro de tipo: {query.Type}");
                 }
 
                 if (!string.IsNullOrEmpty(query.Search))
@@ -59,12 +59,12 @@ namespace TvShowTracker.Infrastructure.Services
                     tvShowsQuery = tvShowsQuery.Where(t =>
                         t.Title.Contains(query.Search) ||
                         (t.Description != null && t.Description.Contains(query.Search)));
-                    Console.WriteLine($"🎬 Aplicado filtro de busca: {query.Search}");
+                    Console.WriteLine($"Aplicado filtro de busca: {query.Search}");
                 }
 
                 // CORREÇÃO: Obter todos os dados primeiro
                 var allTvShows = await tvShowsQuery.ToListAsync();
-                Console.WriteLine($"🎬 Total de TV shows encontrados: {allTvShows.Count}");
+                Console.WriteLine($"Total de TV shows encontrados: {allTvShows.Count}");
                 
                 // CORREÇÃO: Usar var para evitar problemas de namespace
                 var sortedTvShows = allTvShows.AsEnumerable();
@@ -76,19 +76,19 @@ namespace TvShowTracker.Infrastructure.Services
                         sortedTvShows = query.SortDescending
                             ? sortedTvShows.OrderByDescending(t => t.Title)
                             : sortedTvShows.OrderBy(t => t.Title);
-                        Console.WriteLine($"🎬 Ordenação aplicada: Title (Descending: {query.SortDescending})");
+                        Console.WriteLine($"Ordenação aplicada: Title (Descending: {query.SortDescending})");
                         break;
                     case "releasedate":
                         sortedTvShows = query.SortDescending
                             ? sortedTvShows.OrderByDescending(t => t.ReleaseDate)
                             : sortedTvShows.OrderBy(t => t.ReleaseDate);
-                        Console.WriteLine($"🎬 Ordenação aplicada: ReleaseDate (Descending: {query.SortDescending})");
+                        Console.WriteLine($"Ordenação aplicada: ReleaseDate (Descending: {query.SortDescending})");
                         break;
                     case "rating":
                         sortedTvShows = query.SortDescending
                             ? sortedTvShows.OrderByDescending(t => t.Rating)
                             : sortedTvShows.OrderBy(t => t.Rating);
-                        Console.WriteLine($"🎬 Ordenação aplicada: Rating (Descending: {query.SortDescending})");
+                        Console.WriteLine($"Ordenação aplicada: Rating (Descending: {query.SortDescending})");
                         break;
                     case "seasons":
                         sortedTvShows = query.SortDescending
